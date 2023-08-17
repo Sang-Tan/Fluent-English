@@ -1,0 +1,29 @@
+name: conversa
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=conversa'
+      - 'POSTGRES_PASSWORD=secret'
+      - 'POSTGRES_USER=prod'
+    networks:
+      conversa-network:
+        aliases:
+          - postgres
+
+  appserver:
+    build:
+        context: .
+        dockerfile: Dockerfile
+        args:
+          - RUNTIME_DIR=/var/conversa/runtime
+    depends_on:
+      - postgres
+    image: 'conversa:latest'
+    ports:
+      - '8080:8080'
+    networks:
+      - conversa-network
+networks:
+  conversa-network:
+    driver: bridge
