@@ -1,0 +1,22 @@
+name: fluent-english-dev
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=fluent-english'
+      - 'POSTGRES_PASSWORD=secret'
+      - 'POSTGRES_USER=dev'
+    ports:
+      - '5432:5432'
+    networks:
+      fluent-english-network-dev:
+        aliases:
+          - postgres
+
+networks:
+  fluent-english-network-dev:
+    driver: bridge
+    name: fluent-english-network-dev
+
+
+

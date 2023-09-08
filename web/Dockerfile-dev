@@ -1,0 +1,8 @@
+FROM eclipse-temurin:17-jdk
+
+ENV SPRING_CONFIG_NAME=application-dev
+
+ARG RUNTIME_DIR=/var/fluent-english/runtime
+RUN mkdir -p ${RUNTIME_DIR}
+VOLUME ${RUNTIME_DIR}
+ENV RUNTIME_DIR=${RUNTIME_DIR}
