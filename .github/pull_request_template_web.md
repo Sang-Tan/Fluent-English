@@ -6,6 +6,7 @@ Briefly describe the purpose of this pull request.
 
 ### Checklist
 
+- [ ] Migration file must be in format V{CURRENT_DATE(yyyyMMdd)}.{TASK_ID}.{ORDER}__{DESCRIPTION}.sql. For example: V20230102.1.1__create_admin_table.sql
 - [ ] Class and interface names use PascalCase.
 - [ ] Constants are in uppercase with underscores.
 - [ ] Class elements must follow the order: constants, static fields, instance fields, constructors, static methods, instance methods
