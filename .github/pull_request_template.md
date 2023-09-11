@@ -4,7 +4,7 @@
 
 Briefly describe the purpose of this pull request.
 
-### Checklist
+### Checklist (Web)
 
 - [ ] Class and interface names use PascalCase.
 - [ ] Constants are in uppercase with underscores.
