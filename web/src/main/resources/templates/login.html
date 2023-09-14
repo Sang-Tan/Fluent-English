@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <title>Admin login page</title>
+</head>
+<body>
+<!-- Login 8 - Bootstrap Brain Component -->
+<section class="bg-light p-3 p-md-4 p-xl-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xxl-11">
+                <div class="card border-light-subtle shadow-sm">
+                    <div class="row g-0">
+                        <div class="col-12 col-md-6">
+                            <img class="img-fluid rounded-start w-100 h-100 object-fit-cover" loading="lazy" th:src="@{/images/login-background.jpg}" alt="">
+                        </div>
+                        <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
+                            <div class="col-12 col-lg-11 col-xl-10">
+                                <div class="card-body p-3 p-md-4 p-xl-5">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="mb-5">
+                                                <h1 class="text-center">Admin Login</h1>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <form method="post" action="/admin/login">
+                                        <div class="row gy-3 overflow-hidden">
+                                            <div class="col-12">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" name="username" id="email" placeholder="name@example.com" required>
+                                                    <label for="email" class="form-label">Email</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-floating mb-3">
+                                                    <input type="password" class="form-control" name="password" id="password" value="" placeholder="Password" required>
+                                                    <label for="password" class="form-label">Password</label>
+                                                </div>
+                                            </div>
+                                            <!-- Display an error message for bad credentials -->
+                                            <div th:if="${param.badCredentials}" class="text-danger">The email and/or password you specified are not correct.</div>
+<!--                                            <div class="col-12">-->
+<!--                                                <div class="form-check">-->
+<!--                                                    <input class="form-check-input" type="checkbox" value="" name="remember_me" id="remember_me">-->
+<!--                                                    <label class="form-check-label text-secondary" for="remember_me">-->
+<!--                                                        Keep me logged in-->
+<!--                                                    </label>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+                                            <div class="col-12">
+                                                <div class="d-grid">
+                                                    <button class="btn btn-dark btn-lg" type="submit">Log in now</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- JavaScript code to show the logout success alert -->
+<script>
+    // Check if the URL contains logoutSuccess=true
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("logoutSuccess") && urlParams.get("logoutSuccess") === "true") {
+        // Display the logout success alert using JavaScript
+        alert("Logout Successful!");
+    }
+</script>
+</body>
+</html>
