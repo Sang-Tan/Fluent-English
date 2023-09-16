@@ -1,7 +1,10 @@
-package com.fluentenglish.web.admin.authen.security;
+package com.fluentenglish.web.user.authen.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fluentenglish.web.admin.authen.entity.Admin;
+import com.fluentenglish.web.admin.authen.security.Role;
+import com.fluentenglish.web.user.authen.entity.User;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-public class AdminDetails implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
     private Long id;
 
@@ -19,22 +22,25 @@ public class AdminDetails implements UserDetails {
     @JsonIgnore
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     private Collection<? extends GrantedAuthority> authorities;
 
-    public AdminDetails(Long id, String email, String password,
-                        Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long id, String email, String password,
+                           Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
     }
 
-    public static AdminDetails build(Admin admin) {
-        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + Role.ADMIN.name()));
-        return new AdminDetails(
-                admin.getId(),
-                admin.getEmail(),
-                admin.getPassword(),
+    public static UserDetailsImpl build(User user) {
+        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + Role.USER.name()));
+        return new UserDetailsImpl(
+                user.getId(),
+                user.getEmail(),
+                user.getPassword(),
                 authorities);
     }
 
@@ -80,7 +86,7 @@ public class AdminDetails implements UserDetails {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        AdminDetails user = (AdminDetails) o;
+        UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
     }
 

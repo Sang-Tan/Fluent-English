@@ -1,28 +1,29 @@
-package com.fluentenglish.web.admin.authen.entity;
+package com.fluentenglish.web.user.authen.entity;
 
+import com.fluentenglish.web.admin.authen.entity.AuditableEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "admins",
+@Table(name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "email")
         })
-public class Admin extends AuditableEntity {
+public class User extends AuditableEntity {
     private String fullName;
     private String email;
     private String password;
     private boolean enabled;
 
-    public Admin(String fullName, String email, String password, boolean enabled) {
+    public User(String fullName, String email, String password, boolean enabled) {
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.enabled = enabled;
     }
 
-    public Admin() {
+    public User() {
     }
 
     public String getFullName() {

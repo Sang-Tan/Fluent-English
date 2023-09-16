@@ -1,88 +1,88 @@
 package com.fluentenglish.web.config;
 
-import com.fluentenglish.web.admin.authen.security.AdminDetailsService;
+import com.fluentenglish.web.admin.authen.security.AdminAuthenticationManager;
 import com.fluentenglish.web.admin.authen.security.Role;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import lombok.RequiredArgsConstructor;
+import com.fluentenglish.web.user.authen.security.UserAuthenticationManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class WebSecurityConfig {
-    private final AdminDetailsService adminDetailsService;
-    @Enumerated(EnumType.STRING)
-    private Role role;
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-                .requestMatchers(new AntPathRequestMatcher("/resources/**"));
-    }
+    @Autowired
+    private AdminAuthenticationManager adminAuthenticationManager;
+    @Autowired
+    private UserAuthenticationManager userAuthenticationManager;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers(HttpMethod.GET,
+                  "/css/**", "/js/**", "/images/**", "/webjars/**");
+    }
+    @Bean
+    @Order(1)
+    public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
-        http.securityContext((securityContext) -> securityContext.requireExplicitSave(true))
+        http
+
+                .securityMatcher("/admin/**")
                 .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers("/admin/**").hasAuthority(Role.ROLE_ADMIN.name())
-                        .anyRequest().permitAll()
+                        .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
                 )
                 .formLogin(formLogin -> formLogin
                         .loginProcessingUrl("/admin/login")
+                        .loginPage("/admin/login") // Set the login page for admins
                         .defaultSuccessUrl("/admin")
                         .failureUrl("/admin/login?badCredentials=true")
-                        .loginPage("/admin/login")
                         .permitAll()
                 )
-                .authenticationManager(authManager(http))
+                .authenticationManager(adminAuthenticationManager.authManager(http))
                 .sessionManagement((sessionManagement) -> sessionManagement.invalidSessionUrl("/admin/login")
                         .maximumSessions(1)
-                        .sessionRegistry(sessionRegistry()))
+                        .sessionRegistry(new SessionRegistryImpl()))
                 .logout((logout) -> logout.logoutUrl("/admin/logout")
-                        .invalidateHttpSession(true)
                         .logoutSuccessUrl("/admin/login?logoutSuccess=true")
                         .deleteCookies("JSESSIONID")
                         .permitAll());
         return http.build();
     }
     @Bean
-    public SessionRegistry sessionRegistry() {
-        return new SessionRegistryImpl();
-    }
-    @Bean
-    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .authenticationProvider(authProvider())
-                .build();
-    }
-    @Bean
-    public DaoAuthenticationProvider authProvider() {
-        final DaoAuthenticationProvider customAuthProvider = new DaoAuthenticationProvider();
-        customAuthProvider.setUserDetailsService(adminDetailsService);
-        customAuthProvider.setPasswordEncoder(passwordEncoder());
-        return customAuthProvider;
+    @Order(2)
+    public SecurityFilterChain userSecurityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable);
+        http
+                .securityMatcher("/user/**")
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/user/**").hasRole(Role.USER.name())
+                )
+                .formLogin(formLogin -> formLogin
+                        .loginProcessingUrl("/user/login")
+                        .loginPage("/user/login")
+                        .defaultSuccessUrl("/user")
+                        .failureUrl("/user/login?badCredentials=true")
+                        .permitAll()
+                )
+                .authenticationManager(userAuthenticationManager.authManager(http))
+                .sessionManagement((sessionManagement) -> sessionManagement.invalidSessionUrl("/user/login")
+                        .maximumSessions(1)
+                        .sessionRegistry(new SessionRegistryImpl()))
+                .logout((logout) -> logout.logoutUrl("/user/logout")
+                        .logoutSuccessUrl("/user/login?logoutSuccess=true")
+                        .deleteCookies("JSESSIONID")
+                        .permitAll());
+        return http.build();
     }
 
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 
 }
