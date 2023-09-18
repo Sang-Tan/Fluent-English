@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.Objects;
 public class AdminDetails implements UserDetails {
 
-    private Long id;
+    private final Long id;
 
-    private String email;
+    private final String email;
 
     @JsonIgnore
     private String password;
 
-    private Collection<? extends GrantedAuthority> authorities;
+    private final Collection<? extends GrantedAuthority> authorities;
 
     public AdminDetails(Long id, String email, String password,
                         Collection<? extends GrantedAuthority> authorities) {

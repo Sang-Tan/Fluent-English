@@ -3,6 +3,7 @@ package com.fluentenglish.web.admin.authen.security;
 import com.fluentenglish.web.admin.authen.entity.Admin;
 import com.fluentenglish.web.admin.authen.repository.AdminRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service("adminDetailsService")
 @Transactional
+//@RequiredArgsConstructor
 public class AdminDetailsService implements UserDetailsService {
     @Autowired
     AdminRepository adminRepository;

@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Objects;
 public class UserDetailsImpl implements UserDetails {
 
-    private Long id;
+    private final Long id;
 
-    private String email;
+    private final String email;
 
     @JsonIgnore
     private String password;
@@ -25,7 +25,7 @@ public class UserDetailsImpl implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Collection<? extends GrantedAuthority> authorities;
+    private final Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(Long id, String email, String password,
                            Collection<? extends GrantedAuthority> authorities) {
