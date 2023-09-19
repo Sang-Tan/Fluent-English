@@ -6,6 +6,7 @@ Briefly describe the purpose of this pull request.
 
 ### Checklist (Web)
 
+- [ ] Migration files should be in format V_{TRELLO_TASK_ID}_{ORDER}__{DESCRIPTION}.sql
 - [ ] Class and interface names use PascalCase.
 - [ ] Constants are in uppercase with underscores.
 - [ ] Class elements must follow the order: constants, static fields, instance fields, constructors, static methods, instance methods
