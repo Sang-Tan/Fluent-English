@@ -20,6 +20,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
+import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
@@ -49,9 +52,11 @@ public class WebSecurityConfig {
                         .permitAll()
                 )
                 .authenticationManager(getUserAuthManager(adminDetailsService, http))
-                .sessionManagement((sessionManagement) -> sessionManagement.invalidSessionUrl("/admin/login")
-                        .maximumSessions(1)
-                        .sessionRegistry(new SessionRegistryImpl()))
+                .sessionManagement((sessionManagement) -> sessionManagement
+                        .invalidSessionUrl("/admin/login")
+                        .maximumSessions(1).maxSessionsPreventsLogin(true)
+                        .sessionRegistry(new SessionRegistryImpl())
+                )
                 .logout((logout) -> logout.logoutUrl("/admin/logout")
                         .logoutSuccessUrl("/admin/login?logoutSuccess=true")
                         .deleteCookies("JSESSIONID")
