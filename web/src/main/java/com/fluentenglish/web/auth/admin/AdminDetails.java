@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 public class AdminDetails implements UserDetails {
     private Integer id;
@@ -46,6 +46,7 @@ public class AdminDetails implements UserDetails {
     }
 
     @Override
+    @EqualsAndHashCode.Include
     public boolean isEnabled() {
         return enabled;
     }
