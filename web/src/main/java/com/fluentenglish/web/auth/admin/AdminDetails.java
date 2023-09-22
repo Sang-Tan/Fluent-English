@@ -16,8 +16,7 @@ public class AdminDetails implements UserDetails {
 
     private final String email;
 
-    @JsonIgnore
-    private String password;
+    private final String password;
 
     private final Collection<? extends GrantedAuthority> authorities;
 
@@ -27,15 +26,6 @@ public class AdminDetails implements UserDetails {
         this.email = email;
         this.password = password;
         this.authorities = authorities;
-    }
-
-    public static AdminDetails build(Admin admin) {
-        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + Role.ADMIN.name()));
-        return new AdminDetails(
-                admin.getId(),
-                admin.getEmail(),
-                admin.getPassword(),
-                authorities);
     }
 
     @Override

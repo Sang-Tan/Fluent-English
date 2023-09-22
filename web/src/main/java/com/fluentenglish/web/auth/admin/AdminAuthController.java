@@ -15,7 +15,7 @@ public class AdminAuthController {
 
     @GetMapping("/admin/login")
     public String getLoginPage() {
-        return "login_admin";
+        return "auth/login_admin";
     }
 
 

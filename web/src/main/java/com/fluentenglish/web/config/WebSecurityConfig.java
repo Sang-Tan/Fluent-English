@@ -40,7 +40,7 @@ public class WebSecurityConfig {
                 )
                 .formLogin(formLogin -> formLogin
                         .loginProcessingUrl("/admin/login")
-                        .loginPage("/admin/login") // Set the login page for admins
+                        .loginPage("/admin/login")
                         .defaultSuccessUrl("/admin")
                         .failureUrl("/admin/login?badCredentials=true")
                         .permitAll()

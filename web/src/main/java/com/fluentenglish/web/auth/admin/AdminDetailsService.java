@@ -2,10 +2,13 @@ package com.fluentenglish.web.auth.admin;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("adminDetailsService")
 @Transactional
@@ -18,7 +21,7 @@ public class AdminDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
             Admin admin = adminRepository.findByEmail(email)
                     .orElseThrow(() -> new UsernameNotFoundException("Admin Not Found with email: " + email));
-            return AdminDetails.build(admin);
+            return new AdminDetails(admin.getId(), admin.getEmail(), admin.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
     }
 
 }
