@@ -23,8 +23,6 @@ import org.springframework.security.web.authentication.rememberme.TokenBasedReme
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-
-
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(HttpMethod.GET,
@@ -58,14 +56,12 @@ public class WebSecurityConfig {
                         .permitAll());
         return http.build();
     }
-
     private  DaoAuthenticationProvider getAuthProvider(UserDetailsService userDetailsService) {
         final DaoAuthenticationProvider customAuthProvider = new DaoAuthenticationProvider();
         customAuthProvider.setUserDetailsService(userDetailsService);
         customAuthProvider.setPasswordEncoder(getPasswordEncoder());
         return customAuthProvider;
     }
-
     private AuthenticationManager getUserAuthManager(UserDetailsService userDetailsService, HttpSecurity http) throws Exception{
         return http.getSharedObject(AuthenticationManagerBuilder.class)
                 .authenticationProvider(getAuthProvider(userDetailsService))
@@ -75,6 +71,4 @@ public class WebSecurityConfig {
     public PasswordEncoder getPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
-
 }

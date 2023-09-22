@@ -1,7 +1,9 @@
 package com.fluentenglish.web.auth.admin;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -11,6 +13,8 @@ import lombok.Setter;
         })
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,14 +23,4 @@ public class Admin {
     private String email;
     private String password;
     private boolean enabled;
-
-    public Admin(String fullName, String email, String password, boolean enabled) {
-        this.fullName = fullName;
-        this.email = email;
-        this.password = password;
-        this.enabled = enabled;
-    }
-
-    public Admin() {
-    }
 }

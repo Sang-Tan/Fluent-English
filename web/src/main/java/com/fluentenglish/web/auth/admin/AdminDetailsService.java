@@ -10,18 +10,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service("adminDetailsService")
+@Service
 @Transactional
-//@RequiredArgsConstructor
 public class AdminDetailsService implements UserDetailsService {
     @Autowired
     AdminRepository adminRepository;
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
             Admin admin = adminRepository.findByEmail(email)
                     .orElseThrow(() -> new UsernameNotFoundException("Admin Not Found with email: " + email));
-            return new AdminDetails(admin.getId(), admin.getEmail(), admin.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
+            return new AdminDetails(admin.getId(), admin.getEmail(), admin.getPassword(), admin.isEnabled(), List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
     }
-
 }

@@ -9,14 +9,10 @@ public class AdminAuthController {
     @ResponseBody
     @GetMapping("/admin")
     public String getAdminPage() {
-
         return "Admin Page<br>" + "<a href=\"/admin/logout\">Logout</a>";
     }
-
     @GetMapping("/admin/login")
     public String getLoginPage() {
         return "auth/login_admin";
     }
-
-
 }
