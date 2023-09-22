@@ -1,5 +1,6 @@
 package com.fluentenglish.web.auth.admin;
 
+import com.fluentenglish.web.auth.Role;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,7 +25,7 @@ public class AdminDetailsService implements UserDetailsService {
                     .email(admin.getEmail())
                     .password(admin.getPassword())
                     .enabled(admin.isEnabled())
-                    .authorities(List.of(new SimpleGrantedAuthority("ROLE_ADMIN")))
+                    .authorities(List.of(new SimpleGrantedAuthority("ROLE_" + Role.ADMIN)))
                     .build();
     }
 }
