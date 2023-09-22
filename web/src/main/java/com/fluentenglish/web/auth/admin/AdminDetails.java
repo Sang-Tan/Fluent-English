@@ -9,6 +9,8 @@ import java.util.Collection;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 public class AdminDetails implements UserDetails {
+    
+    @EqualsAndHashCode.Include
     private Integer id;
     private String email;
     private String password;
@@ -46,7 +48,6 @@ public class AdminDetails implements UserDetails {
     }
 
     @Override
-    @EqualsAndHashCode.Include
     public boolean isEnabled() {
         return enabled;
     }
