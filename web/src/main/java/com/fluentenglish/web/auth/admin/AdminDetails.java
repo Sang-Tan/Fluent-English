@@ -1,34 +1,19 @@
 package com.fluentenglish.web.auth.admin;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fluentenglish.web.auth.Role;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 @EqualsAndHashCode
+@Builder
 public class AdminDetails implements UserDetails {
-    private final Integer id;
-    private final String email;
-    private final String password;
-    private final boolean enabled;
-    private final Collection<? extends GrantedAuthority> authorities;
-
-    public AdminDetails(Integer id, String email, String password, boolean enabled, Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.enabled = enabled;
-        this.authorities = authorities;
-    }
-
+    private Integer id;
+    private String email;
+    private String password;
+    private boolean enabled;
+    private Collection<? extends GrantedAuthority> authorities;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
