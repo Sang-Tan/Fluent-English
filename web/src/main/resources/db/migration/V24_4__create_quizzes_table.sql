@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS question_answers
+CREATE TABLE IF NOT EXISTS quizzes
 (
     id SERIAL PRIMARY KEY,
 
