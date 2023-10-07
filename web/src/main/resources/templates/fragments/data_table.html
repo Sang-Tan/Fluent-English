@@ -1,17 +1,54 @@
-<!--This is a fragment of a page that contains a data table that can be arranged by drag and drop.-->
-<!--base on Class::common.datatable.DataTable object you pass in -->
+<!--
+Fragment: dataTable(rows, id, isArrangeable)
+Description: This fragment is used to display data table
 
-<!--include this fragment in your template by using this tag:-->
-<!--pass in your dataTable object as a parameter with name 'dataTable'-->
-<!--Add following tag to your template to use this fragment.-->
-<!--<script "fragments/data_table_js" th:with="dataTable=${yourDataTable}"}></script>-->
+Parameters:
+- rows: The List of 'DataTableRow' object containing data of table.
+- id: The id of table.
+- isArrangeable: A boolean value to indicate whether the table is arrangeable or not.
 
-<!--remember that this template can only be used once in a page.-->
+Css Dependencies:
+- library: bootstrap, bootstrap-icon, jquery.dataTables and rowReorder.dataTables.
 
-<table class="display cell-border" th:id="data_table">
+JavaScript Dependencies:
+- library: jquery, jquery.dataTables and dataTables.rowReorder, dataTables.fixedColumn if you want to use reorder feature.
+- script: dataTable.js, to use you typically need to pass that some data from
+your Thymeleaf template to the JavaScript code which is data
+
+Example usage:
+- To use this fragment, you need to include this fragment in your Thymeleaf template by using the following code:
+...
+    <div th:replace="fragments/data_table :: dataTable(${rows}, ${id})"></div>
+...
+    <script type="text/javascript">
+        const dataTables = [
+        {
+            id: 'table-id-1',
+            config : {
+                isArrangeable : false,
+                isPaginable : true,
+            }
+        },
+        {
+            id: 'table2',
+            config : {
+                isArrangeable : true,
+                changePositionsUrl : "url" // if you want to use reorder feature,
+                isPaginable : true,
+            }
+        },
+    ];
+    </script>
+    <script type="text/javascript" src="/js/data_table.js"></script>
+...
+
+-->
+
+
+<table th:fragment="dataTable(rows, id, isArrangeable)" class="display cell-border" th:id="${id}">
     <thead>
     <tr>
-        <th style="display: none;" scope="col">Position</th>
+        <th th:if="${isArrangeable}" scope="col">Position</th>
         <th scope="col" hidden="hidden">ID</th>
         <th scope="col">Name</th>
         <th scope="col">Update</th>
@@ -19,17 +56,13 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="rowData : ${dataTable.rows}">
-        <td style="display: none;" th:text="${rowData.position}"></td>
-        <td th:text="${rowData.id}" hidden="hidden"></td>
-        <td><a th:href="${rowData.detailUrl}" class="name" th:text="${rowData.name}"></a></td>
-        <td><a th:href="${rowData.updateUrl}"><i class="bi bi-pen"></i></a></td>
-        <td><a th:href="${rowData.deleteUrl}"><i class="bi bi-trash"></i></a></td>
+    <tr th:each="row : ${rows}">
+        <td th:if="${isArrangeable}" th:text="${row.position}"></td>
+        <td th:text="${row.id}" hidden="hidden"></td>
+        <td><a th:href="${row.detailUrl}" class="name" th:text="${row.name}"></a></td>
+        <td><a th:href="${row.updateUrl}"><i class="bi bi-pen"></i></a></td>
+        <td><a th:href="${row.deleteUrl}"><i class="bi bi-trash"></i></a></td>
     </tr>
     </tbody>
 </table>
-<button class="btn btn-primary" th:onclick="dataTableManager.savePosition()">Save Position</button>
 
-<!-- Display a message for successful or failed when request for save order-->
-<div id="success-reposition" class="text-success" style="display: none;">Save position successfully</div>
-<div id="fail-reposition" class="text-danger" style="display: none;">Save position failed</div>
