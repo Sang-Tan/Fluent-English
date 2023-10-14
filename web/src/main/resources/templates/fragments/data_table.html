@@ -1,0 +1,69 @@
+<!--
+Fragment: dataTable(rows, id, isArrangeable)
+Description: This fragment is used to display data table
+
+Parameters:
+- rows: The List of 'DataTableRow' object containing data of table.
+- id: The id of table which will be created in DOM document.
+- isArrangeable: A boolean value to indicate whether the table is arrangeable or not.
+
+Css Dependencies:
+- library: bootstrap, bootstrap-icon, jquery.dataTables and rowReorder.dataTables.
+
+JavaScript Dependencies:
+- library: jquery, jquery.dataTables and dataTables.rowReorder, dataTables.fixedColumn if you want to use reorder feature.
+- script: dataTable.js, to use you typically need to pass that some data from
+your Thymeleaf template to the JavaScript code which is data
+
+Example usage:
+- To use this fragment, you need to include this fragment in your Thymeleaf template by using the following code:
+...
+    <div th:replace="fragments/data_table :: dataTable(${rows}, ${id})"></div>
+...
+    <script type="text/javascript">
+        const dataTables = [
+        {
+            id: 'table-id-1',
+            config : {
+                isArrangeable : false,
+                isPaginable : true,
+            }
+        },
+        {
+            id: 'table2',
+            config : {
+                isArrangeable : true,
+                changePositionsUrl : "url" // if you want to use reorder feature,
+                isPaginable : true,
+            }
+        },
+    ];
+    </script>
+    <script type="text/javascript" src="/js/data_table.js"></script>
+...
+
+-->
+
+
+<table th:fragment="dataTable(rows, id, isArrangeable)" class="display cell-border" th:id="${id}">
+    <thead>
+    <tr>
+        <th th:if="${isArrangeable}" style="display: none" scope="col">Position</th>
+        <th scope="col" hidden="hidden">ID</th>
+        <th scope="col" class="name">Name</th>
+        <th scope="col">Update</th>
+        <th scope="col">Delete</th>
+        <th th:if="${isArrangeable}" scope="col">Reorder</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="row : ${rows}">
+        <td th:if="${isArrangeable}" style="display: none" th:text="${row.position}"></td>
+        <td th:text="${row.id}" hidden="hidden"></td>
+        <td><a class="name" th:text="${row.name}"></a></td>
+        <td><a th:href="${row.updateUrl}"><i class="bi bi-pen"></i></a></td>
+        <td><a th:href="${row.deleteUrl}"><i class="bi bi-trash"></i></a></td>
+        <td th:if="${isArrangeable}"><i class="bi bi-arrows-move"></i></td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,34 @@
+<!--
+Fragment: sidebar
+Description: This fragment is used to display sidebar of page
+
+Example usage:
+- To use this fragment, you need to include this fragment in your Thymeleaf template by using the following code:
+...
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+...
+-->
+
+<aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/admin">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/admin/topic">
+                <i class="bi bi-book"></i>
+                <span>All topics</span>
+            </a>
+        </li><!-- End Topics Nav -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="/admin/learning-path">
+                <i class="bi bi-signpost"></i>
+                <span>All learning paths</span>
+            </a>
+        </li><!-- End Topics Nav -->
+    </ul>
+
+</aside><!-- End Sidebar-->
