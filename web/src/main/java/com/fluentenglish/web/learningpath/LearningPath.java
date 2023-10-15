@@ -1,6 +1,6 @@
 package com.fluentenglish.web.learningpath;
 
-import com.fluentenglish.web.learningpath.detail.LearningPathDetail;
+import com.fluentenglish.web.learningpath.admin.detail.LearningPathDetail;
 import jakarta.persistence.*;
 import lombok.*;
 
