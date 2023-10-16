@@ -1,11 +1,9 @@
-package com.fluentenglish.web.common.form;
+package com.fluentenglish.web.common.viewattribute;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Random;
 
 @Builder
 @Getter

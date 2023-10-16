@@ -1,4 +1,4 @@
-package com.fluentenglish.web.common.form;
+package com.fluentenglish.web.common.viewattribute;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
