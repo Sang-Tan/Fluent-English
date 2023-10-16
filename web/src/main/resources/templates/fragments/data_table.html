@@ -62,7 +62,11 @@ Example usage:
         <td th:text="${row.id}" hidden="hidden"></td>
         <td><a class="name" th:text="${row.name}"></a></td>
         <td><a th:href="${row.updateUrl}"><i class="bi bi-pen"></i></a></td>
-        <td><a th:href="${row.deleteUrl}"><i class="bi bi-trash"></i></a></td>
+        <td>
+            <form id="delete-form" th:action="${row.deleteUrl}" method="post">
+                <button type="submit" class="btn-link"><i class="bi bi-trash"></i></button>
+            </form>
+        </td>
         <td th:if="${isArrangeable}"><i class="bi bi-arrows-move"></i></td>
     </tr>
     </tbody>
