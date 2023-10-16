@@ -2,6 +2,12 @@
 Fragment: sidebar
 Description: This fragment is used to display sidebar of page
 
+Css Dependencies:
+- library: bootstrap
+
+Js Dependencies:
+- library: bootstrap
+
 Example usage:
 - To use this fragment, you need to include this fragment in your Thymeleaf template by using the following code:
 ...
@@ -20,15 +26,32 @@ Example usage:
         <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/topic">
                 <i class="bi bi-book"></i>
-                <span>All topics</span>
+                <span>Topics</span>
             </a>
         </li><!-- End Topics Nav -->
         <li class="nav-item">
             <a class="nav-link collapsed" href="/admin/learning-path">
                 <i class="bi bi-signpost"></i>
-                <span>All learning paths</span>
+                <span>Learning paths</span>
             </a>
         </li><!-- End Topics Nav -->
+        <li class="nav-item">
+            <a class="nav-link " data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-pencil-square"></i><span>Create learning material</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="components-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="/admin/learning-path/create">
+                        <i class="bi bi-circle"></i><span>Learning path</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/topic/create">
+                        <i class="bi bi-circle"></i><span>Topic</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End Components Nav -->
     </ul>
 
 </aside><!-- End Sidebar-->
