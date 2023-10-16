@@ -60,7 +60,7 @@ Example usage:
     <tr th:each="row : ${rows}">
         <td th:if="${isArrangeable}" style="display: none" th:text="${row.position}"></td>
         <td th:text="${row.id}" hidden="hidden"></td>
-        <td><a class="name" th:text="${row.name}"></a></td>
+        <td th:text="${row.name}"></td>
         <td><a th:href="${row.updateUrl}"><i class="bi bi-pen"></i></a></td>
         <td>
             <form id="delete-form" th:action="${row.deleteUrl}" method="post">
