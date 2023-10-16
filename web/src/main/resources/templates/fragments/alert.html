@@ -1,0 +1,34 @@
+<!--
+Fragment: alert(alert)
+Description: This fragment is used to display alert message.
+
+Parameters:
+- alert: The 'common.viewattribute.Alert' object containing data of alert message.
+
+Css Dependencies:
+- library: bootstrap
+
+Example usage:
+- To use this fragment, you need to include this fragment in your Thymeleaf template by using the following code:
+...
+    <div th:replace="fragments/alert :: alert(${alert})"></div>
+...
+-->
+
+<div th:fragment="alert(alert)">
+  <div th:each="each : ${alert.error}">
+    <div class="alert alert-danger" role="alert">
+      <p th:text="${each}"> </p>
+    </div>
+  </div>
+  <div th:each="each : ${alert.warning}">
+      <div class="alert alert-warning" role="alert">
+          <p th:text="${each}"> </p>
+      </div>
+  </div>
+  <div th:each="each : ${alert.info}">
+      <div class="alert alert-info" role="alert">
+          <p th:text="${each}"> </p>
+      </div>
+  </div>
+</div>
