@@ -22,7 +22,8 @@ public class LearningPath {
 
     private String description;
 
-    private boolean isPublic;
+    @Builder.Default
+    private boolean isPublic = false;
 
     @OneToMany(mappedBy = "learningPath")
     @OrderBy("position ASC")

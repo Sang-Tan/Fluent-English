@@ -1,6 +1,5 @@
 package com.fluentenglish.web.learningmaterial.lesson;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fluentenglish.web.learningmaterial.lesson.introduction.Introduction;
 import com.fluentenglish.web.learningmaterial.quiz.Quiz;
 import com.fluentenglish.web.learningmaterial.topic.Topic;
@@ -34,6 +33,7 @@ public class Lesson {
     private Byte difficulty;
 
     @Column
+    @Builder.Default
     private boolean isPublic = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,4 +46,4 @@ public class Lesson {
     @OneToMany(mappedBy = "lesson")
     @OrderBy("position ASC")
     private List<Quiz> quizzes;
-    }
+}

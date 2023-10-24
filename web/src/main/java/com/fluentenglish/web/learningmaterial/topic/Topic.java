@@ -1,6 +1,5 @@
 package com.fluentenglish.web.learningmaterial.topic;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fluentenglish.web.learningmaterial.lesson.Lesson;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,7 +21,8 @@ public class Topic {
     private String name;
 
     @Column
-    private boolean isPublic;
+    @Builder.Default
+    private boolean isPublic = false;
 
     @OneToMany(mappedBy = "topic")
     @OrderBy("position ASC")
