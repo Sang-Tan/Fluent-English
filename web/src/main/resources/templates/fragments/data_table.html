@@ -45,7 +45,7 @@ Example usage:
 -->
 
 
-<table th:fragment="dataTable(rows, id, isArrangeable)" class="display cell-border" th:id="${id}">
+<table th:fragment="dataTable(rows, id, isArrangeable)" class="table display cell-border" th:id="${id}">
     <thead>
     <tr>
         <th th:if="${isArrangeable}" style="display: none" scope="col">Position</th>
