@@ -1,23 +1,31 @@
 package com.fluentenglish.web.common.exception.userinput;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-public class UserInputException extends RuntimeException{
-    private final Map<String, List<InputErrorInfo>> errors;
+public class UserInputException extends RuntimeException implements UserInputErrors{
+    private final UserInputErrors errors;
 
     public UserInputException(List<InputErrorInfo> errors) {
-        this.errors = errors.stream().collect(
-                Collectors.groupingBy(InputErrorInfo::getField));
+        this.errors = new UserInputErrorsImpl(errors);
     }
 
-    public Set<String> getErrorFields() {
-        return errors.keySet();
+    @Override
+    public List<String> getErrorFields() {
+        return errors.getErrorFields();
     }
 
-    public List<InputErrorInfo> getErrors(String field) {
-        return errors.get(field);
+    @Override
+    public List<String> getErrorMessages(String field) {
+        return errors.getErrorMessages(field);
+    }
+
+    @Override
+    public String getFirstErrorMessage(String field) {
+        return errors.getFirstErrorMessage(field);
+    }
+
+    @Override
+    public boolean hasErrors(String field) {
+        return errors.hasErrors(field);
     }
 }
