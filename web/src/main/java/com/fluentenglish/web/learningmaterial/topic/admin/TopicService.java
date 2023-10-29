@@ -12,6 +12,8 @@ public interface TopicService {
 
     TopicDto getTopicById(int id);
 
+    boolean topicExistsById(int id);
+
     List<TopicDto> getAllTopics();
 
     List<TopicDto> searchTopics(TopicSearchDto topicSearchDto);

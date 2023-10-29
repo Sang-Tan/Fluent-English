@@ -47,6 +47,10 @@ public class TopicServiceImpl implements TopicService {
         return topicMapper.topicToTopicDto(topic);
     }
 
+    public boolean topicExistsById(int id) {
+        return topicRepository.existsById(id);
+    }
+
     public List<TopicDto> getAllTopics() {
         List<Topic> topics = topicRepository.findAll();
         return topics.stream().map(topicMapper::topicToTopicDto).toList();
