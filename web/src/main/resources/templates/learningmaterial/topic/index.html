@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Favicon  -->
+    <link rel="icon" href="/images/fragments/favicon.ico">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="/vendor/datatables/css/rowReorder.dataTables.min.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="/css/style.css" rel="stylesheet">
+    <title>Topics</title>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header(${userInfo})"></div>
+<div th:replace="fragments/sidebar"></div>
+<main id="main" class="main">
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title" style="flex: 1">Topics</h5>
+                            <a href="/admin/topic/create"
+                               class="btn btn-primary">Create</a>
+                        </div>
+                        <div th:if="${topicDataTable.rows.isEmpty()}">
+                            <div class="alert alert-info" role="alert">
+                                No topics found.
+                            </div>
+                        </div>
+                        <div th:unless="${topicDataTable.rows.isEmpty()}">
+                            <div th:replace="fragments/data_table :: dataTable(${topicDataTable.rows}, 'topic-data-table', ${topicDataTable.isArrangeable()})"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+
+<!-- Vendor JS Files -->
+<script src="/vendor/jquery/code.jquery.com_jquery-3.7.1.min.js"></script>
+<script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="/vendor/datatables/js/dataTables.rowReorder.min.js"></script>
+<script src="/vendor/datatables/js/dataTables.fixedColumns.min.js"></script>
+<script src="/vendor/tinymce/tinymce.min.js"></script>
+
+<script src="/js/fragments/data_table.js"></script>
+<script th:inline="javascript" type="application/javascript">
+
+    const dataTables = [
+        {
+            id: 'lp-data-table-id',
+            config: {
+                isArrangeable: [[${topicDataTable.isArrangeable}]],
+                isPaginable: [[${topicDataTable.isPaginable}]],
+            }
+        }
+    ];
+    $(document).ready(function () {
+        DataTableInitializer.initializeDataTables(dataTables);
+    });
+</script>
+<!-- Template Main JS File -->
+<script src="/js/main.js"></script>
+</body>
+</html>
