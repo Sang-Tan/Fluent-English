@@ -30,3 +30,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Properties files ###
+src/main/resources/*.properties
+!src/main/resources/*.example.properties
+src/test/resources/*.properties
+!src/test/resources/*.example.properties
