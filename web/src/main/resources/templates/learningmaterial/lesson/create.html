@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Favicon  -->
+  <link rel="icon" href="/images/fragments/favicon.ico">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+      rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <title>Create new lesson</title>
+
+  <!-- Template Main CSS File -->
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="fragments/header :: header(${userInfo})"></div>
+<div th:replace="fragments/sidebar"></div>
+<main id="main" class="main">
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a th:href="@{/admin/topic}">Topics</a></li>
+      <li class="breadcrumb-item">
+        <a th:href="@{/admin/topic/{topicId}(topicId=${topicId})}" th:text="${topicId}"></a>
+      </li>
+      <li class="breadcrumb-item active">Create lesson</li>
+    </ol>
+  </nav>
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Create Lesson</h5>
+            <form method="post" id="lesson-form" action="/admin/lesson/create" class="row g-3">
+              <div
+                  th:replace="~{learningmaterial/lesson/form_input :: formInput(${topicId}, ${submittedLesson}, ${userInputErrors})}"></div>
+              <div class="text-center">
+                <button type="submit" class="btn btn-primary">Create</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Template Main JS File -->
+<script src="/js/main.js"></script>
+</body>
+</html>
