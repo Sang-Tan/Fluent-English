@@ -1,0 +1,82 @@
+$color_1: #899bbd;
+$color_2: #4154f1;
+$color_3: #012970;
+$background-color_1: #fff;
+$background-color_2: #aab7cf;
+$background-color_3: #4154f1;
+
+.nav-item {
+  margin-bottom: 5px;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: $color_2;
+  transition: 0.3;
+  background: #f6f9ff;
+  padding: 10px 15px;
+  border-radius: 4px;
+  svg {
+    font-size: 16px;
+    margin-right: 10px;
+    color: $color_2;
+  }
+  &:hover {
+    color: $color_2;
+    background: #f6f9ff;
+    svg {
+      color: $color_2;
+    }
+  }
+  &:not(.collapsed) {
+    .chevron-down {
+      transform: rotate(180deg);
+    }
+  }
+}
+.nav-link.collapsed {
+  color: $color_3;
+  background: #fff;
+  svg {
+    color: $color_1;
+  }
+  &:hover {
+    color: $color_2;
+    background: #f6f9ff;
+    svg {
+      color: $color_2;
+    }
+  }
+}
+.nav-content {
+  padding: 5px 0 0 0;
+  margin: 0;
+  list-style: none;
+  a {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: $color_3;
+    transition: 0.3;
+    padding: 10px 0 10px 40px;
+    transition: 0.3s;
+    svg {
+      font-size: 6px;
+      margin-right: 8px;
+      line-height: 0;
+      border-radius: 50%;
+    }
+    &:hover {
+      color: $color_2;
+    }
+  }
+  a.active {
+    color: $color_2;
+    svg {
+      background-color: $background-color_3;
+    }
+  }
+}
