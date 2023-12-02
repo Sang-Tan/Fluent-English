@@ -37,17 +37,13 @@ $background-color_3: #4154f1;
   .sidebar {
     left: -300px;
   }
-  .toggle-sidebar {
-    .sidebar {
-      left: 0;
-    }
+  .sidebar.show {
+    left: 0;
   }
 }
 
 @media (min-width: 1200px) {
-  .toggle-sidebar {
-    .sidebar {
-      left: -300px;
-    }
+  .sidebar.show {
+    left: -300px;
   }
 }

@@ -7,9 +7,9 @@ import { Grid, Book, Signpost, PencilSquare } from "react-bootstrap-icons";
 
 const cx = classnames.bind(styles);
 
-function Sidebar() {
+function Sidebar({ show }) {
   return (
-    <aside id="sidebar" className={cx("sidebar")}>
+    <aside id="sidebar" className={cx("sidebar", { show })}>
       <ul className={cx("sidebar-nav")} id="sidebar-nav">
         <NavItem href="/admin" title="Dashboard" icon={Grid} />
         <NavItem href="/admin/topic" title="Topics" icon={Book} />
