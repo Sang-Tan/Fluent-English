@@ -12,12 +12,12 @@ function ChildItem({ href, title }) {
   return <NavItem href={href} title={title} icon={Circle} />;
 }
 
-function ExpandNavItem({ href, title, icon: Icon, childItems }) {
+function ExpandNavItem({ title, icon: Icon, childItems }) {
   const [open, setOpen] = useState(false);
   return (
     <li className={cx("nav-item")}>
       <span onClick={() => setOpen(!open)}>
-        <NavItem href={href} title={title} icon={Icon} />
+        <NavItem href="#" title={title} icon={Icon} />
       </span>
 
       <Collapse in={open}>

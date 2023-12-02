@@ -19,7 +19,6 @@ function Sidebar({ show }) {
           icon={Signpost}
         />
         <ExpandNavItem
-          href="#"
           title="Learning materials"
           icon={PencilSquare}
           childItems={[
