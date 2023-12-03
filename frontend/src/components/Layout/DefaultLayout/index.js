@@ -4,7 +4,12 @@ import { Fragment } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 
-function DefaultLayout() {
+import styles from "./DefaultLayout.module.scss";
+import classNames from "classnames/bind";
+
+const cx = classNames.bind(styles);
+
+function DefaultLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const openSidebar = () => setSidebarOpen(true);
@@ -22,6 +27,9 @@ function DefaultLayout() {
     <Fragment>
       <Header toggleSidebar={toggleSidebar} />
       <Sidebar show={sidebarOpen} />
+      <div className={cx("main", { "sidebar-open": sidebarOpen })}>
+        {children}
+      </div>
     </Fragment>
   );
 }
