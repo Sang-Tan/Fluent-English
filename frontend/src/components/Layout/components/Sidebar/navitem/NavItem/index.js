@@ -1,15 +1,20 @@
 import styles from "./../styles.module.scss";
 import classnames from "classnames/bind";
 
+import { NavLink } from "react-router-dom";
+
 const cx = classnames.bind(styles);
 
 function NavItem({ href, title, icon: Icon }) {
   return (
     <li className={cx("nav-item")}>
-      <a className={cx("nav-link", "collapsed")} href={href}>
+      <NavLink
+        className={({ isActive }) => cx("nav-link", { active: isActive })}
+        to={href}
+      >
         <Icon />
         <span>{title}</span>
-      </a>
+      </NavLink>
     </li>
   );
 }

@@ -13,15 +13,16 @@ $background-color_3: #4154f1;
   align-items: center;
   font-size: 15px;
   font-weight: 600;
-  color: $color_2;
+  cursor: pointer;
+  color: $color_3;
   transition: 0.3;
-  background: #f6f9ff;
+  background: #fff;
   padding: 10px 15px;
   border-radius: 4px;
   svg {
     font-size: 16px;
     margin-right: 10px;
-    color: $color_2;
+    color: $color_1;
   }
   &:hover {
     color: $color_2;
@@ -30,17 +31,12 @@ $background-color_3: #4154f1;
       color: $color_2;
     }
   }
-  &:not(.collapsed) {
-    .chevron-down {
-      transform: rotate(180deg);
-    }
-  }
 }
-.nav-link.collapsed {
-  color: $color_3;
-  background: #fff;
+.nav-link.active {
+  color: $color_2;
+  background: #f6f9ff;
   svg {
-    color: $color_1;
+    color: $color_2;
   }
   &:hover {
     color: $color_2;
