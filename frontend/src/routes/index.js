@@ -1,9 +1,14 @@
-const publicRoutes = [
+import Login from "src/pages/auth/Login";
+
+const privateRoutes = [
   {
     path: "/",
   },
   {
     path: "/topic",
+  },
+  {
+    path: "/topic/create",
   },
   {
     path: "/learning-path",
@@ -16,4 +21,12 @@ const publicRoutes = [
   },
 ];
 
-export { publicRoutes };
+const publicRoutes = [
+  {
+    path: "/login",
+    layout: null,
+    page: Login,
+  },
+];
+
+export { privateRoutes, publicRoutes };
