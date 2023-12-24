@@ -7,13 +7,14 @@ import {
   Button,
   Alert,
 } from "react-bootstrap";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "src/contexts/AuthContext";
+import Spinner from "react-bootstrap/Spinner";
 import useRequest from "src/hooks/useRequest";
 
 function Login() {
-  const { data, error, loading, request } = useRequest();
+  const [error, setError] = useState(null);
   const [, setAuthInfo] = useContext(AuthContext);
   const [alertShow, setAlertShow] = useState(false);
   const navigate = useNavigate();
@@ -39,21 +40,32 @@ function Login() {
     request("/login", options);
   };
 
-  useEffect(() => {
-    if (data) {
-      setAuthInfo({
-        isAuthenticated: true,
-        token: data.token,
+  /**
+   * @param {Response} response
+   */
+  const handleResponse = (response) => {
+    if (response.ok) {
+      response.json().then((data) => {
+        setAuthInfo({
+          isAuthenticated: true,
+          token: data.token,
+        });
+        navigate("/");
       });
-      navigate("/");
+    } else {
+      response.json().then((data) => {
+        setAlertShow(true);
+        setError(data || "Something went wrong!");
+      });
     }
-  }, [data, navigate, setAuthInfo]);
+  };
 
-  useEffect(() => {
-    if (error) {
-      setAlertShow(true);
-    }
-  }, [error]);
+  const handleException = (exception) => {
+    setAlertShow(true);
+    setError("Something went wrong!");
+  };
+
+  const [request, loading] = useRequest(handleResponse, handleException);
 
   return (
     <section className="bg-light p-3 p-md-4 p-xl-5">
@@ -144,7 +156,11 @@ function Login() {
                                 type="submit"
                                 disabled={loading}
                               >
-                                {loading ? "Loading..." : "Login"}
+                                {loading ? (
+                                  <Spinner as="span" size="sm" />
+                                ) : (
+                                  "Login"
+                                )}
                               </Button>
                             </div>
                           </Col>
