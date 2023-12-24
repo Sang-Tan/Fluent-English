@@ -1,56 +1,67 @@
-import { useContext, useState, useCallback } from "react";
+import { useContext, useCallback, useState } from "react";
 import { AuthContext } from "src/contexts/AuthContext";
 
 const API_URL = process.env.REACT_APP_API_URL;
-
-function useRequest({ initialData = null, initialLoading = false } = {}) {
+/**
+ * @callback ResponseHandler
+ * @param {Response} response
+ * @returns {void}
+ */
+/**
+ * @callback ExceptionHandler
+ * @param {*} error
+ * @returns {void}
+ */
+/**
+ * @param {ResponseHandler} onResponse
+ * @param {ExceptionHandler} onException
+ * @returns
+ */
+function useRequest({
+  onResponse = (response) => {},
+  onException = (exception) => {},
+  initialLoading = false,
+}) {
   const [authInfo, setAuthInfo] = useContext(AuthContext);
-  const [data, setData] = useState(initialData);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(initialLoading);
 
   const request = useCallback(
-    async (url, options) => {
-      setLoading(true);
+    /**
+     * @param {string} url
+     * @param {object} options
+     */
+    (url, options) => {
       const headers = options?.headers || {};
 
       if (authInfo?.isAuthenticated) {
         headers.Authorization = `Bearer ${authInfo.token}`;
       }
 
-      const response = await fetch(`${API_URL}${url}`, {
+      setLoading(true);
+      fetch(`${API_URL}${url}`, {
         ...options,
         headers,
-      });
+      })
+        .then((response) => {
+          if (response.status === 401 || response.status === 403) {
+            setAuthInfo({
+              isAuthenticated: false,
+              token: null,
+            });
+          }
 
-      const responseData = await response.json();
-
-      if (response.status === 401 || response.status === 403) {
-        setAuthInfo({
-          isAuthenticated: false,
-          token: null,
+          setLoading(false);
+          onResponse(response);
+        })
+        .catch((error) => {
+          setLoading(false);
+          onException(error);
         });
-      }
-
-      if (response.ok) {
-        setData(responseData);
-      } else {
-        setError(responseData);
-      }
-
-      setLoading(false);
-
-      return responseData;
     },
-    [authInfo, setAuthInfo]
+    [authInfo, setAuthInfo, onResponse, onException]
   );
 
-  return {
-    data,
-    error,
-    loading,
-    request,
-  };
+  return [request, loading];
 }
 
 export default useRequest;
