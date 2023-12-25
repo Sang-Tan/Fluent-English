@@ -1,5 +1,6 @@
 package com.fluentenglish.web.learningmaterial.topic.admin;
 
+import com.fluentenglish.web.common.exception.errorresponse.BadRequestException;
 import com.fluentenglish.web.common.exception.errorresponse.NotFoundException;
 import com.fluentenglish.web.common.exception.userinput.InputErrorInfo;
 import com.fluentenglish.web.common.exception.userinput.UserInputException;
@@ -60,7 +61,7 @@ public class TopicAPIController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Cannot get topics"));
+            throw new BadRequestException("Cannot get topics");
         }
     }
 
@@ -79,7 +80,7 @@ public class TopicAPIController {
         try {
             return ResponseEntity.ok(Map.of("topics", topicService.searchTopics(topicSearchDto)));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Cannot search topics"));
+            throw new BadRequestException("Cannot search topics");
         }
     }
 
@@ -109,27 +110,27 @@ public class TopicAPIController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getTopicDetailPage(@PathVariable int id, @RequestBody(required = false) TopicCreateUpdateDto submittedTopic) {
-        TopicDto topic = topicService.getTopicById(id);
+        try{
+            TopicDto topic = topicService.getTopicById(id);
 
-        if(topic == null) {
-            throw new NotFoundException("Cannot get topic with id " + id);
+            if (submittedTopic != null) {
+                topicMapper.updateTopicDtoFromCreateUpdateDto(submittedTopic, topic);
+            }
+
+            return ResponseEntity.ok(Map.of(
+                    "topic", topic,
+                    "userInfo", getUserInfo(),
+                    "title", "Chi tiết chủ đề"
+            ));
+        } catch (NotFoundException e) {
+            throw new NotFoundException("Cannot find topic with id " + id);
+        } catch (Exception e) {
+            throw new BadRequestException("Cannot get topic");
         }
-
-        if (submittedTopic != null) {
-            topicMapper.updateTopicDtoFromCreateUpdateDto(submittedTopic, topic);
-        }
-
-        return ResponseEntity.ok(Map.of(
-                "message", "Get topic successfully",
-                "data", Map.of(
-                        "topic", topic,
-                        "userInfo", getUserInfo()
-                )
-        ));
     }
 
     @PostMapping("/{id}/update")
-    public ResponseEntity<?> updateTopic(@PathVariable int id,
+    public ResponseEntity<Map<String, Object>> updateTopic(@PathVariable int id,
                                     @RequestBody @Valid TopicCreateUpdateDto topicDto,
                                     Errors errors) {
         try {
@@ -159,9 +160,9 @@ public class TopicAPIController {
         try {
             topicService.setTopicPublicity(id, isPublic);
         } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Cannot find topic with id " + id));
+            throw new NotFoundException("Cannot find topic with id " + id);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Cannot set publicity"));
+            throw new BadRequestException("Cannot set publicity");
         }
 
         return ResponseEntity.ok(Map.of(
@@ -175,9 +176,9 @@ public class TopicAPIController {
         try {
             topicService.deleteTopic(id);
         } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Cannot find topic with id " + id));
+            throw new NotFoundException("Cannot find topic with id " + id);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Cannot delete topic"));
+            throw new BadRequestException("Cannot delete topic");
         }
 
         return ResponseEntity.ok(Map.of("message", "Delete topic successfully"));
