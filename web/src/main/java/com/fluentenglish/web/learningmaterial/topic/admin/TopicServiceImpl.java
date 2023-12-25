@@ -1,5 +1,6 @@
 package com.fluentenglish.web.learningmaterial.topic.admin;
 
+import com.fluentenglish.web.common.exception.errorresponse.NotFoundException;
 import com.fluentenglish.web.common.exception.userinput.InputErrorInfo;
 import com.fluentenglish.web.common.exception.userinput.UserInputException;
 import com.fluentenglish.web.learningmaterial.lesson.LessonRepository;
@@ -42,8 +43,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     public TopicDto getTopicById(int id) {
-        Topic topic = topicRepository.findById(id).orElseThrow(() -> new RuntimeException("Topic not found"));
-
+        Topic topic = topicRepository.findById(id).orElseThrow(() -> new NotFoundException("Topic not found"));
         return topicMapper.topicToTopicDto(topic);
     }
 
@@ -62,8 +62,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     public void updateTopic(int id, TopicCreateUpdateDto topicDto) {
-        Topic topic = topicRepository.findById(id).orElseThrow(() -> new RuntimeException("Topic not found"));
-
+        Topic topic = topicRepository.findById(id).orElseThrow(() -> new NotFoundException("Topic not found"));
         if (!topic.getName().equals(topicDto.getName()) && topicRepository.existsByName(topicDto.getName())) {
             InputErrorInfo inputErrorInfo =
                     new InputErrorInfo("name",
@@ -81,13 +80,13 @@ public class TopicServiceImpl implements TopicService {
     }
 
     public void setTopicPublicity(int id, boolean isPublic) {
-        Topic topic = topicRepository.findById(id).orElseThrow(() -> new RuntimeException("Topic not found"));
+        Topic topic = topicRepository.findById(id).orElseThrow(() -> new NotFoundException("Topic not found"));
         topic.setPublic(isPublic);
         topicRepository.save(topic);
     }
 
     public void deleteTopic(int id) {
-        Topic topic = topicRepository.findById(id).orElseThrow(() -> new RuntimeException("Topic not found"));
+        Topic topic = topicRepository.findById(id).orElseThrow(() -> new NotFoundException("Topic not found"));
         topicRepository.delete(topic);
     }
 }
