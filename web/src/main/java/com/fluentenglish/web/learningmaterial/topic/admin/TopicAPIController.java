@@ -1,5 +1,6 @@
 package com.fluentenglish.web.learningmaterial.topic.admin;
 
+import com.fluentenglish.web.common.exception.errorresponse.BadRequestException;
 import com.fluentenglish.web.common.exception.errorresponse.NotFoundException;
 import com.fluentenglish.web.common.exception.userinput.InputErrorInfo;
 import com.fluentenglish.web.common.exception.userinput.UserInputException;
@@ -109,23 +110,25 @@ public class TopicAPIController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getTopicDetailPage(@PathVariable int id, @RequestBody(required = false) TopicCreateUpdateDto submittedTopic) {
-        TopicDto topic = topicService.getTopicById(id);
+        try{
+            TopicDto topic = topicService.getTopicById(id);
 
-        if(topic == null) {
+            if (submittedTopic != null) {
+                topicMapper.updateTopicDtoFromCreateUpdateDto(submittedTopic, topic);
+            }
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Get topic successfully",
+                    "data", Map.of(
+                            "topic", topic,
+                            "userInfo", getUserInfo()
+                    )
+            ));
+        } catch(NotFoundException e) {
             throw new NotFoundException("Cannot get topic with id " + id);
+        } catch(Exception e) {
+            throw new BadRequestException("Cannot get topic with id " + id);
         }
-
-        if (submittedTopic != null) {
-            topicMapper.updateTopicDtoFromCreateUpdateDto(submittedTopic, topic);
-        }
-
-        return ResponseEntity.ok(Map.of(
-                "message", "Get topic successfully",
-                "data", Map.of(
-                        "topic", topic,
-                        "userInfo", getUserInfo()
-                )
-        ));
     }
 
     @PostMapping("/{id}/update")
