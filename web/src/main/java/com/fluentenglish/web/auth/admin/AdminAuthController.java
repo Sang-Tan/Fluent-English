@@ -1,18 +1,31 @@
 package com.fluentenglish.web.auth.admin;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import com.fluentenglish.web.auth.dto.LoginDto;
+import com.fluentenglish.web.auth.dto.ResponseToken;
+import com.fluentenglish.web.auth.exception.InvalidLoginCredentialsException;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import java.util.Map;
+
+@RestController
 public class AdminAuthController {
-    @ResponseBody
-    @GetMapping("/admin")
-    public String getAdminPage() {
-        return "Admin Page<br>" + "<a href=\"/admin/logout\">Logout</a>";
+    private final AdminLoginService adminLoginService;
+
+    public AdminAuthController(AdminLoginService adminLoginService) {
+        this.adminLoginService = adminLoginService;
     }
-    @GetMapping("/admin/login")
-    public String getLoginPage() {
-        return "auth/login_admin";
+
+    @PostMapping("/admin/api/login")
+    public ResponseEntity<Map<String, Object>> postLogin(@RequestBody @Valid LoginDto loginDto) {
+        try {
+            ResponseToken responseToken = adminLoginService.login(loginDto);
+            return ResponseEntity.ok(Map.of("data", responseToken));
+        } catch (InvalidLoginCredentialsException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Invalid credentials"));
+        }
     }
 }
