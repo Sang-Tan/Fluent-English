@@ -65,7 +65,10 @@ function Login() {
     setError("Something went wrong!");
   };
 
-  const [request, loading] = useRequest(handleResponse, handleException);
+  const [request, loading] = useRequest({
+    onResponse: handleResponse,
+    onException: handleException,
+  });
 
   return (
     <section className="bg-light p-3 p-md-4 p-xl-5">
