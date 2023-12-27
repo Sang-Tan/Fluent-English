@@ -44,10 +44,7 @@ public class TopicAPIController {
         } catch (Exception e) {
             Map<String, Object> response = Map.of(
                     "message", "Cannot create topic",
-                    "data", Map.of(
-                            "submittedTopic", topicDto,
-                            "userInputErrors", e
-                    )
+                    "error", e.getMessage()
             );
             return ResponseEntity.internalServerError().body(response);
         }
