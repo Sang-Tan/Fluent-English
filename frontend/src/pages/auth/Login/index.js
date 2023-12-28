@@ -45,10 +45,10 @@ function Login() {
    */
   const handleResponse = (response) => {
     if (response.ok) {
-      response.json().then((data) => {
+      response.json().then((respBody) => {
         setAuthInfo({
           isAuthenticated: true,
-          token: data.token,
+          token: respBody.data.accessToken,
         });
         navigate("/");
       });
