@@ -19,7 +19,7 @@ public class CloudinaryStorageService implements StorageService {
     }
 
     @Override
-    public String uploadFile(InputStream inputStream, String folder) {
+    public UploadedFileDto uploadFile(InputStream inputStream, String folder) {
         try {
             Map<String, Object> params = new HashMap<>();
             if (folder != null) {
@@ -32,17 +32,17 @@ public class CloudinaryStorageService implements StorageService {
                     cloudinary.uploader().upload(tempFile, params);
             tempFile.delete();
 
-            return getAssetId(uploadResult);
+            return getUploadedFileDto(uploadResult);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public String getFileUrl(String fileId) {
+    public UploadedFileDto getFileData(String fileId) {
         try {
             Map<?, ?> result = cloudinary.api().resourceByAssetID(fileId, Map.of());
-            return getSecureUrl(result);
+            return getUploadedFileDto(result);
         } catch (BadRequest e) {
             throw new UploadFileNotFoundException(e);
         }
@@ -68,11 +68,11 @@ public class CloudinaryStorageService implements StorageService {
         return tempFile;
     }
 
-    private String getAssetId(Map<?, ?> uploadResult) {
-        return (String) uploadResult.get("asset_id");
-    }
+    private UploadedFileDto getUploadedFileDto(Map<?, ?> uploadResult) {
+        UploadedFileDto uploadedFileDto = new UploadedFileDto();
+        uploadedFileDto.setId((String) uploadResult.get("asset_id"));
+        uploadedFileDto.setUrl((String) uploadResult.get("secure_url"));
 
-    private String getSecureUrl(Map<?, ?> resourceResult) {
-        return (String) resourceResult.get("secure_url");
+        return uploadedFileDto;
     }
 }

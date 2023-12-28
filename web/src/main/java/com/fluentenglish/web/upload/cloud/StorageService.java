@@ -12,12 +12,12 @@ public interface StorageService {
      * @param folder folder in which file will be stored
      * @return file id
      */
-    String uploadFile(InputStream inputStream, String folder);
+    UploadedFileDto uploadFile(InputStream inputStream, String folder);
 
     /**
      * @throws UploadFileNotFoundException if file not found
      */
-    String getFileUrl(String fileId);
+    UploadedFileDto getFileData(String fileId);
 
     void deleteFile(String fileId);
 }

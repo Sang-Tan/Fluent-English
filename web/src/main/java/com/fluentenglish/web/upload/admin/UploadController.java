@@ -1,6 +1,7 @@
 package com.fluentenglish.web.upload.admin;
 
 import com.fluentenglish.web.upload.cloud.StorageService;
+import com.fluentenglish.web.upload.cloud.UploadedFileDto;
 import com.fluentenglish.web.upload.cloud.exception.UploadFileNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,25 +21,24 @@ public class UploadController {
 
     @PostMapping
     public ResponseEntity<Map<?,?>> upload(@RequestParam("file") MultipartFile file,
-                                      @RequestParam("folder") String folder) throws IOException {
+                                                  @RequestParam("folder") String folder) throws IOException {
         if (file.isEmpty()) {
             throw new RuntimeException("File is empty");
         }
 
-        String fileId = storageService.uploadFile(file.getInputStream(), folder);
+        UploadedFileDto uploadedFile = storageService.uploadFile(file.getInputStream(), folder);
 
-        return ResponseEntity.ok(Map.of("id", fileId));
+        return ResponseEntity.ok(Map.of("data", uploadedFile));
     }
 
     @GetMapping("/file/{fileId}")
     public ResponseEntity<Map<?,?>> getFileInfo(@PathVariable String fileId) {
         try {
-            String fileUrl = storageService.getFileUrl(fileId);
-            return ResponseEntity.ok(Map.of("url", fileUrl));
+            UploadedFileDto uploadedFile = storageService.getFileData(fileId);
+            return ResponseEntity.ok(Map.of("data", uploadedFile));
         } catch (UploadFileNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
-
     }
 
     @DeleteMapping("/file/{fileId}")
