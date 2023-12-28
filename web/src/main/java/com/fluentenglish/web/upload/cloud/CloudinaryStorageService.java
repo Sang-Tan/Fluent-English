@@ -19,21 +19,22 @@ public class CloudinaryStorageService implements StorageService {
     }
 
     @Override
-    public UploadedFileDto uploadFile(InputStream inputStream, String folder) {
-        try {
-            Map<String, Object> params = new HashMap<>();
-            if (folder != null) {
-                params.put("folder", folder);
-            }
-            params.put("resource_type", "auto");
+    public UploadedFileDto uploadFile(UploadDto uploadDto) {
+        Map<String, Object> params = new HashMap<>();
+        String folder = uploadDto.getFolder();
+        if (folder != null) {
+            params.put("folder", folder);
+        }
+        params.put("resource_type", getResourceType(uploadDto));
 
-            File tempFile = createTempFile(inputStream);
+        File tempFile = createTempFile(uploadDto.getInputStream(), uploadDto.getExtension());
+        try {
             Map<?, ?> uploadResult =
                     cloudinary.uploader().upload(tempFile, params);
             tempFile.delete();
-
             return getUploadedFileDto(uploadResult);
         } catch (IOException e) {
+            tempFile.delete();
             throw new RuntimeException(e);
         }
     }
@@ -45,9 +46,19 @@ public class CloudinaryStorageService implements StorageService {
             return getUploadedFileDto(result);
         } catch (BadRequest e) {
             throw new UploadFileNotFoundException(e);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public String getResourceType(UploadDto uploadDto) {
+        String mimeType = uploadDto.getMimeType();
+        if (mimeType.startsWith("image")) {
+            return "image";
+        } else if (mimeType.startsWith("video")) {
+            return "video";
+        } else {
+            return "auto";
         }
     }
 
@@ -60,12 +71,18 @@ public class CloudinaryStorageService implements StorageService {
         }
     }
 
-    private File createTempFile(InputStream inputStream) throws IOException {
-        File tempFile = File.createTempFile("temp", null);
-        BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(tempFile));
-        inputStream.transferTo(outputStream);
+    private File createTempFile(InputStream inputStream, String fileExtension) {
+        try {
+            File tempFile = File.createTempFile("temp", fileExtension == null ? "" : "." + fileExtension);
+            BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(tempFile));
+            inputStream.transferTo(outputStream);
 
-        return tempFile;
+            outputStream.close(); //close and flush remaining data into file
+
+            return tempFile;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private UploadedFileDto getUploadedFileDto(Map<?, ?> uploadResult) {

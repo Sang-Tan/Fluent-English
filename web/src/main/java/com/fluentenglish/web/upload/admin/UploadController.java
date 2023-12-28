@@ -1,6 +1,8 @@
 package com.fluentenglish.web.upload.admin;
 
+import com.fluentenglish.web.common.utils.FilenameUtils;
 import com.fluentenglish.web.upload.cloud.StorageService;
+import com.fluentenglish.web.upload.cloud.UploadDto;
 import com.fluentenglish.web.upload.cloud.UploadedFileDto;
 import com.fluentenglish.web.upload.cloud.exception.UploadFileNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,13 @@ public class UploadController {
             throw new RuntimeException("File is empty");
         }
 
-        UploadedFileDto uploadedFile = storageService.uploadFile(file.getInputStream(), folder);
+        UploadDto uploadDto = new UploadDto();
+        uploadDto.setInputStream(file.getInputStream());
+        uploadDto.setFolder(folder);
+        uploadDto.setMimeType(file.getContentType());
+        uploadDto.setExtension(FilenameUtils.getExtension(file.getOriginalFilename()).orElse(null));
+
+        UploadedFileDto uploadedFile = storageService.uploadFile(uploadDto);
 
         return ResponseEntity.ok(Map.of("data", uploadedFile));
     }

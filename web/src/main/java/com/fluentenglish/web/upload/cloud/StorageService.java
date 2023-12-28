@@ -8,11 +8,8 @@ public interface StorageService {
 
     /**
      * Uploads file to cloud storage, file name is generated automatically
-     * @param inputStream file content
-     * @param folder folder in which file will be stored
-     * @return file id
      */
-    UploadedFileDto uploadFile(InputStream inputStream, String folder);
+    UploadedFileDto uploadFile(UploadDto uploadDto);
 
     /**
      * @throws UploadFileNotFoundException if file not found
