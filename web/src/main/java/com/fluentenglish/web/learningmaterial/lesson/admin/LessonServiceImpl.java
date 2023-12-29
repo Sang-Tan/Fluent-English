@@ -1,5 +1,6 @@
 package com.fluentenglish.web.learningmaterial.lesson.admin;
 
+import com.fluentenglish.web.common.exception.errorresponse.NotFoundException;
 import com.fluentenglish.web.learningmaterial.lesson.Lesson;
 import com.fluentenglish.web.learningmaterial.lesson.LessonRepository;
 import com.fluentenglish.web.learningmaterial.lesson.admin.mapper.ServiceLessonMapper;
@@ -42,32 +43,38 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public LessonDto getLessonById(int lessonId) {
-        Lesson lesson = lessonRepository.getReferenceById(lessonId);
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new NotFoundException("Lesson not found"));
 
         return lessonMapper.toLessonDto(lesson);
     }
 
     @Override
     public int getTopicIdOfLesson(int lessonId) {
+        if(!lessonRepository.existsById(lessonId)) {
+            throw new NotFoundException("Lesson not found");
+        }
         return lessonRepository.getTopicIdOfLesson(lessonId);
     }
 
     @Override
     public void updateLesson(int lessonId, LessonUpdateDto lessonUpdateDto) {
-        Lesson lesson = lessonRepository.getReferenceById(lessonId);
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new NotFoundException("Lesson not found"));
         lessonMapper.updateLesson(lessonUpdateDto, lesson);
         lessonRepository.save(lesson);
     }
 
     @Override
     public void setLessonPublicity(int lessonId, boolean isPublic) {
-        Lesson lesson = lessonRepository.getReferenceById(lessonId);
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new NotFoundException("Lesson not found"));
         lesson.setPublic(isPublic);
         lessonRepository.save(lesson);
     }
 
     @Override
     public void deleteLesson(int lessonId) {
+        if(!lessonRepository.existsById(lessonId)) {
+            throw new NotFoundException("Lesson not found");
+        }
         lessonRepository.deleteById(lessonId);
     }
 
@@ -80,7 +87,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public void updateLessonIntroduction(int lessonId, String content) {
-        Lesson lesson = lessonRepository.getReferenceById(lessonId);
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new NotFoundException("Lesson not found"));
 
         Introduction introduction = introductionRepository.findByLessonId(lessonId)
                 .orElse(Introduction.builder().lessonId(lessonId).build());
