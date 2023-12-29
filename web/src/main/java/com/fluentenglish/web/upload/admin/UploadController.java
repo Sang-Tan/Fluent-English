@@ -22,8 +22,10 @@ public class UploadController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<?,?>> upload(@RequestParam("file") MultipartFile file,
-                                                  @RequestParam("folder") String folder) throws IOException {
+    public ResponseEntity<Map<?, ?>> upload(@RequestParam("file") MultipartFile file,
+                                            @RequestParam("folder") String folder,
+                                            @RequestParam(value = "temporary", required = false, defaultValue = "true")
+                                            boolean temporary) throws IOException {
         if (file.isEmpty()) {
             throw new RuntimeException("File is empty");
         }
@@ -34,19 +36,28 @@ public class UploadController {
         uploadDto.setMimeType(file.getContentType());
         uploadDto.setExtension(FilenameUtils.getExtension(file.getOriginalFilename()).orElse(null));
 
-        UploadedFileDto uploadedFile = storageService.uploadFile(uploadDto);
+        UploadedFileDto uploadedFile = temporary
+                ? storageService.uploadFileTemp(uploadDto)
+                : storageService.uploadFile(uploadDto);
 
         return ResponseEntity.ok(Map.of("data", uploadedFile));
     }
 
     @GetMapping("/file/{fileId}")
-    public ResponseEntity<Map<?,?>> getFileInfo(@PathVariable String fileId) {
+    public ResponseEntity<Map<?, ?>> getFileInfo(@PathVariable String fileId) {
         try {
             UploadedFileDto uploadedFile = storageService.getFileData(fileId);
             return ResponseEntity.ok(Map.of("data", uploadedFile));
         } catch (UploadFileNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping("/file/{fileId}/permanent")
+    public ResponseEntity<?> makeFilePermanent(@PathVariable String fileId) {
+        storageService.makeFilePermanent(fileId);
+
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/file/{fileId}")
