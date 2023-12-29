@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/admin/upload")
+@RequestMapping("/admi/api/upload")
 public class UploadController {
     private final StorageService storageService;
 
@@ -22,7 +22,7 @@ public class UploadController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<?, ?>> upload(@RequestParam("file") MultipartFile file,
+    public ResponseEntity<UploadedFileDto> upload(@RequestParam("file") MultipartFile file,
                                             @RequestParam("folder") String folder,
                                             @RequestParam(value = "temporary", required = false, defaultValue = "true")
                                             boolean temporary) throws IOException {
@@ -40,7 +40,7 @@ public class UploadController {
                 ? storageService.uploadFileTemp(uploadDto)
                 : storageService.uploadFile(uploadDto);
 
-        return ResponseEntity.ok(Map.of("data", uploadedFile));
+        return ResponseEntity.ok(uploadedFile);
     }
 
     @GetMapping("/file/{fileId}")
