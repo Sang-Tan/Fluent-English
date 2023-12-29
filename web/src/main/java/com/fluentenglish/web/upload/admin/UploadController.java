@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/admi/api/upload")
+@RequestMapping("/admin/api/upload")
 public class UploadController {
     private final StorageService storageService;
 
@@ -44,10 +43,10 @@ public class UploadController {
     }
 
     @GetMapping("/file/{fileId}")
-    public ResponseEntity<Map<?, ?>> getFileInfo(@PathVariable String fileId) {
+    public ResponseEntity<UploadedFileDto> getFileInfo(@PathVariable String fileId) {
         try {
             UploadedFileDto uploadedFile = storageService.getFileData(fileId);
-            return ResponseEntity.ok(Map.of("data", uploadedFile));
+            return ResponseEntity.ok(uploadedFile);
         } catch (UploadFileNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
