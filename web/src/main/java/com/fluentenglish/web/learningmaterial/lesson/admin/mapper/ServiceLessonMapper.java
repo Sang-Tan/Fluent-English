@@ -11,6 +11,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface ServiceLessonMapper {
     @Mapping(target = "topicId", source = "topic.id")
+    @Mapping(target = "introductionContent", source = "introduction.content")
     LessonDto toLessonDto(Lesson lesson);
 
     Lesson toLesson(LessonDto lessonDto);
