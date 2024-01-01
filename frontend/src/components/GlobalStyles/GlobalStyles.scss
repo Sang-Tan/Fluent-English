@@ -1,3 +1,5 @@
+@import "GlobalColors.scss";
+
 :root {
   scroll-behavior: smooth;
 }
@@ -9,7 +11,7 @@ body {
 }
 
 a {
-  color: #4154f1;
+  color: $theme-color;
   text-decoration: none;
 }
 
@@ -212,7 +214,7 @@ a:hover {
 
 .accordion-flush .accordion-button:not(.collapsed) {
   box-shadow: none;
-  color: #4154f1;
+  color: $theme-color;
 }
 
 .accordion-flush .accordion-body {
@@ -260,13 +262,13 @@ a:hover {
 
 .nav-tabs-bordered .nav-link:hover,
 .nav-tabs-bordered .nav-link:focus {
-  color: #4154f1;
+  color: $theme-color;
 }
 
 .nav-tabs-bordered .nav-link.active {
   background-color: #fff;
-  color: #4154f1;
-  border-bottom: 2px solid #4154f1;
+  color: $theme-color;
+  border-bottom: 2px solid $theme-color;
 }
 
 h1,
