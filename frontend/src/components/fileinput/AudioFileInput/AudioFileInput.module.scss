@@ -1,0 +1,52 @@
+@import "../../GlobalStyles/GlobalColors.scss";
+
+$color-upload: #00ffcd;
+$color-reset: #ff0000;
+$color-text: #fff;
+
+.container {
+  position: relative;
+  .options {
+    position: absolute;
+    top: 0;
+    right: 50%;
+    transform: translate(50%, 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.3rem;
+    padding: 0.5rem 2rem;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    z-index: 9990;
+
+    .button {
+      width: 2rem;
+      height: 2rem;
+      margin: 0 0.2rem;
+      border: none;
+      box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.3);
+      background-color: $theme-color-2;
+      &:hover {
+        cursor: pointer;
+      }
+      svg {
+        width: 100%;
+        height: 100%;
+        color: $color-text;
+      }
+    }
+    .button-reset {
+      border: 1px solid $color-reset;
+    }
+    .button-upload {
+      border: 1px solid $color-upload;
+    }
+  }
+  &:hover {
+    .options {
+      opacity: 1;
+      transform: translate(50%, -100%);
+    }
+  }
+}
