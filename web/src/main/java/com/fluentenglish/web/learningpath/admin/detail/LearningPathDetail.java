@@ -1,4 +1,4 @@
-package com.fluentenglish.web.learningpath.detail;
+package com.fluentenglish.web.learningpath.admin.detail;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fluentenglish.web.learningmaterial.topic.Topic;

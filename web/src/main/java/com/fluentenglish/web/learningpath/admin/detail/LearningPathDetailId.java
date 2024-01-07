@@ -1,4 +1,4 @@
-package com.fluentenglish.web.learningpath.detail;
+package com.fluentenglish.web.learningpath.admin.detail;
 
 import lombok.*;
 
@@ -9,6 +9,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@Builder
 public class LearningPathDetailId implements Serializable {
     private Integer topicId;
     private Integer learningPathId;
