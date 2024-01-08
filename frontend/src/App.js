@@ -1,5 +1,6 @@
 import DefaultLayout from "./components/Layout/DefaultLayout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import { publicRoutes, privateRoutes } from "./routes";
 import { NotFound } from "./pages/error";
@@ -41,11 +42,13 @@ function getAppRoute({ route, isPrivate, index }) {
           <AuthPath>
             <LayoutComponent>
               <PageComponent />
+              <ToastContainer />
             </LayoutComponent>
           </AuthPath>
         ) : (
           <LayoutComponent>
             <PageComponent />
+            <ToastContainer />
           </LayoutComponent>
         )
       }
