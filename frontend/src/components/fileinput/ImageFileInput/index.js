@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { PencilSquare, EyeFill, ArrowClockwise } from "react-bootstrap-icons";
 import { Modal, Button } from "react-bootstrap";
 import classNames from "classnames/bind";
@@ -126,7 +126,6 @@ function ImageFileInput({
           </Button>
         </Modal.Footer>
       </Modal>
-      <ToastContainer />
     </>
   );
 }

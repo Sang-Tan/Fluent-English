@@ -1,7 +1,7 @@
 import { Row, Col, Card, Form, Button, Alert, Spinner } from "react-bootstrap";
 import { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import useRequest from "src/hooks/useRequest";
 import useFetch from "src/hooks/useFetch";
 import "react-toastify/dist/ReactToastify.css";
@@ -100,7 +100,6 @@ function UpdateTopic() {
           </Col>
         </Row>
       </section>
-      <ToastContainer />
     </>
   );
 }
