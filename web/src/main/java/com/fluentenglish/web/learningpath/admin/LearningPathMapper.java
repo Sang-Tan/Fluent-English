@@ -9,7 +9,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface LearningPathMapper{
-    LearningPath learningPathCreateDtoToLearningPath(LearningPathCreateDto learningPathCreateDto);
-    LearningPathDto learningPathToLearningPathDto(LearningPath learningPath);
-    void updateLearningPathFromUpdateDto(LearningPathUpdateDto learningPathUpdateDto, @MappingTarget LearningPath learningPath);
+    LearningPath toLearningPath(LearningPathCreateDto learningPathCreateDto);
+    LearningPathDto ToLearningPathDto(LearningPath learningPath);
+    void updateLearningPath(LearningPathUpdateDto learningPathUpdateDto, @MappingTarget LearningPath learningPath);
 }

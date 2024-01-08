@@ -15,7 +15,6 @@ import java.util.List;
 
 @Service
 @Slf4j
-@Transactional
 public class LearningPathService {
     private final LearningPathRepository learningPathRepository;
     private final LearningPathMapper learningPathMapper;
@@ -31,7 +30,7 @@ public class LearningPathService {
                             "Learning path with this name already exists");
             throw new UserInputException(List.of(inputErrorInfo));
         }
-        LearningPath learningPath = learningPathMapper.learningPathCreateDtoToLearningPath(form);
+        LearningPath learningPath = learningPathMapper.toLearningPath(form);
 
         return learningPathRepository.save(learningPath);
     }
@@ -57,7 +56,7 @@ public class LearningPathService {
                 .orElseThrow(() -> new NotFoundException(
                         String.format("Learning path id: %d not found", learningPathId)));
 
-        learningPathMapper.updateLearningPathFromUpdateDto(form, learningPath);
+        learningPathMapper.updateLearningPath(form, learningPath);
 
         return learningPathRepository.save(learningPath);
     }

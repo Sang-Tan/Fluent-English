@@ -6,6 +6,7 @@ import com.fluentenglish.web.learningmaterial.topic.TopicRepository;
 import com.fluentenglish.web.learningpath.LearningPath;
 import com.fluentenglish.web.learningpath.LearningPathRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,9 +15,9 @@ public class LearningPathDetailService {
     private final LearningPathDetailRepository learningPathDetailRepository;
     private final LearningPathRepository learningPathRepository;
     private final TopicRepository topicRepository;
-    public LearningPathDetailService(LearningPathDetailRepository learningPathDetailRepository
-            , LearningPathRepository learningPathRepository
-            , TopicRepository topicRepository) {
+    public LearningPathDetailService(LearningPathDetailRepository learningPathDetailRepository,
+                                     LearningPathRepository learningPathRepository,
+                                     TopicRepository topicRepository) {
         this.learningPathDetailRepository = learningPathDetailRepository;
         this.learningPathRepository = learningPathRepository;
         this.topicRepository = topicRepository;
@@ -26,6 +27,7 @@ public class LearningPathDetailService {
         return learningPathDetailRepository.findTopicByLearningPathId(learningPathId);
     }
 
+    @Transactional
     public List<LearningPathDetail> setTopicsByLearningPathId(Integer learningPathId, List<Integer> topicIds) {
         List<LearningPathDetail> learningPathDetails = learningPathDetailRepository.findAllByLearningPathId(learningPathId);
         learningPathDetailRepository.deleteAll(learningPathDetails);

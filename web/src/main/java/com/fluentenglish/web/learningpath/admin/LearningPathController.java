@@ -31,7 +31,7 @@ public class LearningPathController {
     {
         LearningPath learningPath = learningPathService.getLearningPath(learningPathId);
 
-        return ResponseEntity.ok(learningPathMapper.learningPathToLearningPathDto(learningPath));
+        return ResponseEntity.ok(learningPathMapper.ToLearningPathDto(learningPath));
     }
 
     @GetMapping
@@ -39,7 +39,7 @@ public class LearningPathController {
 
         List<LearningPath> learningPaths = learningPathService.getAllLearningPath();
         List<LearningPathDto> learningPathDtos = learningPaths.stream()
-                .map(learningPathMapper::learningPathToLearningPathDto)
+                .map(learningPathMapper::ToLearningPathDto)
                 .toList();
 
         return ResponseEntity.ok(learningPathDtos);
@@ -56,7 +56,7 @@ public class LearningPathController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/{learningPathId}/update")
+    @PutMapping("/{learningPathId}/update")
     public ResponseEntity<Void> updateLearningPath(@PathVariable("learningPathId") Integer learningPathId,
                                      @RequestBody @Valid LearningPathUpdateDto form) {
         LearningPath learningPathSaved = learningPathService.updateLearningPath(learningPathId, form);
@@ -65,7 +65,7 @@ public class LearningPathController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{learningPathId}/delete")
+    @DeleteMapping("/{learningPathId}/delete")
     public ResponseEntity<Void> deleteLearningPath(@PathVariable("learningPathId") Integer learningPathId) {
         learningPathService.deleteLearningPath(learningPathId);
         log.debug("delete learning path -> " + learningPathId);
@@ -73,7 +73,7 @@ public class LearningPathController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{learning-path-id}/set-publicity")
+    @PutMapping("/{learning-path-id}/set-publicity")
     public ResponseEntity<Void> setPublicity(@PathVariable("learning-path-id") Integer learningPathId,
                                @RequestParam("is-public") boolean isPublic) {
         LearningPath saved = learningPathService.setLearningPathPublicity(learningPathId, isPublic);

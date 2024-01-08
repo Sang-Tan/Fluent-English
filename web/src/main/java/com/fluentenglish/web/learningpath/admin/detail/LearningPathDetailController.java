@@ -31,7 +31,7 @@ public class LearningPathDetailController {
         return ResponseEntity.ok(topicDtos);
     }
 
-    @PostMapping("/{learningPathId}/topics")
+    @PutMapping("/{learningPathId}/topics")
     public ResponseEntity<Void> setTopicsByLearningPathId(
             @PathVariable("learningPathId") Integer learningPathId
             ,@RequestParam("topic-ids") String topics) {
@@ -44,7 +44,7 @@ public class LearningPathDetailController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{learningPathId}/add-topic/{topicId}")
+    @PutMapping("/{learningPathId}/add-topic/{topicId}")
     public ResponseEntity<Void> addTopicToLearningPath(
             @PathVariable("learningPathId") Integer learningPathId,
             @PathVariable("topicId") Integer topicId
@@ -56,7 +56,7 @@ public class LearningPathDetailController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{learningPathId}/remove-topic/{topicId}")
+    @PutMapping("/{learningPathId}/remove-topic/{topicId}")
     public ResponseEntity<Void> removeTopicFromLearningPath(
             @PathVariable("learningPathId") Integer learningPathId,
             @PathVariable("topicId") Integer topicId
