@@ -45,7 +45,7 @@ public class LearningPathController {
         return ResponseEntity.ok(learningPathDtos);
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<Map<String, Integer>> createLearningPath(@RequestBody @Valid LearningPathCreateDto form) {
         LearningPath learningPathSaved = learningPathService.createLearningPath(form);
         log.debug(learningPathSaved + " created successfully");
@@ -56,7 +56,7 @@ public class LearningPathController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/{learningPathId}/update")
+    @PutMapping("/{learningPathId}")
     public ResponseEntity<Void> updateLearningPath(@PathVariable("learningPathId") Integer learningPathId,
                                      @RequestBody @Valid LearningPathUpdateDto form) {
         LearningPath learningPathSaved = learningPathService.updateLearningPath(learningPathId, form);
@@ -65,19 +65,10 @@ public class LearningPathController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{learningPathId}/delete")
+    @DeleteMapping("/{learningPathId}")
     public ResponseEntity<Void> deleteLearningPath(@PathVariable("learningPathId") Integer learningPathId) {
         learningPathService.deleteLearningPath(learningPathId);
         log.debug("delete learning path -> " + learningPathId);
-
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{learning-path-id}/set-publicity")
-    public ResponseEntity<Void> setPublicity(@PathVariable("learning-path-id") Integer learningPathId,
-                               @RequestParam("is-public") boolean isPublic) {
-        LearningPath saved = learningPathService.setLearningPathPublicity(learningPathId, isPublic);
-        log.debug("set learning path publicity -> " + saved);
 
         return ResponseEntity.noContent().build();
     }

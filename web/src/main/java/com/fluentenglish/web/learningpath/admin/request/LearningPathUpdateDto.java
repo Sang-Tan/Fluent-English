@@ -15,4 +15,7 @@ public class LearningPathUpdateDto {
 
     @Size(max = 1000, message = "Description must not be more than 1000 characters")
     private String description;
+
+    @NotNull(message = "isPublic is mandatory")
+    private Boolean isPublic;
 }

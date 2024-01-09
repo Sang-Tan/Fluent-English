@@ -10,5 +10,7 @@ public interface TopicRepository extends JpaRepository<Topic, Integer> {
     @Query("SELECT t FROM Topic t WHERE lower(t.name) LIKE lower(concat('%', :#{#topicSearchDto.name}, '%'))")
     List<Topic> searchTopics(TopicSearchDto topicSearchDto);
 
+    List<Topic> findAllByIdIn(List<Integer> ids);
+
     boolean existsByName(String name);
 }

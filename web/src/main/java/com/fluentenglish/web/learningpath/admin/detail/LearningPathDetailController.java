@@ -22,8 +22,8 @@ public class LearningPathDetailController {
         this.learningPathDetailService = learningPathDetailService;
         this.serviceTopicMapper = serviceTopicMapper;
     }
-    @GetMapping(value = "/{learningPathId}/topics")
-    public ResponseEntity<List<TopicDto>> getTopicsByLearningPathId(
+    @GetMapping(value = "/{learningPathId}/lessons")
+    public ResponseEntity<List<TopicDto>> getLessonsByLearningPathId(
             @PathVariable("learningPathId") Integer learningPathId) {
         List<Topic> topics = learningPathDetailService.getTopicsByLearningPathId(learningPathId);
         List<TopicDto> topicDtos = topics.stream().map(serviceTopicMapper::topicToTopicDto)
@@ -31,37 +31,16 @@ public class LearningPathDetailController {
         return ResponseEntity.ok(topicDtos);
     }
 
-    @PutMapping("/{learningPathId}/topics")
-    public ResponseEntity<Void> setTopicsByLearningPathId(
+    @PutMapping("/{learningPathId}/lessons")
+    public ResponseEntity<Void> setLessonsForLearningPathId(
             @PathVariable("learningPathId") Integer learningPathId
-            ,@RequestParam("topic-ids") String topics) {
-        List<Integer> topicIds = Arrays.stream(topics.split(",")).map(Integer::parseInt).toList();
+            ,@RequestParam("lesson-ids") String lessons) {
+        List<Integer> lessonIds = Arrays.stream(lessons.split(",")).map(Integer::parseInt).toList();
         List<LearningPathDetail> result = learningPathDetailService
-                .setTopicsByLearningPathId(learningPathId, topicIds);
+                .setTopicsByLearningPathId(learningPathId, lessonIds);
         log.debug(result.stream().map(LearningPathDetail::toString)
                 .collect(Collectors.joining(",")) + " added successfully");
 
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{learningPathId}/add-topic/{topicId}")
-    public ResponseEntity<Void> addTopicToLearningPath(
-            @PathVariable("learningPathId") Integer learningPathId,
-            @PathVariable("topicId") Integer topicId
-    ) {
-        LearningPathDetail result = learningPathDetailService
-                .addTopicToLearningPath(learningPathId, topicId);
-        log.debug(result + " added successfully");
-
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{learningPathId}/remove-topic/{topicId}")
-    public ResponseEntity<Void> removeTopicFromLearningPath(
-            @PathVariable("learningPathId") Integer learningPathId,
-            @PathVariable("topicId") Integer topicId
-    ) {
-        learningPathDetailService.removeTopicFromLearningPath(learningPathId, topicId);
         return ResponseEntity.noContent().build();
     }
 }

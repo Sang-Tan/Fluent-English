@@ -35,49 +35,15 @@ public class LearningPathDetailService {
         LearningPath lpTmp = learningPathRepository.findById(learningPathId).orElseThrow(
                 () -> new NotFoundException(String.format("LearningPath with id %d not found", learningPathId))
         );
+
         return learningPathDetailRepository.saveAll(
-                topicIds.stream().map(topicId -> {
-                    Topic tpTmp = topicRepository.findById(topicId).orElseThrow(
-                            () -> new NotFoundException(String.format("Topic with id %d not found", topicId))
-                    );
-                    LearningPathDetail learningPathDetail = new LearningPathDetail();
-                    learningPathDetail.setLearningPath(lpTmp);
-                    learningPathDetail.setTopic(tpTmp);
-                    return learningPathDetail;
-                }).toList()
+                topicRepository.findAllByIdIn(topicIds).stream()
+                        .map(topic -> {
+                            LearningPathDetail learningPathDetail = new LearningPathDetail();
+                            learningPathDetail.setLearningPath(lpTmp);
+                            learningPathDetail.setTopic(topic);
+                            return learningPathDetail;
+                        }).toList()
         );
-    }
-
-    public LearningPathDetail addTopicToLearningPath(Integer learningPathId, Integer topicId) {
-        LearningPath lpTmp = learningPathRepository.findById(learningPathId).orElseThrow(
-                () -> new NotFoundException(String.format("LearningPath with id %d not found", learningPathId))
-        );
-        Topic tpTmp = topicRepository.findById(topicId).orElseThrow(
-                () -> new NotFoundException(String.format("Topic with id %d not found", topicId))
-        );
-
-        LearningPathDetailId learningPathDetailId = LearningPathDetailId.builder()
-                .learningPathId(learningPathId)
-                .topicId(topicId)
-                .build();
-        if (learningPathDetailRepository.existsById(learningPathDetailId)) {
-            LearningPathDetail learningPathDetail = new LearningPathDetail();
-            learningPathDetail.setLearningPath(lpTmp);
-            learningPathDetail.setTopic(tpTmp);
-            return learningPathDetailRepository.save(learningPathDetail);
-        }
-
-        return null;
-    }
-
-    public void removeTopicFromLearningPath(Integer learningPathId, Integer topicId) {
-        LearningPathDetailId learningPathDetailId = LearningPathDetailId.builder()
-                .learningPathId(learningPathId)
-                .topicId(topicId)
-                .build();
-        if (!learningPathDetailRepository.existsById(learningPathDetailId)) {
-            throw new NotFoundException(String.format("LearningPathDetail with id %s not found", learningPathDetailId));
-        }
-        learningPathDetailRepository.deleteById(learningPathDetailId);
     }
 }
