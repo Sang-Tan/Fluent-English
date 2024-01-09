@@ -10,6 +10,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class LearningPathDetailId implements Serializable {
-    private Integer topicId;
+    private Integer lessonId;
     private Integer learningPathId;
 }

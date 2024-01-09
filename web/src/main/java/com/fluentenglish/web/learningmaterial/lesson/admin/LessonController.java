@@ -1,64 +1,68 @@
 package com.fluentenglish.web.learningmaterial.lesson.admin;
 
-import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonCreateDto;
-import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonUpdateDto;
+import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonCreateUpdateDto;
+import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonSearchDto;
 import com.fluentenglish.web.learningmaterial.lesson.admin.response.LessonDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/api/lessons")
 public class LessonController {
     private final LessonService lessonService;
-
+    
     public LessonController(LessonService lessonService) {
         this.lessonService = lessonService;
     }
 
-    @PostMapping
-    public ResponseEntity<Void> createLesson(@RequestBody @Valid LessonCreateDto lessonCreateDto) {
-        lessonService.createLesson(lessonCreateDto);
+    @GetMapping
+    public ResponseEntity<List<LessonDto>> index(@RequestParam(name = "q", required = false, defaultValue = "") String lessonSearch) {
+        LessonSearchDto lessonSearchDto = new LessonSearchDto();
+        lessonSearchDto.setName(lessonSearch.trim());
+        List<LessonDto> lessons = lessonSearchDto.getName().isEmpty()
+                ? lessonService.getAllLessons()
+                : lessonService.searchLessons(lessonSearchDto);
 
-        return ResponseEntity.created(URI.create("/admin/topic/" + lessonCreateDto.getTopicId())).build();
+        return ResponseEntity.ok(lessons);
     }
 
-    @GetMapping("/{lessonId}")
-    public ResponseEntity<LessonDto> getLesson(@PathVariable int lessonId) {
-        LessonDto lesson = lessonService.getLessonById(lessonId);
+    @PostMapping
+    public ResponseEntity<Void> createLesson(@RequestBody @Valid LessonCreateUpdateDto lessonDto) {
+        lessonService.createLesson(lessonDto);
+
+        return ResponseEntity.created(URI.create("/admin/lesson")).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<LessonDto> lessonDetail(@PathVariable int id) {
+        LessonDto lesson = lessonService.getLessonById(id);
 
         return ResponseEntity.ok(lesson);
     }
 
-    @PutMapping("/{lessonId}")
-    public ResponseEntity<Void> updateLesson(@PathVariable int lessonId,
-                                     @RequestBody @Valid LessonUpdateDto lessonUpdateDto) {
-        lessonService.updateLesson(lessonId, lessonUpdateDto);
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateLesson(@PathVariable int id,
+                                    @RequestBody @Valid LessonCreateUpdateDto lessonDto) {
+        lessonService.updateLesson(id, lessonDto);
 
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{lessonId}/set-publicity")
-    public ResponseEntity<Void> setLessonPublicity(@PathVariable int lessonId,
-                                           @RequestParam boolean isPublic) {
-        lessonService.setLessonPublicity(lessonId, isPublic);
+    @PutMapping("/{id}/set-publicity")
+    public ResponseEntity<Void> setPublicity(@PathVariable int id,
+                               @RequestParam("is-public") boolean isPublic) {
+        lessonService.setLessonPublicity(id, isPublic);
 
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{lessonId}")
-    public ResponseEntity<Void> deleteLesson(@PathVariable int lessonId) {
-        lessonService.deleteLesson(lessonId);
-
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{lessonId}/update-introduction")
-    public ResponseEntity<Void> updateLessonIntroduction(@PathVariable int lessonId,
-                                                 @RequestParam String content) {
-        lessonService.updateLessonIntroduction(lessonId, content);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLesson(@PathVariable int id) {
+        lessonService.deleteLesson(id);
 
         return ResponseEntity.noContent().build();
     }

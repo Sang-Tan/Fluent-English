@@ -21,7 +21,7 @@
 
     <!-- Template Main CSS File -->
     <link href="/css/style.css" rel="stylesheet">
-    <title>Topics</title>
+    <title>Lessons</title>
 </head>
 <body>
 
@@ -34,17 +34,17 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="card-title" style="flex: 1">Topics</h5>
-                            <a href="/admin/topic/create"
+                            <h5 class="card-title" style="flex: 1">Lessons</h5>
+                            <a href="/admin/lesson/create"
                                class="btn btn-primary">Create</a>
                         </div>
-                        <div th:if="${topicDataTable.rows.isEmpty()}">
+                        <div th:if="${lessonDataTable.rows.isEmpty()}">
                             <div class="alert alert-info" role="alert">
-                                No topics found.
+                                No lessons found.
                             </div>
                         </div>
-                        <div th:unless="${topicDataTable.rows.isEmpty()}">
-                            <div th:replace="fragments/data_table :: dataTable(${topicDataTable.rows}, 'topic-data-table', ${topicDataTable.isArrangeable()})"></div>
+                        <div th:unless="${lessonDataTable.rows.isEmpty()}">
+                            <div th:replace="fragments/data_table :: dataTable(${lessonDataTable.rows}, 'lesson-data-table', ${lessonDataTable.isArrangeable()})"></div>
                         </div>
                     </div>
                 </div>
@@ -67,8 +67,8 @@
         {
             id: 'lp-data-table-id',
             config: {
-                isArrangeable: [[${topicDataTable.isArrangeable}]],
-                isPaginable: [[${topicDataTable.isPaginable}]],
+                isArrangeable: [[${lessonDataTable.isArrangeable}]],
+                isPaginable: [[${lessonDataTable.isPaginable}]],
             }
         }
     ];

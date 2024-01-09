@@ -8,17 +8,7 @@ import lombok.Setter;
 public class LessonDto {
     private int id;
 
-    private int position;
-
     private String name;
 
-    private String coreSkill;
-
-    private int difficulty;
-
     private boolean isPublic;
-
-    private int topicId;
-
-    private String introductionContent;
 }

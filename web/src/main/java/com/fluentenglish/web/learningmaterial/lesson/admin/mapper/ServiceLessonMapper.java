@@ -1,22 +1,17 @@
 package com.fluentenglish.web.learningmaterial.lesson.admin.mapper;
 
 import com.fluentenglish.web.learningmaterial.lesson.Lesson;
-import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonCreateDto;
-import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonUpdateDto;
+import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonCreateUpdateDto;
 import com.fluentenglish.web.learningmaterial.lesson.admin.response.LessonDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ServiceLessonMapper {
-    @Mapping(target = "topicId", source = "topic.id")
-    @Mapping(target = "introductionContent", source = "introduction.content")
-    LessonDto toLessonDto(Lesson lesson);
 
-    Lesson toLesson(LessonDto lessonDto);
+    Lesson lessonCreateUpdateDtoToLesson(LessonCreateUpdateDto lessonCreateUpdateDto);
 
-    Lesson toLesson(LessonCreateDto lessonCreateDto);
+    LessonDto lessonToLessonDto(Lesson lesson);
 
-    void updateLesson(LessonUpdateDto lessonUpdateDto, @MappingTarget Lesson lesson);
+    void updateLessonFromDto(LessonCreateUpdateDto lessonCreateUpdateDto, @MappingTarget Lesson lesson);
 }

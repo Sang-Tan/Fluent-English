@@ -1,23 +1,28 @@
 package com.fluentenglish.web.learningmaterial.lesson.admin;
 
-import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonCreateDto;
-import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonUpdateDto;
+import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonCreateUpdateDto;
+import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonSearchDto;
 import com.fluentenglish.web.learningmaterial.lesson.admin.response.LessonDto;
 
+import java.util.List;
+import java.util.Map;
+
 public interface LessonService {
-    void createLesson(LessonCreateDto lessonCreateDto);
+    void createLesson(LessonCreateUpdateDto lessonDto);
 
-    LessonDto getLessonById(int lessonId);
+    LessonDto getLessonById(int id);
 
-    int getTopicIdOfLesson(int lessonId);
+    boolean lessonExistsById(int id);
 
-    void updateLesson(int lessonId, LessonUpdateDto lessonCreateDto);
+    List<LessonDto> getAllLessons();
 
-    void setLessonPublicity(int lessonId, boolean isPublic);
+    List<LessonDto> searchLessons(LessonSearchDto lessonSearchDto);
 
-    void deleteLesson(int lessonId);
+    void updateLesson(int id, LessonCreateUpdateDto lessonDto);
 
-    String getLessonIntroduction(int lessonId);
+    void changeExercisePosition(Map<Integer, Integer> newPositionMap);
 
-    void updateLessonIntroduction(int lessonId, String content);
+    void setLessonPublicity(int id, boolean isPublic);
+
+    void deleteLesson(int id);
 }

@@ -1,6 +1,6 @@
 package com.fluentenglish.web.learningmaterial.quiz;
 
-import com.fluentenglish.web.learningmaterial.lesson.Lesson;
+import com.fluentenglish.web.learningmaterial.exercise.Exercise;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +24,6 @@ public class Quiz {
     private String answer;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "lesson_id", nullable = false)
-    private Lesson lesson;
+    @JoinColumn(name = "exercise_id", nullable = false)
+    private Exercise exercise;
 }

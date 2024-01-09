@@ -1,8 +1,6 @@
 package com.fluentenglish.web.learningmaterial.lesson;
 
-import com.fluentenglish.web.learningmaterial.lesson.introduction.Introduction;
-import com.fluentenglish.web.learningmaterial.quiz.Quiz;
-import com.fluentenglish.web.learningmaterial.topic.Topic;
+import com.fluentenglish.web.learningmaterial.exercise.Exercise;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,30 +18,13 @@ public class Lesson {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column
-    private Integer position;
-
-    @Column
     private String name;
-
-    @Column(name = "core_skill")
-    @Enumerated(EnumType.STRING)
-    private CoreSkill coreSkill;
-
-    private Byte difficulty;
 
     @Column
     @Builder.Default
     private boolean isPublic = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "topic_id")
-    private Topic topic;
-
-    @OneToOne(mappedBy = "lesson", fetch = FetchType.LAZY)
-    private Introduction introduction;
-
     @OneToMany(mappedBy = "lesson")
     @OrderBy("position ASC")
-    private List<Quiz> quizzes;
+    private List<Exercise> exercises;
 }
