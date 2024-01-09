@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useRequest from "src/hooks/useRequest";
 
-function CreateTopic() {
+function CreateLesson() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState(null);
   const [paramError, setParamError] = useState(null);
@@ -11,7 +11,7 @@ function CreateTopic() {
   const handleResponse = useCallback(
     async (response) => {
       if (response.ok) {
-        navigate("/topic");
+        navigate("/lesson");
       } else if (response.status === 400) {
         const data = await response.json();
         setParamError(data?.paramError);
@@ -48,7 +48,7 @@ function CreateTopic() {
       },
     };
 
-    request("/topics", options);
+    request("/lessons", options);
   };
 
   return (
@@ -57,7 +57,7 @@ function CreateTopic() {
         <Col>
           <Card>
             <Card.Body>
-              <Card.Title>Create Topic</Card.Title>
+              <Card.Title>Create Lesson</Card.Title>
               {errorMessage && (
                 <Alert
                   variant="danger"
@@ -95,4 +95,4 @@ function CreateTopic() {
   );
 }
 
-export default CreateTopic;
+export default CreateLesson;

@@ -1,4 +1,4 @@
-import { TopicsList, CreateTopic, UpdateTopic } from "src/pages/topic";
+import { LessonList, CreateLesson, LessonDetail } from "src/pages/lesson";
 import Login from "src/pages/auth/Login";
 
 const privateRoutes = [
@@ -6,16 +6,16 @@ const privateRoutes = [
     path: "/",
   },
   {
-    path: "/topic",
-    page: TopicsList,
+    path: "/lesson",
+    page: LessonList,
   },
   {
-    path: "/topic/create",
-    page: CreateTopic,
+    path: "/lesson/create",
+    page: CreateLesson,
   },
   {
-    path: "/topic/:topicId",
-    page: UpdateTopic,
+    path: "/lesson/:lessonId",
+    page: LessonDetail,
   },
   {
     path: "/learning-path",
