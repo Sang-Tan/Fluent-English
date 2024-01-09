@@ -1,0 +1,17 @@
+.type-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .title {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+}
+
+.answer-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  padding: 1rem;
+}

@@ -1,0 +1,39 @@
+.choice-wrapper {
+  margin: 1rem 0;
+  .choice {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    width: 100%;
+    // border: 1px solid #ccc;
+
+    .correct-btn {
+      background-color: #7ab37c;
+      color: #fff;
+      border: none;
+      width: 2rem;
+
+      &:hover {
+        background-color: #4caf50;
+      }
+    }
+
+    .correct-btn.selected {
+      background-color: #4caf50;
+    }
+
+    .content {
+      flex: 1;
+    }
+  }
+  .remove-btn {
+    background-color: #ff3636;
+    color: #fff;
+    border: none;
+    width: 100%;
+
+    &:hover {
+      background-color: #ff0000;
+    }
+  }
+}
