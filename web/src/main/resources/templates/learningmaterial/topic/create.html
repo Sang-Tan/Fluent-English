@@ -16,7 +16,7 @@
     <!-- Vendor CSS Files -->
     <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <title>Create new topic</title>
+    <title>Create new lesson</title>
 
     <!-- Template Main CSS File -->
     <link href="/css/style.css" rel="stylesheet">
@@ -27,7 +27,7 @@
 <main id="main" class="main">
     <nav>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/admin/topic">Topics</a></li>
+            <li class="breadcrumb-item"><a href="/admin/lesson">Lessons</a></li>
         </ol>
     </nav>
     <section class="section">
@@ -35,11 +35,11 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Create Topic</h5>
-                        <form method="post" id="topic-form" action="/admin/topic/create" class="row g-3">
+                        <h5 class="card-title">Create Lesson</h5>
+                        <form method="post" id="lesson-form" action="/admin/lesson/create" class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" name="name" id="name" th:value="${submittedTopic?.name}" th:classappend="${userInputErrors?.hasErrors('name')}? 'is-invalid' : ''">
+                                    <input type="text" class="form-control" name="name" id="name" th:value="${submittedLesson?.name}" th:classappend="${userInputErrors?.hasErrors('name')}? 'is-invalid' : ''">
                                     <label for="name">Name</label>
                                     <div class="invalid-feedback">
                                         <span th:if="${userInputErrors?.hasErrors('name')}" th:text="${userInputErrors.getFirstErrorMessage('name')}"></span>

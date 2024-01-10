@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <body>
-<div class="row g-3 mt-0" th:fragment="formInput(topicId, lesson, userInputErrors)">
+<div class="row g-3 mt-0" th:fragment="formInput(lessonId, exercise, userInputErrors)">
   <div class="col-12">
     <div class="form-floating">
-      <input type="text" class="form-control" name="name" id="name" th:value="${lesson?.name}"
+      <input type="text" class="form-control" name="name" id="name" th:value="${exercise?.name}"
              th:classappend="${userInputErrors?.hasErrors('name')}? 'is-invalid' : ''">
       <label for="name">Name</label>
       <div class="invalid-feedback">
@@ -18,10 +18,10 @@
     <div class="form-floating">
       <select class="form-select" name="coreSkill" id="coreSkill"
               th:classappend="${userInputErrors?.hasErrors('coreSkill')}? 'is-invalid' : ''">
-        <option value="" th:selected="${lesson?.coreSkill == null}" disabled hidden>Select core skill</option>
-        <option value="READING" th:selected="${lesson?.coreSkill == 'READING'}">Reading</option>
-        <option value="LISTENING" th:selected="${lesson?.coreSkill == 'LISTENING'}">Listening</option>
-        <option value="WRITING" th:selected="${lesson?.coreSkill == 'WRITING'}">Writing</option>
+        <option value="" th:selected="${exercise?.coreSkill == null}" disabled hidden>Select core skill</option>
+        <option value="READING" th:selected="${exercise?.coreSkill == 'READING'}">Reading</option>
+        <option value="LISTENING" th:selected="${exercise?.coreSkill == 'LISTENING'}">Listening</option>
+        <option value="WRITING" th:selected="${exercise?.coreSkill == 'WRITING'}">Writing</option>
       </select>
       <label for="coreSkill">Core skill</label>
       <div class="invalid-feedback">
@@ -35,10 +35,10 @@
     <div class="form-floating">
       <select class="form-select" name="difficulty" id="difficulty"
               th:classappend="${userInputErrors?.hasErrors('difficulty')}? 'is-invalid' : ''">
-        <option value="" th:selected="${lesson?.difficulty == null}" disabled hidden>Select difficulty</option>
-        <option value="1" th:selected="${lesson?.difficulty == 1}">Easy</option>
-        <option value="2" th:selected="${lesson?.difficulty == 2}">Medium</option>
-        <option value="3" th:selected="${lesson?.difficulty == 3}">Hard</option>
+        <option value="" th:selected="${exercise?.difficulty == null}" disabled hidden>Select difficulty</option>
+        <option value="1" th:selected="${exercise?.difficulty == 1}">Easy</option>
+        <option value="2" th:selected="${exercise?.difficulty == 2}">Medium</option>
+        <option value="3" th:selected="${exercise?.difficulty == 3}">Hard</option>
       </select>
       <label for="difficulty">Difficulty</label>
       <div class="invalid-feedback">
@@ -48,7 +48,7 @@
       </div>
     </div>
   </div>
-  <input type="hidden" name="topicId" id="topicId" th:value="${topicId}">
+  <input type="hidden" name="lessonId" id="lessonId" th:value="${lessonId}">
 </div>
 </body>
 </html>

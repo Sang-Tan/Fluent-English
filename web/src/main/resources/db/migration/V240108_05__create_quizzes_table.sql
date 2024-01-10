@@ -2,8 +2,8 @@ CREATE TABLE IF NOT EXISTS quizzes
 (
     id SERIAL PRIMARY KEY,
 
-    lesson_id INTEGER NOT NULL
-        REFERENCES lessons (id) ON DELETE CASCADE,
+    exercise_id INTEGER NOT NULL
+        REFERENCES exercises (id) ON DELETE CASCADE,
 
     position INTEGER NOT NULL,
 
@@ -16,5 +16,5 @@ CREATE TABLE IF NOT EXISTS quizzes
         CONSTRAINT question_answers__answer__is_object
         CHECK (jsonb_typeof(answer) = 'object'),
 
-    UNIQUE (lesson_id, position) DEFERRABLE INITIALLY DEFERRED
+    UNIQUE (exercise_id, position) DEFERRABLE INITIALLY DEFERRED
 );

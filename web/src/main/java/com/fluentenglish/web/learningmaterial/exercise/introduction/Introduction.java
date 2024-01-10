@@ -1,6 +1,6 @@
-package com.fluentenglish.web.learningmaterial.lesson.introduction;
+package com.fluentenglish.web.learningmaterial.exercise.introduction;
 
-import com.fluentenglish.web.learningmaterial.lesson.Lesson;
+import com.fluentenglish.web.learningmaterial.exercise.Exercise;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,12 +13,12 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Introduction {
     @Id
-    @Column(name = "lesson_id")
-    private Integer lessonId;
+    @Column(name = "exercise_id")
+    private Integer exerciseId;
 
     private String content;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lesson_id")
-    private Lesson lesson;
+    @JoinColumn(name = "exercise_id")
+    private Exercise exercise;
 }

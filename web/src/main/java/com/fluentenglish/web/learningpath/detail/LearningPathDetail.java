@@ -1,13 +1,13 @@
 package com.fluentenglish.web.learningpath.detail;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fluentenglish.web.learningmaterial.topic.Topic;
+import com.fluentenglish.web.learningmaterial.lesson.Lesson;
 import com.fluentenglish.web.learningpath.LearningPath;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "topic_and_learning_path")
+@Table(name = "lesson_and_learning_path")
 @Getter
 @Setter
 @Builder
@@ -18,9 +18,9 @@ public class LearningPathDetail {
     private LearningPathDetailId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("topicId")
-    @JoinColumn(name = "topic_id")
-    private Topic topic;
+    @MapsId("lessonId")
+    @JoinColumn(name = "lesson_id")
+    private Lesson lesson;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("learningPathId")
