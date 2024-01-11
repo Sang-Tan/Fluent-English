@@ -24,9 +24,8 @@ function Login() {
     const data = new FormData(event.currentTarget);
 
     const requestData = {
-      email: data.get("email"),
+      username: data.get("email"),
       password: data.get("password"),
-      rememberMe: data.get("rememberMe"),
     };
 
     const options = {
