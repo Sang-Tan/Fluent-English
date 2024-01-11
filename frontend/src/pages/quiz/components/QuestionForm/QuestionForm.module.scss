@@ -1,0 +1,16 @@
+.image-inp-wrapper {
+  position: relative;
+  width: 500px;
+  .ratio-wrapper {
+    width: 100%;
+    padding-top: 56.25%;
+    position: relative;
+    .image-inp {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+  }
+}
