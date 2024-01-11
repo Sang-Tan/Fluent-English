@@ -3,6 +3,8 @@ package com.fluentenglish.web.learningmaterial.quiz;
 import com.fluentenglish.web.learningmaterial.exercise.Exercise;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "quizzes")
@@ -17,9 +19,11 @@ public class Quiz {
     private Integer id;
     private Integer position;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "JSONB")
     private String question;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "JSONB")
     private String answer;
 
