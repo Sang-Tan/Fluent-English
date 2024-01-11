@@ -11,4 +11,6 @@ public interface LessonRepository extends JpaRepository<Lesson, Integer> {
     List<Lesson> searchLessons(LessonSearchDto lessonSearchDto);
 
     boolean existsByName(String name);
+
+    List<Lesson> findAllByIdIn(List<Integer> ids);
 }
