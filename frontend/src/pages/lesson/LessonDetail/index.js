@@ -6,15 +6,17 @@ import useRequest from "src/hooks/useRequest";
 import useFetch from "src/hooks/useFetch";
 import "react-toastify/dist/ReactToastify.css";
 
-function UpdateTopic() {
-  const { topicId } = useParams();
-  const { data: topic, loading: fetchLoading } = useFetch(`/topics/${topicId}`);
+function LessonDetail() {
+  const { lessonId } = useParams();
+  const { data: lesson, loading: fetchLoading } = useFetch(
+    `/lessons/${lessonId}`
+  );
   const [errorMessage, setErrorMessage] = useState(null);
   const [paramError, setParamError] = useState(null);
 
   const handleUpdateResponse = useCallback(async (response) => {
     if (response.ok) {
-      toast.success("Topic updated successfully");
+      toast.success("Lesson updated successfully");
     } else if (response.status === 400) {
       const data = await response.json();
       setParamError(data?.paramError);
@@ -25,7 +27,7 @@ function UpdateTopic() {
 
   const handleUpdateException = useCallback((exception) => {
     setErrorMessage("Something went wrong");
-    console.error("Error while updating topic", exception);
+    console.error("Error while updating lesson", exception);
   }, []);
 
   const [request, loading] = useRequest({
@@ -50,7 +52,7 @@ function UpdateTopic() {
       },
     };
 
-    request("/topics/" + topicId, options);
+    request("/lessons/" + lessonId, options);
   };
 
   return (
@@ -60,7 +62,7 @@ function UpdateTopic() {
           <Col>
             <Card>
               <Card.Body>
-                <Card.Title>Update Topic</Card.Title>
+                <Card.Title>Update Lesson</Card.Title>
                 {fetchLoading ? (
                   <Spinner animation="border" />
                 ) : (
@@ -79,7 +81,7 @@ function UpdateTopic() {
                       <Form.Control
                         type="text"
                         name="name"
-                        defaultValue={topic?.name}
+                        defaultValue={lesson?.name}
                         isInvalid={paramError?.name}
                       />
                       <Form.Control.Feedback type="invalid">
@@ -104,4 +106,4 @@ function UpdateTopic() {
   );
 }
 
-export default UpdateTopic;
+export default LessonDetail;

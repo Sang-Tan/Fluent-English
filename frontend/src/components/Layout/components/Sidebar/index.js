@@ -12,7 +12,7 @@ function Sidebar({ show }) {
     <aside id="sidebar" className={cx("sidebar", { show })}>
       <ul className={cx("sidebar-nav")} id="sidebar-nav">
         <NavItem href="/" title="Dashboard" icon={Grid} />
-        <NavItem href="/topic" title="Topics" icon={Book} />
+        <NavItem href="/lesson" title="Lesson" icon={Book} />
         <NavItem href="/learning-path" title="Learning paths" icon={Signpost} />
         <ExpandNavItem
           title="Learning materials"

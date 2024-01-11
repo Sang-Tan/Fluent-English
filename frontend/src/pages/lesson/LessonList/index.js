@@ -5,12 +5,12 @@ import DataTable from "src/components/DataTable";
 import { useState, useEffect } from "react";
 import useFetch from "src/hooks/useFetch";
 
-function TopicList() {
-  const { data: respTopics, loading } = useFetch("/topics", {
+function LessonList() {
+  const { data: respLessons, loading } = useFetch("/lessons", {
     initialData: [],
   });
 
-  const [topics, setTopics] = useState([]);
+  const [lessons, setLessons] = useState([]);
 
   const columns = [
     {
@@ -24,32 +24,32 @@ function TopicList() {
     },
   ];
 
-  topics.forEach((topic) => {
-    topic.details = (
-      <Link to={`/topic/${topic.id}`}>
+  lessons.forEach((lesson) => {
+    lesson.details = (
+      <Link to={`/lesson/${lesson.id}`}>
         <Button variant="primary">Details</Button>
       </Link>
     );
   });
 
   useEffect(() => {
-    setTopics(respTopics || []);
-  }, [respTopics]);
+    setLessons(respLessons || []);
+  }, [respLessons]);
 
   return (
     <section>
       <Card>
         <CardBody>
           <div className="d-flex justify-content-between align-items-center">
-            <CardTitle>Topics</CardTitle>
-            <Link to="/topic/create">
+            <CardTitle>Lessons</CardTitle>
+            <Link to="/lesson/create">
               <Button variant="primary">Create</Button>
             </Link>
           </div>
           {loading ? (
             <div>Loading...</div>
           ) : (
-            <DataTable columns={columns} data={topics} />
+            <DataTable columns={columns} data={lessons} />
           )}
         </CardBody>
       </Card>
@@ -57,4 +57,4 @@ function TopicList() {
   );
 }
 
-export default TopicList;
+export default LessonList;
