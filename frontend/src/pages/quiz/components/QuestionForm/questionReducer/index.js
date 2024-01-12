@@ -46,6 +46,7 @@ const questionReducer = (questionState, action) => {
  * @returns {import("../typeDefs").QuestionState}
  */
 const initializeQuestion = (initialQuestion) => {
+  /** @type {import("../typeDefs").QuestionState} */
   const state = {};
   state.content = initialQuestion?.content || "";
   if (initialQuestion?.attachment) {
@@ -53,6 +54,7 @@ const initializeQuestion = (initialQuestion) => {
       type: initialQuestion.attachment.type || DEFAULT_ATTACHMENT_TYPE,
       url: initialQuestion.attachment.url || null,
       pendingUrl: null,
+      savedData: initialQuestion.attachment,
     };
   }
   return state;

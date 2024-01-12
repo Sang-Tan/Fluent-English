@@ -44,15 +44,15 @@ const AudioInputChoice = forwardRef(({ data }, ref) => {
       }
 
       const formData = new FormData();
-      formData.append("file", pendingUrl);
+      formData.append(
+        "file",
+        await fetch(pendingUrl).then((resp) => resp.blob())
+      );
       formData.append("folder", uploadFolder);
 
       const resp = await request(`/upload`, {
         method: "POST",
-        data: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        body: formData,
       });
 
       const respData = await resp.json();
