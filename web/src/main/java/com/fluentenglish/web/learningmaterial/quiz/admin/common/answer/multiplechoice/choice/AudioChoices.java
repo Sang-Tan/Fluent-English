@@ -5,5 +5,5 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AudioChoices extends AnswerChoices<AudioChoiceDto>{
+public class AudioChoices extends MediaChoices<AudioChoiceDto>{
 }

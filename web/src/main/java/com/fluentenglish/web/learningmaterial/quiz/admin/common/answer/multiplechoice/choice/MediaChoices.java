@@ -2,5 +2,5 @@ package com.fluentenglish.web.learningmaterial.quiz.admin.common.answer.multiple
 
 import com.fluentenglish.web.learningmaterial.quiz.admin.common.media.MediaDto;
 
-public class MediaChoices<T extends MediaDto> extends AnswerChoices<T> {
+public abstract class MediaChoices<T extends MediaDto> extends AnswerChoices<T> {
 }

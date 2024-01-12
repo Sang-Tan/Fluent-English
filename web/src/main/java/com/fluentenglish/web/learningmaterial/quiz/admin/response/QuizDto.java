@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class QuizDto {
-    private int id;
-    private int exerciseId;
+    private Integer id;
+    private Integer exerciseId;
     private JsonNode question;
     private JsonNode answer;
 }
