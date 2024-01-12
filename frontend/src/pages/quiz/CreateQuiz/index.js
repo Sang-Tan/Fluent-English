@@ -67,7 +67,7 @@ function CreateQuiz() {
     };
 
     setSubmitting(true);
-    const resp = await request(`/exercises/${exerciseId}/quizzes`, {
+    const resp = await request(`/quizzes`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

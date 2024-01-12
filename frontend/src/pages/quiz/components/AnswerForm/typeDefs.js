@@ -15,9 +15,13 @@
  * @property {string} url
  */
 /**
+ * @typedef {Object} AnswerChoiceData
+ * @property {string} type - "audio" | "text"
+ * @property {string[] | AudioAnswerData[]} data
+ */
+/**
  * @typedef {Object} MultipleChoiceAnswerDetail
- * @property {string} choiceType - "audio" | "text"
- * @property {string[] | AudioAnswerData[]} choices
+ * @property {AnswerChoiceData} choices
  * @property {string} correctChoice - index of the correct choice (0-based)
  * @typedef {AnswerData & MultipleChoiceAnswerDetail} MultipleChoiceAnswerData
  */

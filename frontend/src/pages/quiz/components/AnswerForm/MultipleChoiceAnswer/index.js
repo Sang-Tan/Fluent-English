@@ -115,9 +115,11 @@ const MultipleChoiceAnswer = forwardRef(({ data = initialAnswer }, ref) => {
       );
 
       return {
-        choiceType: answerState.choiceType,
         correctChoice: correctChoiceIndex,
-        choices: validatedChoices,
+        choices: {
+          type: answerState.choiceType,
+          data: validatedChoices,
+        },
       };
     },
   }));
