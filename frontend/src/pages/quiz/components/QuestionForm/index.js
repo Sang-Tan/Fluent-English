@@ -72,6 +72,8 @@ const QuestionForm = forwardRef(
       async validateAndGetData() {
         setValidationError(null);
         const errors = {};
+
+        /** @type {QuestionData} */
         const extractedData = {};
 
         if (!content) {
@@ -85,6 +87,8 @@ const QuestionForm = forwardRef(
           if (uploadedAttachment) {
             extractedData.attachment = uploadedAttachment;
             extractedData.attachment.type = attachment.type;
+          } else {
+            extractedData.attachment = attachment?.savedData || undefined;
           }
         } catch (error) {
           errors.attachment = error.message;
@@ -99,29 +103,32 @@ const QuestionForm = forwardRef(
       },
     }));
 
+    /**
+     * @returns {Promise<import("./typeDefs").AttachmentData> | Promise<null>}
+     */
     const tryUploadAttachment = async () => {
       if (!attachment) {
-        return;
+        return null;
       }
 
       if (!attachment.pendingUrl) {
         if (attachment?.url) {
-          return;
+          return null;
         } else {
           throw Error("No attachment");
         }
       }
 
       const formData = new FormData();
-      formData.append("file", attachment.pendingUrl);
+      formData.append(
+        "file",
+        await fetch(attachment.pendingUrl).then((r) => r.blob())
+      );
       formData.append("folder", uploadFolder);
 
       const resp = await request("/upload", {
         method: "POST",
-        data: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        body: formData,
       });
 
       if (!resp.ok) {
