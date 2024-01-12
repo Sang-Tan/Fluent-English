@@ -1,8 +1,8 @@
 package com.fluentenglish.web.learningpath.admin;
 
-import com.fluentenglish.web.learningmaterial.topic.Topic;
-import com.fluentenglish.web.learningmaterial.topic.admin.mapper.ServiceTopicMapper;
-import com.fluentenglish.web.learningmaterial.topic.admin.response.TopicDto;
+import com.fluentenglish.web.learningmaterial.lesson.Lesson;
+import com.fluentenglish.web.learningmaterial.lesson.admin.mapper.ServiceLessonMapper;
+import com.fluentenglish.web.learningmaterial.lesson.admin.response.LessonDto;
 import com.fluentenglish.web.learningpath.LearningPath;
 import com.fluentenglish.web.learningpath.admin.detail.LearningPathDetail;
 import com.fluentenglish.web.learningpath.admin.request.LearningPathCreateDto;
@@ -24,15 +24,15 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin/api/learning-path")
 @Slf4j
 public class LearningPathController {
-    private final LearningPathService learningPathService;
+    private final LearningPathServiceImpl learningPathService;
     private final LearningPathMapper learningPathMapper;
-    private final ServiceTopicMapper serviceTopicMapper;
-    public LearningPathController(LearningPathService learningPathService,
+    private final ServiceLessonMapper serviceLessonMapper;
+    public LearningPathController(LearningPathServiceImpl learningPathService,
                                   LearningPathMapper learningPathMapper,
-                                  ServiceTopicMapper serviceTopicMapper) {
+                                  ServiceLessonMapper serviceLessonMapper) {
         this.learningPathService = learningPathService;
         this.learningPathMapper = learningPathMapper;
-        this.serviceTopicMapper = serviceTopicMapper;
+        this.serviceLessonMapper = serviceLessonMapper;
     }
 
     @GetMapping(value = "/{learningPathId}")
@@ -91,12 +91,12 @@ public class LearningPathController {
     }
 
     @GetMapping(value = "/{learningPathId}/lessons")
-    public ResponseEntity<List<TopicDto>> getLessonsByLearningPathId(
+    public ResponseEntity<List<LessonDto>> getLessonsByLearningPathId(
             @PathVariable("learningPathId") Integer learningPathId) {
-        List<Topic> topics = learningPathService.getTopicsByLearningPathId(learningPathId);
-        List<TopicDto> topicDtos = topics.stream().map(serviceTopicMapper::topicToTopicDto)
+        List<Lesson> lessons = learningPathService.getLessonsByLearningPathId(learningPathId);
+        List<LessonDto> lessonDtos = lessons.stream().map(serviceLessonMapper::lessonToLessonDto)
                 .toList();
-        return ResponseEntity.ok(topicDtos);
+        return ResponseEntity.ok(lessonDtos);
     }
 
     @PutMapping("/{learningPathId}/lessons")
@@ -105,7 +105,7 @@ public class LearningPathController {
             ,@RequestParam("lesson-ids") String lessons) {
         List<Integer> lessonIds = Arrays.stream(lessons.split(",")).map(Integer::parseInt).toList();
         List<LearningPathDetail> result = learningPathService
-                .setTopicsByLearningPathId(learningPathId, lessonIds);
+                .setLessonsByLearningPathId(learningPathId, lessonIds);
         log.debug(result.stream().map(LearningPathDetail::toString)
                 .collect(Collectors.joining(",")) + " added successfully");
 
