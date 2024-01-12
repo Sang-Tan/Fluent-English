@@ -27,7 +27,7 @@ public class Quiz {
     @Column(columnDefinition = "JSONB")
     private String answer;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id", nullable = false)
     private Exercise exercise;
 }
