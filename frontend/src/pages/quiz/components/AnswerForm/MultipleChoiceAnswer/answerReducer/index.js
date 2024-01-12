@@ -12,9 +12,11 @@ const DEFAULT_CHOICE_TYPE = CHOICE_TEXT;
 
 /** @type {import("../../typeDefs").MultipleChoiceAnswerDetail} */
 const initialAnswer = {
-  choices: [],
+  choices: {
+    type: DEFAULT_CHOICE_TYPE,
+    data: [],
+  },
   correctChoice: -1,
-  choiceType: DEFAULT_CHOICE_TYPE,
 };
 
 /**
@@ -50,7 +52,8 @@ const initializeAnswer = (data) => {
   }
   return {
     ...data,
-    choices: data.choices.map((choice, index) => {
+    choiceType: data.choices.type,
+    choices: data.choices.data.map((choice, index) => {
       return {
         data: choice,
         key: index,
