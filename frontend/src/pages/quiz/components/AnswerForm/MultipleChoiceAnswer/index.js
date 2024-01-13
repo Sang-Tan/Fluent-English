@@ -43,14 +43,14 @@ const MIN_CHOICES = 2;
 /**
  * @type {React.ForwardRefExoticComponent<React.PropsWithoutRef<MultipleChoiceAnswerProps> & React.RefAttributes<MultipleChoiceAnswerRef>>}
  */
-const MultipleChoiceAnswer = forwardRef(({ data = initialAnswer }, ref) => {
+const MultipleChoiceAnswer = forwardRef(({ data }, ref) => {
   const [answerState, dispatch] = useReducer(
     answerReducer,
-    data || initialAnswer,
+    data,
     initializeAnswer
   );
   const [validationErrors, setValidationErrors] = useState(null);
-
+  console.log("answerState", answerState);
   useEffect(() => {
     dispatch({
       type: answerActions.INIT_STATE,
