@@ -1,9 +1,15 @@
 package com.fluentenglish.web.common.exception.userinput;
 
+import java.util.Collections;
 import java.util.List;
 
 public class UserInputException extends RuntimeException implements UserInputErrors{
     private final UserInputErrors errors;
+
+    public UserInputException(String message) {
+        super(message);
+        this.errors = new UserInputErrorsImpl(Collections.emptyList());
+    }
 
     public UserInputException(List<InputErrorInfo> errors) {
         this.errors = new UserInputErrorsImpl(errors);
