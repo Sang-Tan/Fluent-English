@@ -48,8 +48,9 @@ const answerReducer = (state, action) => {
  */
 const initializeAnswer = (data) => {
   if (!data) {
-    return initialAnswer;
+    data = initialAnswer;
   }
+
   return {
     ...data,
     choiceType: data.choices.type,
