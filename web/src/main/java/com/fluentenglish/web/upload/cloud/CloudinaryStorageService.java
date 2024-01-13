@@ -1,74 +1,66 @@
 package com.fluentenglish.web.upload.cloud;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.api.exceptions.NotFound;
-import com.fluentenglish.web.upload.cloud.exception.UploadFileNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.fluentenglish.web.upload.cloud.dto.UploadDto;
+import com.fluentenglish.web.upload.cloud.dto.UploadedFileDto;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
+@Primary
+@Log4j2
 public class CloudinaryStorageService implements StorageService {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    private final Cloudinary cloudinary;
-
-    private final int deleteBatchSize;
+    private final long maxAgeMs;
 
     private final TemporaryFileRepository temporaryFileRepository;
 
-    public CloudinaryStorageService(@Value("${upload.cloudinary.url}") String cloudinaryUrl,
-                                    @Value("${upload.cloudinary.delete-batch-size}") int deleteBatchSize,
-                                    TemporaryFileRepository temporaryFileRepository) {
-        this.cloudinary = new Cloudinary(cloudinaryUrl);
-        this.deleteBatchSize = deleteBatchSize;
+    private final CloudinaryProxyService cloudinaryProxyService;
+
+    public CloudinaryStorageService(@Value("${upload.cloudinary.temporary-file.max-age-ms}") long maxAgeMs,
+                                    TemporaryFileRepository temporaryFileRepository,
+                                    CloudinaryProxyService cloudinaryProxyService) {
+        this.maxAgeMs = maxAgeMs;
         this.temporaryFileRepository = temporaryFileRepository;
+        this.cloudinaryProxyService = cloudinaryProxyService;
     }
 
     @Override
     public UploadedFileDto uploadFile(UploadDto uploadDto) {
-        String folder = uploadDto.getFolder();
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("folder", folder == null ? "" : folder);
-        params.put("resource_type", getResourceType(uploadDto));
-
-        File tempFile = createTempFile(uploadDto.getInputStream(), uploadDto.getExtension());
-        try {
-            Map<?, ?> uploadResult = cloudinary.uploader().upload(tempFile, params);
-
-            tempFile.delete();
-            return getUploadedFileDto(uploadResult);
-        } catch (IOException e) {
-            tempFile.delete();
-            throw new RuntimeException(e);
-        }
+        return cloudinaryProxyService.uploadFile(uploadDto);
     }
 
     @Override
     public UploadedFileDto uploadFileTemp(UploadDto uploadDto) {
-        UploadedFileDto uploadedFileDto = uploadFile(uploadDto);
+        UploadedFileDto uploadedFileDto = cloudinaryProxyService.uploadFile(uploadDto);
 
         TemporaryFile temporaryFile = new TemporaryFile();
         temporaryFile.setId(uploadedFileDto.getId());
         temporaryFile.setUploadDate(new Date());
-
-        try {
-            temporaryFileRepository.save(temporaryFile);
-        } catch (Exception e) {
-            logger.error("Failed to save temporary file to database", e);
-            deleteFileFromCloud(uploadedFileDto.getId());
-            throw new RuntimeException(e);
-        }
+        temporaryFileRepository.save(temporaryFile);
 
         return uploadedFileDto;
+    }
+
+    @Override
+    public UploadedFileDto getFileData(String fileId) {
+        return cloudinaryProxyService.getFileData(fileId);
+    }
+
+    @Override
+    public void deleteFile(String fileId) {
+        cloudinaryProxyService.deleteFile(fileId);
+        temporaryFileRepository.deleteById(fileId);
+    }
+
+    @Override
+    public void deleteFiles(List<String> fileIds) {
+        cloudinaryProxyService.deleteFiles(fileIds);
+        temporaryFileRepository.deleteAllById(fileIds);
     }
 
     @Override
@@ -76,85 +68,15 @@ public class CloudinaryStorageService implements StorageService {
         temporaryFileRepository.deleteById(fileId);
     }
 
-    @Override
-    public UploadedFileDto getFileData(String fileId) {
-        try {
-            Map<?, ?> result = cloudinary.api().resource(fileId, Map.of());
-            return getUploadedFileDto(result);
-        } catch (NotFound e) {
-            throw new UploadFileNotFoundException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    @Scheduled(fixedRateString = "${upload.cloudinary.temporary-file.delete-interval-ms}",
+            initialDelayString = "${upload.cloudinary.temporary-file.initial-delay-ms}")
+    private void deleteTemporaryFiles() {
+        log.info("Deleting expired temporary files");
 
-    @Override
-    public void deleteFile(String fileId) {
-        deleteFileFromCloud(fileId);
-        temporaryFileRepository.deleteById(fileId);
-    }
+        Date maxAgeDate = new Date(System.currentTimeMillis() - maxAgeMs);
+        List<TemporaryFile> temporaryFiles = temporaryFileRepository.findAllByUploadDateBefore(maxAgeDate);
+        cloudinaryProxyService.deleteFiles(temporaryFiles.stream().map(TemporaryFile::getId).toList());
 
-    @Override
-    public void deleteFiles(List<String> fileIds) {
-        int fromIndex = 0;
-        int toIndex = Math.min(deleteBatchSize, fileIds.size());
-
-        while (fromIndex < fileIds.size()) {
-            deleteBatch(fileIds.subList(fromIndex, toIndex));
-
-            fromIndex = toIndex;
-            toIndex = Math.min(toIndex + deleteBatchSize, fileIds.size());
-        }
-    }
-
-    private String getResourceType(UploadDto uploadDto) {
-        String mimeType = uploadDto.getMimeType();
-
-        if (mimeType.startsWith("image")) {
-            return "image";
-        } else if (mimeType.startsWith("video")) {
-            return "video";
-        } else {
-            return "auto";
-        }
-    }
-
-    private void deleteBatch(List<String> fileIdsInBatch) {
-        try {
-            cloudinary.api().deleteResources(fileIdsInBatch, Map.of());
-            temporaryFileRepository.deleteAllById(fileIdsInBatch);
-        } catch (Exception e) {
-            logger.error("Failed to delete files in batch", e);
-        }
-    }
-
-    private void deleteFileFromCloud(String fileId) {
-        try {
-            cloudinary.uploader().destroy(fileId, Map.of());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private File createTempFile(InputStream inputStream, String fileExtension) {
-        try {
-            File tempFile = File.createTempFile("FluentEnglish" + File.separator,
-                    fileExtension == null ? "" : "." + fileExtension);
-            try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(tempFile))) {
-                inputStream.transferTo(outputStream);
-            }
-
-            return tempFile;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private UploadedFileDto getUploadedFileDto(Map<?, ?> uploadResult) {
-        UploadedFileDto uploadedFileDto = new UploadedFileDto();
-        uploadedFileDto.setId((String) uploadResult.get("public_id"));
-        uploadedFileDto.setUrl((String) uploadResult.get("secure_url"));
-
-        return uploadedFileDto;
+        log.info("Deleted {} expired temporary files", temporaryFiles.size());
     }
 }

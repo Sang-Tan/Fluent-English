@@ -1,4 +1,4 @@
-package com.fluentenglish.web.upload.cloud;
+package com.fluentenglish.web.upload.cloud.dto;
 
 import lombok.Getter;
 import lombok.Setter;
