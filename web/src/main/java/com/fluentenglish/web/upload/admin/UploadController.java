@@ -2,8 +2,8 @@ package com.fluentenglish.web.upload.admin;
 
 import com.fluentenglish.web.common.utils.FilenameUtils;
 import com.fluentenglish.web.upload.cloud.StorageService;
-import com.fluentenglish.web.upload.cloud.UploadDto;
-import com.fluentenglish.web.upload.cloud.UploadedFileDto;
+import com.fluentenglish.web.upload.cloud.dto.UploadDto;
+import com.fluentenglish.web.upload.cloud.dto.UploadedFileDto;
 import com.fluentenglish.web.upload.cloud.exception.UploadFileNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
