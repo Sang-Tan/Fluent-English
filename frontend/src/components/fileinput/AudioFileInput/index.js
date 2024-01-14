@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
 import { PencilSquare, ArrowClockwise } from "react-bootstrap-icons";
 import AudioPlayer from "src/components/AudioPlayer";
@@ -13,6 +13,10 @@ function AudioFileInput({
 }) {
   const [audioUrl, setAudioUrl] = useState(initialAudioUrl);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    setAudioUrl(initialAudioUrl);
+  }, [initialAudioUrl]);
 
   const changeAudioUrl = (url) => {
     if (audioUrl && audioUrl.startsWith("blob:")) {
