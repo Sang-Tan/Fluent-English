@@ -76,6 +76,7 @@ public class CloudinaryStorageService implements StorageService {
         Date maxAgeDate = new Date(System.currentTimeMillis() - maxAgeMs);
         List<TemporaryFile> temporaryFiles = temporaryFileRepository.findAllByUploadDateBefore(maxAgeDate);
         cloudinaryProxyService.deleteFiles(temporaryFiles.stream().map(TemporaryFile::getId).toList());
+        temporaryFileRepository.deleteAll(temporaryFiles);
 
         log.info("Deleted {} expired temporary files", temporaryFiles.size());
     }
