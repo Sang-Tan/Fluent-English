@@ -39,7 +39,7 @@ public class QuizServiceImpl implements QuizService {
             throw new NotFoundException("Exercise not found");
         }
 
-        return quizRepository.findAllByExerciseId(exerciseId)
+        return quizRepository.findAllByExerciseIdOrderedByPositionAsc(exerciseId)
                 .stream()
                 .map(quizMapper::toQuizDto)
                 .collect(Collectors.toList());
