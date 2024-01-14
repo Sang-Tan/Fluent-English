@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 import { PencilSquare, EyeFill, ArrowClockwise } from "react-bootstrap-icons";
 import { Modal, Button } from "react-bootstrap";
@@ -17,13 +17,20 @@ function ImageFileInput({
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const fileInputRef = useRef(null);
 
-  const changePreviewUrl = (url) => {
-    if (previewUrl && previewUrl.startsWith("blob:")) {
-      URL.revokeObjectURL(previewUrl);
-    }
-    setPreviewUrl(url === null ? initialImageUrl : url);
-    onUploadUrlChange(url);
-  };
+  useEffect(() => {
+    setPreviewUrl(initialImageUrl);
+  }, [initialImageUrl]);
+
+  const changePreviewUrl = useCallback(
+    (url) => {
+      if (previewUrl && previewUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      setPreviewUrl(url === null ? initialImageUrl : url);
+      onUploadUrlChange(url);
+    },
+    [previewUrl, initialImageUrl, onUploadUrlChange]
+  );
 
   const handleFileChange = (event) => {
     if (event.target.files.length === 0) {
@@ -42,6 +49,9 @@ function ImageFileInput({
     fileInputRef.current.value = null;
     setDeleteModalOpen(false);
   };
+
+  console.log("Preview URL: ", previewUrl);
+  console.log("Initial Image URL: ", initialImageUrl);
 
   return (
     <>
