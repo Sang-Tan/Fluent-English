@@ -1,0 +1,9 @@
+const EXERCISE_ACTION = Object.freeze({
+  INITIALIZE: 0,
+  SET_NAME: 1,
+  SET_SKILL: 2,
+  SET_DIFFICULTY: 3,
+  SET_INTRODUCTION: 4,
+});
+
+export default EXERCISE_ACTION;
