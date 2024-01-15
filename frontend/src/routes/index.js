@@ -1,6 +1,7 @@
 import { LessonList, CreateLesson, LessonDetail } from "src/pages/lesson";
 import { QuizDetail, CreateQuiz } from "src/pages/quiz";
-import { ExerciseDetail } from "src/pages/exercise";
+import { PATH_EXERCISE } from "./paths";
+import { ExerciseDetail, CreateExercise } from "src/pages/exercise";
 import Login from "src/pages/auth/Login";
 
 const privateRoutes = [
@@ -29,8 +30,12 @@ const privateRoutes = [
     path: "/learning-material-category",
   },
   {
-    path: "/exercise/:exerciseId",
+    path: PATH_EXERCISE.DETAIL,
     page: ExerciseDetail,
+  },
+  {
+    path: PATH_EXERCISE.CREATE,
+    page: CreateExercise,
   },
   {
     path: "/quiz/create",

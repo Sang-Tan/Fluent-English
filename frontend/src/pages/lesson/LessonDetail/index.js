@@ -1,4 +1,5 @@
 import { Row, Col, Card, Form, Button, Alert, Spinner } from "react-bootstrap";
+import ExerciseList from "./ExerciseList";
 import { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -99,6 +100,7 @@ function LessonDetail() {
                 )}
               </Card.Body>
             </Card>
+            <ExerciseList lessonId={lessonId} />
           </Col>
         </Row>
       </section>
