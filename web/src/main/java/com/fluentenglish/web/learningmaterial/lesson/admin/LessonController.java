@@ -52,7 +52,7 @@ public class LessonController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/set-publicity")
+    @PutMapping("/{id}/publicity")
     public ResponseEntity<Void> setPublicity(@PathVariable int id,
                                @RequestParam("is-public") boolean isPublic) {
         lessonService.setLessonPublicity(id, isPublic);

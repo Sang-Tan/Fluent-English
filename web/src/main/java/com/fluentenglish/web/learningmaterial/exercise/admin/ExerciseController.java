@@ -46,7 +46,7 @@ public class ExerciseController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{exerciseId}/set-publicity")
+    @PutMapping("/{exerciseId}/publicity")
     public ResponseEntity<Void> setExercisePublicity(@PathVariable int exerciseId,
                                                      @RequestParam boolean isPublic) {
         exerciseService.setExercisePublicity(exerciseId, isPublic);
