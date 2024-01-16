@@ -1,23 +1,45 @@
 import { ENDPOINT_LESSON } from "src/apis/endpoints";
 import { PATH_LESSON } from "src/routes/paths";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useRequest from "src/hooks/useRequest";
 import useAsyncRequest from "src/hooks/useAsyncRequest";
-import useFetch from "src/hooks/useFetch";
 import parseUrl from "src/helpers/pasteUrl";
 import { Card, Form, Button, Alert, Spinner, Modal } from "react-bootstrap";
+import { EyeSlash, EyeFill } from "react-bootstrap-icons";
 
 function DetailForm({ lessonId }) {
-  const { data: lesson, loading: fetchLoading } = useFetch(
-    `/lessons/${lessonId}`
-  );
+  const [lesson, setLesson] = useState(null);
+  const [fetchLoading, setFetchLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [paramError, setParamError] = useState(null);
   const [deleteModalShow, setDeleteModalShow] = useState(false);
+  const [publicityModalShow, setPublicityModalShow] = useState(false);
   const [asyncRequest] = useAsyncRequest();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchLesson = async () => {
+      setFetchLoading(true);
+      try {
+        const response = await asyncRequest(
+          parseUrl(ENDPOINT_LESSON.DETAIL, { lessonId })
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setLesson(data);
+        } else {
+          setErrorMessage("Something went wrong");
+        }
+      } catch (exception) {
+        setErrorMessage("Something went wrong");
+        console.error("Error while updating lesson", exception);
+      }
+      setFetchLoading(false);
+    };
+    fetchLesson();
+  }, [lessonId, asyncRequest]);
 
   const handleUpdateResponse = useCallback(async (response) => {
     if (response.ok) {
@@ -87,15 +109,64 @@ function DetailForm({ lessonId }) {
     setDeleteModalShow(false);
   };
 
+  const setPublicity = async (isPublic) => {
+    const options = {
+      method: "put",
+      body: JSON.stringify({ isPublic }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const response = await asyncRequest(
+        parseUrl(ENDPOINT_LESSON.SET_PUBLICITY, { lessonId }),
+        options
+      );
+
+      if (response.ok) {
+        toast.success("Lesson's publicity updated successfully");
+        setLesson({ ...lesson, isPublic });
+      } else if (response.status === 400) {
+        const data = await response.json();
+        toast.error(data?.message || "Something went wrong");
+      } else {
+        toast.error("Something went wrong");
+      }
+    } catch (exception) {
+      toast.error("Something went wrong");
+      console.error("Error while updating lesson", exception);
+    }
+    setPublicityModalShow(false);
+  };
+
   return (
     <>
       <Card>
         <Card.Body>
           <div className="d-flex justify-content-between align-items-center">
             <Card.Title>Update Lesson</Card.Title>
-            <Button variant="danger" onClick={() => setDeleteModalShow(true)}>
-              Delete
-            </Button>
+            <div>
+              <Button
+                variant="outline-secondary"
+                onClick={() => setPublicityModalShow(true)}
+                title={lesson?.isPublic ? "Make Private" : "Make Public"}
+                className="me-2"
+              >
+                {lesson?.isPublic ? (
+                  <>
+                    <EyeSlash />
+                  </>
+                ) : (
+                  <>
+                    <EyeFill />
+                  </>
+                )}
+              </Button>
+              <Button variant="danger" onClick={() => setDeleteModalShow(true)}>
+                Delete
+              </Button>
+            </div>
           </div>
           {fetchLoading ? (
             <Spinner animation="border" />
@@ -129,6 +200,8 @@ function DetailForm({ lessonId }) {
           )}
         </Card.Body>
       </Card>
+
+      {/* Delete modal */}
       <Modal
         show={deleteModalShow}
         onHide={() => setDeleteModalShow(false)}
@@ -146,6 +219,39 @@ function DetailForm({ lessonId }) {
           </Button>
           <Button variant="danger" onClick={deleteLesson}>
             Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Public modal */}
+      <Modal
+        show={publicityModalShow}
+        onHide={() => setPublicityModalShow(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {lesson?.isPublic ? "Make Private" : "Make Public"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Are you sure you want to make this lesson{" "}
+            {lesson?.isPublic ? "private" : "public"}?
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setPublicityModalShow(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => setPublicity(lesson?.isPublic ? false : true)}
+          >
+            {lesson?.isPublic ? "Make Private" : "Make Public"}
           </Button>
         </Modal.Footer>
       </Modal>

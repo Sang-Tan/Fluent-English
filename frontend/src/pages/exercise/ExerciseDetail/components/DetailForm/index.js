@@ -7,6 +7,7 @@ import parseUrl from "src/helpers/pasteUrl";
 import useAsyncRequest from "src/hooks/useAsyncRequest";
 import { toast } from "react-toastify";
 import { Card, Alert, Spinner, Modal, Button } from "react-bootstrap";
+import { EyeSlash, EyeFill } from "react-bootstrap-icons";
 import ExerciseForm from "src/pages/exercise/components/ExerciseForm";
 
 function DetailForm({ exerciseId }) {
@@ -15,6 +16,7 @@ function DetailForm({ exerciseId }) {
   const [errorMessage, setErrorMessage] = useState(null);
   const [paramError, setParamError] = useState(null);
   const [deleteModalShow, setDeleteModalShow] = useState(false);
+  const [publicityModalShow, setPublicityModalShow] = useState(false);
   const [request] = useAsyncRequest();
   const navigate = useNavigate();
 
@@ -85,6 +87,29 @@ function DetailForm({ exerciseId }) {
     setDeleteModalShow(false);
   };
 
+  const setPublicity = async (isPublic) => {
+    try {
+      const resp = await request(
+        parseUrl(ENDPOINT_EXERCISE.SET_PUBLICITY, { exerciseId }),
+        {
+          method: "PUT",
+          body: JSON.stringify({ isPublic }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (resp.ok) {
+        toast.success("Exercise's publicity updated successfully");
+        setExercise({ ...exercise, isPublic });
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+      console.error(err);
+    }
+    setPublicityModalShow(false);
+  };
+
   return isFetching ? (
     errorMessage ? (
       <Alert variant="danger">{errorMessage}</Alert>
@@ -97,9 +122,27 @@ function DetailForm({ exerciseId }) {
         <Card.Body>
           <div className="d-flex justify-content-between align-items-center">
             <Card.Title>Update Exercise</Card.Title>
-            <Button variant="danger" onClick={() => setDeleteModalShow(true)}>
-              Delete
-            </Button>
+            <div>
+              <Button
+                variant="outline-secondary"
+                onClick={() => setPublicityModalShow(true)}
+                title={exercise?.isPublic ? "Make Private" : "Make Public"}
+                className="me-2"
+              >
+                {exercise?.isPublic ? (
+                  <>
+                    <EyeSlash />
+                  </>
+                ) : (
+                  <>
+                    <EyeFill />
+                  </>
+                )}
+              </Button>
+              <Button variant="danger" onClick={() => setDeleteModalShow(true)}>
+                Delete
+              </Button>
+            </div>
           </div>
           {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
           <ExerciseForm
@@ -109,6 +152,8 @@ function DetailForm({ exerciseId }) {
           />
         </Card.Body>
       </Card>
+
+      {/* Delete Modal */}
       <Modal show={deleteModalShow} onHide={() => setDeleteModalShow(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Delete Exercise</Modal.Title>
@@ -120,6 +165,37 @@ function DetailForm({ exerciseId }) {
           </Button>
           <Button variant="danger" onClick={deleteExercise}>
             Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Publicity Modal */}
+      <Modal
+        show={publicityModalShow}
+        onHide={() => setPublicityModalShow(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Update Exercise's Publicity</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to{" "}
+          {exercise?.isPublic
+            ? "make this exercise private"
+            : "make this exercise public"}
+          ?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setPublicityModalShow(false)}
+          >
+            Close
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => setPublicity(!exercise?.isPublic)}
+          >
+            {exercise?.isPublic ? "Make Private" : "Make Public"}
           </Button>
         </Modal.Footer>
       </Modal>
