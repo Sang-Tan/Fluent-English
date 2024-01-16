@@ -8,6 +8,8 @@ import { AuthContextProvider } from "./contexts/AuthContext";
 import AuthPath from "./components/AuthPath";
 import { Fragment } from "react";
 
+import "react-toastify/dist/ReactToastify.css";
+
 function AppRoutes() {
   let i = 0;
   return (
