@@ -19,16 +19,16 @@ function CreateExercise() {
 
   const handleSubmit = async (exercise) => {
     try {
-      const resp = await request(
-        parseUrl(ENDPOINT_EXERCISE.ADD, { lessonId }),
-        {
-          method: "POST",
-          body: JSON.stringify(exercise),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const resp = await request(parseUrl(ENDPOINT_EXERCISE.ADD), {
+        method: "POST",
+        body: JSON.stringify({
+          ...exercise,
+          lessonId,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (resp.ok) {
         setParamError(null);
         setErrorMessage(null);
