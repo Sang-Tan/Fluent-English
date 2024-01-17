@@ -1,11 +1,13 @@
 name: fluent-english
 services:
   postgres:
-    image: 'postgres:latest'
+    image: "postgres:latest"
     environment:
-      - 'POSTGRES_DB=fluent-english'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=prod'
+      - "POSTGRES_DB=fluent-english"
+      - "POSTGRES_PASSWORD=secret"
+      - "POSTGRES_USER=root"
+    ports:
+      - "5432:5432"
     networks:
       fluent-english-network:
         aliases:
@@ -13,17 +15,18 @@ services:
 
   appserver:
     build:
-        context: .
-        dockerfile: Dockerfile
-        args:
-          - RUNTIME_DIR=/var/fluent-english/runtime
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - RUNTIME_DIR=/var/fluent-english/runtime
     depends_on:
       - postgres
-    image: 'fluent-english:latest'
+    image: "fluent-english:latest"
     ports:
-      - '8080:8080'
+      - "8080:8080"
     networks:
       - fluent-english-network
 networks:
   fluent-english-network:
     driver: bridge
+    name: fluent-english-network
