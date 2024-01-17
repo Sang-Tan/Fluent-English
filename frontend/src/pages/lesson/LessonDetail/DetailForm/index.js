@@ -112,7 +112,7 @@ function DetailForm({ lessonId }) {
   const setPublicity = async (isPublic) => {
     const options = {
       method: "put",
-      body: JSON.stringify({ isPublic }),
+      body: JSON.stringify(isPublic),
       headers: {
         "Content-Type": "application/json",
       },
@@ -194,7 +194,7 @@ function DetailForm({ lessonId }) {
                 </Form.Control.Feedback>
               </Form.Group>
               <Button variant="primary" type="submit" disabled={loading}>
-                {loading ? <Spinner animation="border" size="sm" /> : "Update"}
+                {loading ? <Spinner animation="border" size="sm" /> : "Submit"}
               </Button>
             </Form>
           )}

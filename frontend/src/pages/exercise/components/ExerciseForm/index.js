@@ -153,7 +153,7 @@ function ExerciseForm({ initialData, error, onSubmit }) {
       </Form.Group>
       {/* Submit */}
       <Button variant="primary" type="submit" disabled={loading}>
-        {loading ? <Spinner animation="border" size="sm" /> : "Create"}
+        {loading ? <Spinner animation="border" size="sm" /> : "Submit"}
       </Button>
     </Form>
   );
