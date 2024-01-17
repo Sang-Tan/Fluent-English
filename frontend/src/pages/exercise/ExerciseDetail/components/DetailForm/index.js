@@ -93,7 +93,7 @@ function DetailForm({ exerciseId }) {
         parseUrl(ENDPOINT_EXERCISE.SET_PUBLICITY, { exerciseId }),
         {
           method: "PUT",
-          body: JSON.stringify({ isPublic }),
+          body: JSON.stringify(isPublic),
           headers: {
             "Content-Type": "application/json",
           },

@@ -117,7 +117,7 @@ function CreateQuiz() {
                       {isValidating > 0 ? (
                         <Spinner animation="border" />
                       ) : (
-                        "Create"
+                        "Submit"
                       )}
                     </Button>
                     <Modal show={confirmModalShow}>

@@ -83,7 +83,7 @@ function CreateLesson() {
                   {loading ? (
                     <Spinner animation="border" size="sm" />
                   ) : (
-                    "Create"
+                    "Submit"
                   )}
                 </Button>
               </Form>
