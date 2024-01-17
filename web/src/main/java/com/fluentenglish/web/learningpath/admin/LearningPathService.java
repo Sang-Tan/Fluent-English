@@ -16,5 +16,5 @@ public interface LearningPathService {
     void deleteLearningPath(Integer learningPathId);
     LearningPath setLearningPathPublicity(Integer learningPathId, boolean isPublic);
     List<Lesson> getLessonsByLearningPathId(Integer learningPathId);
-    List<LearningPathDetail> setLessonsByLearningPathId(Integer learningPathId, List<Integer> lessonIds);
+    void setLessonsByLearningPathId(Integer learningPathId, List<Integer> lessonIds);
 }

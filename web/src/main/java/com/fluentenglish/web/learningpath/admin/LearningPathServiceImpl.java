@@ -98,7 +98,7 @@ public class LearningPathServiceImpl implements LearningPathService{
 
     @Override
     @Transactional
-    public List<LearningPathDetail> setLessonsByLearningPathId(Integer learningPathId, List<Integer> lessonIds) {
+    public void setLessonsByLearningPathId(Integer learningPathId, List<Integer> lessonIds) {
         List<LearningPathDetail> learningPathDetails = learningPathDetailRepository.findAllByLearningPathId(learningPathId);
         learningPathDetailRepository.deleteAll(learningPathDetails);
 
@@ -106,7 +106,7 @@ public class LearningPathServiceImpl implements LearningPathService{
                 () -> new NotFoundException(String.format("LearningPath with id %d not found", learningPathId))
         );
 
-        return learningPathDetailRepository.saveAll(
+        learningPathDetailRepository.saveAll(
                 lessonRepository.findAllByIdIn(lessonIds).stream()
                         .map(lesson -> {
                             LearningPathDetail learningPathDetail = new LearningPathDetail();
