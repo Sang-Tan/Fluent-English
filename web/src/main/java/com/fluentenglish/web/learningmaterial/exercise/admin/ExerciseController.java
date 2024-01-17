@@ -46,7 +46,7 @@ public class ExerciseController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{exerciseId}/set-publicity")
+    @PutMapping("/{exerciseId}/publicity")
     public ResponseEntity<Void> setExercisePublicity(@PathVariable int exerciseId,
                                                      @RequestParam boolean isPublic) {
         exerciseService.setExercisePublicity(exerciseId, isPublic);
@@ -57,14 +57,6 @@ public class ExerciseController {
     @DeleteMapping("/{exerciseId}")
     public ResponseEntity<Void> deleteExercise(@PathVariable int exerciseId) {
         exerciseService.deleteExercise(exerciseId);
-
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{exerciseId}/update-introduction")
-    public ResponseEntity<Void> updateExerciseIntroduction(@PathVariable int exerciseId,
-                                                           @RequestParam String content) {
-        exerciseService.updateExerciseIntroduction(exerciseId, content);
 
         return ResponseEntity.noContent().build();
     }

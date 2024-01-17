@@ -9,15 +9,9 @@ public interface ExerciseService {
 
     ExerciseDto getExerciseById(int exerciseId);
 
-    int getLessonIdOfExercise(int exerciseId);
-
     void updateExercise(int exerciseId, ExerciseUpdateDto exerciseCreateDto);
 
     void setExercisePublicity(int exerciseId, boolean isPublic);
 
     void deleteExercise(int exerciseId);
-
-    String getExerciseIntroduction(int exerciseId);
-
-    void updateExerciseIntroduction(int exerciseId, String content);
 }

@@ -1,6 +1,5 @@
 package com.fluentenglish.web.learningmaterial.exercise;
 
-import com.fluentenglish.web.learningmaterial.exercise.introduction.Introduction;
 import com.fluentenglish.web.learningmaterial.lesson.Lesson;
 import com.fluentenglish.web.learningmaterial.quiz.Quiz;
 import jakarta.persistence.*;
@@ -28,9 +27,12 @@ public class Exercise {
 
     @Column(name = "core_skill")
     @Enumerated(EnumType.STRING)
-    private CoreSkill coreSkill;
+    private CoreSkill skill;
 
     private Byte difficulty;
+
+    @Column
+    private String introduction;
 
     @Column
     @Builder.Default
@@ -39,9 +41,6 @@ public class Exercise {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
-
-    @OneToOne(mappedBy = "exercise", fetch = FetchType.LAZY)
-    private Introduction introduction;
 
     @OneToMany(mappedBy = "exercise")
     @OrderBy("position ASC")

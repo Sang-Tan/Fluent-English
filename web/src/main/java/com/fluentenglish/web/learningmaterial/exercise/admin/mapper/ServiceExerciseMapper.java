@@ -11,10 +11,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface ServiceExerciseMapper {
     @Mapping(target = "lessonId", source = "lesson.id")
-    @Mapping(target = "introductionContent", source = "introduction.content")
     ExerciseDto toExerciseDto(Exercise exercise);
-
-    Exercise toExercise(ExerciseDto exerciseDto);
 
     Exercise toExercise(ExerciseCreateDto exerciseCreateDto);
 
