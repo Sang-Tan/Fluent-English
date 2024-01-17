@@ -12,7 +12,7 @@ public class ExerciseDto {
 
     private String name;
 
-    private String coreSkill;
+    private String skill;
 
     private int difficulty;
 
@@ -20,5 +20,5 @@ public class ExerciseDto {
 
     private int lessonId;
 
-    private String introductionContent;
+    private String introduction;
 }

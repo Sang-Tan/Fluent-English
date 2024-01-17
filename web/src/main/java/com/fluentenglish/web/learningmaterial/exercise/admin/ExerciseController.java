@@ -61,14 +61,6 @@ public class ExerciseController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{exerciseId}/update-introduction")
-    public ResponseEntity<Void> updateExerciseIntroduction(@PathVariable int exerciseId,
-                                                           @RequestParam String content) {
-        exerciseService.updateExerciseIntroduction(exerciseId, content);
-
-        return ResponseEntity.noContent().build();
-    }
-
     @GetMapping("/{exerciseId}/quizzes")
     public ResponseEntity<List<QuizDto>> getQuizzes(@PathVariable int exerciseId) {
         List<QuizDto> quizzes = quizService.getQuizzesByExerciseId(exerciseId);

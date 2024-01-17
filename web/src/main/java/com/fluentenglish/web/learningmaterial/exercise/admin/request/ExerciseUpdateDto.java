@@ -14,8 +14,10 @@ public class ExerciseUpdateDto {
     private String name;
 
     @NotBlank(message = "Please select a core skill")
-    private String coreSkill;
+    private String skill;
 
     @Range(min = 1, max = 3, message = "Invalid difficulty")
     private int difficulty;
+
+    private String introduction;
 }
