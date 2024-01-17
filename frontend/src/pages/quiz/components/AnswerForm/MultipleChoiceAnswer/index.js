@@ -8,10 +8,7 @@ import {
   useEffect,
 } from "react";
 import answerActions from "./answerReducer/constants";
-import answerReducer, {
-  initialAnswer,
-  initializeAnswer,
-} from "./answerReducer";
+import answerReducer, { initializeAnswer } from "./answerReducer";
 import { CHOICE_TEXT, CHOICE_AUDIO } from "./constants";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { Square, CheckSquare, TrashFill } from "react-bootstrap-icons";
