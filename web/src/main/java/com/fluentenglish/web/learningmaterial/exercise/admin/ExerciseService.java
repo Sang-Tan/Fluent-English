@@ -4,6 +4,8 @@ import com.fluentenglish.web.learningmaterial.exercise.admin.request.ExerciseCre
 import com.fluentenglish.web.learningmaterial.exercise.admin.request.ExerciseUpdateDto;
 import com.fluentenglish.web.learningmaterial.exercise.admin.response.ExerciseDto;
 
+import java.util.List;
+
 public interface ExerciseService {
     void createExercise(ExerciseCreateDto exerciseCreateDto);
 
@@ -14,4 +16,6 @@ public interface ExerciseService {
     void setExercisePublicity(int exerciseId, boolean isPublic);
 
     void deleteExercise(int exerciseId);
+
+    List<ExerciseDto> getExercisesByLessonId(int lessonId);
 }

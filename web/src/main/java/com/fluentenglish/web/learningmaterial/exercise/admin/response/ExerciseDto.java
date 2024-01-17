@@ -1,5 +1,6 @@
 package com.fluentenglish.web.learningmaterial.exercise.admin.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,7 @@ public class ExerciseDto {
 
     private int difficulty;
 
+    @JsonProperty("isPublic")
     private boolean isPublic;
 
     private int lessonId;
