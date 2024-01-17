@@ -104,10 +104,8 @@ public class LearningPathController {
             @PathVariable("learningPathId") Integer learningPathId
             ,@RequestParam("lesson-ids") String lessons) {
         List<Integer> lessonIds = Arrays.stream(lessons.split(",")).map(Integer::parseInt).toList();
-        List<LearningPathDetail> result = learningPathService
-                .setLessonsByLearningPathId(learningPathId, lessonIds);
-        log.debug(result.stream().map(LearningPathDetail::toString)
-                .collect(Collectors.joining(",")) + " added successfully");
+        learningPathService.setLessonsByLearningPathId(learningPathId, lessonIds);
+        log.debug("Added successfully");
 
         return ResponseEntity.noContent().build();
     }
