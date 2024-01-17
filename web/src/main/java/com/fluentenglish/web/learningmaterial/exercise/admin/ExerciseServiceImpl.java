@@ -10,6 +10,8 @@ import com.fluentenglish.web.learningmaterial.exercise.admin.response.ExerciseDt
 import com.fluentenglish.web.learningmaterial.lesson.Lesson;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ExerciseServiceImpl implements ExerciseService {
 
@@ -63,5 +65,12 @@ public class ExerciseServiceImpl implements ExerciseService {
             throw new NotFoundException("Exercise not found");
         }
         exerciseRepository.deleteById(exerciseId);
+    }
+
+    @Override
+    public List<ExerciseDto> getExercisesByLessonId(int lessonId) {
+        List<Exercise> exercises = exerciseRepository
+                .findAllByLessonIdOrderedByPositionAsc(lessonId);
+        return exercises.stream().map(exerciseMapper::toExerciseDto).toList();
     }
 }

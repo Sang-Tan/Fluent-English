@@ -1,5 +1,6 @@
 package com.fluentenglish.web.learningmaterial.lesson.admin.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,5 +11,6 @@ public class LessonDto {
 
     private String name;
 
+    @JsonProperty("isPublic")
     private boolean isPublic;
 }
