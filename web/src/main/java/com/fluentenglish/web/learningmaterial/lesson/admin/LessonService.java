@@ -1,8 +1,11 @@
 package com.fluentenglish.web.learningmaterial.lesson.admin;
 
+import com.fluentenglish.web.common.paging.PageDto;
 import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonCreateUpdateDto;
 import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonSearchDto;
 import com.fluentenglish.web.learningmaterial.lesson.admin.response.LessonDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -14,9 +17,9 @@ public interface LessonService {
 
     boolean lessonExistsById(int id);
 
-    List<LessonDto> getAllLessons();
+    PageDto getAllLessons(int page);
 
-    List<LessonDto> searchLessons(LessonSearchDto lessonSearchDto);
+    PageDto searchLessons(LessonSearchDto lessonSearchDto, int page);
 
     void updateLesson(int id, LessonCreateUpdateDto lessonDto);
 

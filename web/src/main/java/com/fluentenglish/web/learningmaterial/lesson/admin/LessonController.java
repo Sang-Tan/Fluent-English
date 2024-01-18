@@ -1,11 +1,16 @@
 package com.fluentenglish.web.learningmaterial.lesson.admin;
 
+import com.fluentenglish.web.common.paging.PageDto;
 import com.fluentenglish.web.learningmaterial.exercise.admin.ExerciseService;
 import com.fluentenglish.web.learningmaterial.exercise.admin.response.ExerciseDto;
 import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonCreateUpdateDto;
 import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonSearchDto;
 import com.fluentenglish.web.learningmaterial.lesson.admin.response.LessonDto;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,14 +29,16 @@ public class LessonController {
     }
 
     @GetMapping
-    public ResponseEntity<List<LessonDto>> index(@RequestParam(name = "q", required = false, defaultValue = "") String lessonSearch) {
+    public ResponseEntity<PageDto> index(@RequestParam(name = "q", required = false, defaultValue = "") String lessonSearch,
+                                         @RequestParam(name = "page", required = false, defaultValue = "1") int page
+    ) {
         LessonSearchDto lessonSearchDto = new LessonSearchDto();
         lessonSearchDto.setName(lessonSearch.trim());
-        List<LessonDto> lessons = lessonSearchDto.getName().isEmpty()
-                ? lessonService.getAllLessons()
-                : lessonService.searchLessons(lessonSearchDto);
+        PageDto lessonsPage = lessonSearchDto.getName().isEmpty()
+                ? lessonService.getAllLessons(page)
+                : lessonService.searchLessons(lessonSearchDto, page);
 
-        return ResponseEntity.ok(lessons);
+        return ResponseEntity.ok(lessonsPage);
     }
 
     @PostMapping
