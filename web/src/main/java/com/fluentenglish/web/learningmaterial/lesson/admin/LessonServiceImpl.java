@@ -3,6 +3,8 @@ package com.fluentenglish.web.learningmaterial.lesson.admin;
 import com.fluentenglish.web.common.exception.errorresponse.NotFoundException;
 import com.fluentenglish.web.common.exception.userinput.InputErrorInfo;
 import com.fluentenglish.web.common.exception.userinput.UserInputException;
+import com.fluentenglish.web.common.mapper.PageMapper;
+import com.fluentenglish.web.common.paging.PageDto;
 import com.fluentenglish.web.learningmaterial.exercise.ExerciseRepository;
 import com.fluentenglish.web.learningmaterial.lesson.Lesson;
 import com.fluentenglish.web.learningmaterial.lesson.LessonRepository;
@@ -10,6 +12,10 @@ import com.fluentenglish.web.learningmaterial.lesson.admin.mapper.ServiceLessonM
 import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonCreateUpdateDto;
 import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonSearchDto;
 import com.fluentenglish.web.learningmaterial.lesson.admin.response.LessonDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,16 +24,19 @@ import java.util.Map;
 
 @Service
 public class LessonServiceImpl implements LessonService {
+    private final static int PAGE_SIZE = 10;
     private final LessonRepository lessonRepository;
 
     private final ServiceLessonMapper lessonMapper;
 
     private final ExerciseRepository exerciseRepository;
+    private final PageMapper pageMapper;
 
-    public LessonServiceImpl(LessonRepository lessonRepository, ServiceLessonMapper lessonMapper, ExerciseRepository exerciseRepository) {
+    public LessonServiceImpl(LessonRepository lessonRepository, ServiceLessonMapper lessonMapper, ExerciseRepository exerciseRepository, PageMapper pageMapper) {
         this.lessonRepository = lessonRepository;
         this.lessonMapper = lessonMapper;
         this.exerciseRepository = exerciseRepository;
+        this.pageMapper = pageMapper;
     }
 
     public void createLesson(LessonCreateUpdateDto lessonDto) {
@@ -51,14 +60,16 @@ public class LessonServiceImpl implements LessonService {
         return lessonRepository.existsById(id);
     }
 
-    public List<LessonDto> getAllLessons() {
-        List<Lesson> lessons = lessonRepository.findAll();
-        return lessons.stream().map(lessonMapper::lessonToLessonDto).toList();
+    public PageDto getAllLessons(int page) {
+        Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("name"));
+        Page<Lesson> lessons = lessonRepository.findAll(pageable);
+        return pageMapper.toPageDto(lessons.map(lessonMapper::lessonToLessonDto));
     }
 
-    public List<LessonDto> searchLessons(LessonSearchDto lessonSearchDto) {
-        List<Lesson> lessons = lessonRepository.searchLessons(lessonSearchDto);
-        return lessons.stream().map(lessonMapper::lessonToLessonDto).toList();
+    public PageDto searchLessons(LessonSearchDto lessonSearchDto, int page) {
+        Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("name"));
+        Page<Lesson> lessons = lessonRepository.searchLessons(lessonSearchDto, pageable);
+        return pageMapper.toPageDto(lessons.map(lessonMapper::lessonToLessonDto));
     }
 
     public void updateLesson(int id, LessonCreateUpdateDto lessonDto) {
