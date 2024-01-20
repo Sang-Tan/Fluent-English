@@ -1,6 +1,8 @@
 package com.fluentenglish.web.learningpath.admin;
 
+import com.fluentenglish.web.common.paging.PageDto;
 import com.fluentenglish.web.learningmaterial.lesson.Lesson;
+import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonSearchDto;
 import com.fluentenglish.web.learningpath.LearningPath;
 import com.fluentenglish.web.learningpath.admin.detail.LearningPathDetail;
 import com.fluentenglish.web.learningpath.admin.request.LearningPathCreateDto;
@@ -16,5 +18,9 @@ public interface LearningPathService {
     void deleteLearningPath(Integer learningPathId);
     LearningPath setLearningPathPublicity(Integer learningPathId, boolean isPublic);
     List<Lesson> getLessonsByLearningPathId(Integer learningPathId);
-    void setLessonsByLearningPathId(Integer learningPathId, List<Integer> lessonIds);
+    void addLesson(int learningPathId,int lessonIds);
+    void removeLesson(int learningPathId,int lessonIds);
+    PageDto getUnassignedLessons(Integer learningPathId, int page);
+
+    PageDto searchUnassignedLessons(LessonSearchDto lessonSearchDto, Integer learningPathId, Integer page);
 }

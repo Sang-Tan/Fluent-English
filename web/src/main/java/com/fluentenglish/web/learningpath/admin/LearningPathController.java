@@ -1,7 +1,9 @@
 package com.fluentenglish.web.learningpath.admin;
 
+import com.fluentenglish.web.common.paging.PageDto;
 import com.fluentenglish.web.learningmaterial.lesson.Lesson;
 import com.fluentenglish.web.learningmaterial.lesson.admin.mapper.ServiceLessonMapper;
+import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonSearchDto;
 import com.fluentenglish.web.learningmaterial.lesson.admin.response.LessonDto;
 import com.fluentenglish.web.learningpath.LearningPath;
 import com.fluentenglish.web.learningpath.admin.detail.LearningPathDetail;
@@ -21,7 +23,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/admin/api/learning-path")
+@RequestMapping("/admin/api/learning-paths")
 @Slf4j
 public class LearningPathController {
     private final LearningPathServiceImpl learningPathService;
@@ -76,7 +78,7 @@ public class LearningPathController {
 
     @PutMapping("/{learning-path-id}/publicity")
     public ResponseEntity<Void> setPublicity(@PathVariable("learning-path-id") Integer learningPathId,
-                                             @RequestParam("is-public") boolean isPublic) {
+                                             @RequestParam("isPublished") boolean isPublic) {
         LearningPath saved = learningPathService.setLearningPathPublicity(learningPathId, isPublic);
         log.debug("set learning path publicity -> " + saved);
         return ResponseEntity.noContent().build();
@@ -98,15 +100,34 @@ public class LearningPathController {
                 .toList();
         return ResponseEntity.ok(lessonDtos);
     }
-
-    @PutMapping("/{learningPathId}/lessons")
-    public ResponseEntity<Void> setLessonsForLearningPathId(
-            @PathVariable("learningPathId") Integer learningPathId
-            ,@RequestParam("lesson-ids") String lessons) {
-        List<Integer> lessonIds = Arrays.stream(lessons.split(",")).map(Integer::parseInt).toList();
-        learningPathService.setLessonsByLearningPathId(learningPathId, lessonIds);
+    @PostMapping("/{learningPathId}/lessons")
+    public ResponseEntity<Void> addLesson(
+            @PathVariable("learningPathId") int learningPathId,
+            @RequestParam("lessonId") int lessonId) {
+        learningPathService.addLesson(learningPathId, lessonId);
         log.debug("Added successfully");
 
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    @DeleteMapping("/{learningPathId}/lessons")
+    public ResponseEntity<Void> deleteLesson(
+            @PathVariable("learningPathId") int learningPathId,
+            @RequestParam("lessonId") int lessonId) {
+        learningPathService.removeLesson(learningPathId, lessonId);
+        log.debug("removed successfully");
+
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping(value = "/{learningPathId}/unassigned-lessons")
+    public ResponseEntity<PageDto> getUnassignedLessonsByLearningPathId(
+            @PathVariable("learningPathId") Integer learningPathId,
+            @RequestParam(value = "q", required = false, defaultValue = "") String search,
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
+        LessonSearchDto lessonSearchDto = new LessonSearchDto();
+        lessonSearchDto.setName(search.trim());
+        PageDto lessonsPage = lessonSearchDto.getName().isEmpty()
+                ? learningPathService.getUnassignedLessons(learningPathId, page)
+                : learningPathService.searchUnassignedLessons(lessonSearchDto, learningPathId, page);
+        return ResponseEntity.ok(lessonsPage);
     }
 }
