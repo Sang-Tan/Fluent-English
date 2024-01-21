@@ -1,3 +1,7 @@
 {
-  "expo": {}
+  "expo": {
+    "name": "Fluent English",
+    "slug": "fluent-english",
+    "privacy": "public"
+  }
 }
