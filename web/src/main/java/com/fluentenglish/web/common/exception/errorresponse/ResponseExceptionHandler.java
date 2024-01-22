@@ -6,6 +6,7 @@ import com.fluentenglish.web.common.exception.userinput.UserInputException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -36,8 +37,12 @@ public class ResponseExceptionHandler {
     @ExceptionHandler(UserInputException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleUserInputException(UserInputException ex) {
-        ErrorResponse.Builder errorBuilder = ErrorResponse.builder()
-                .withMessage(ex.getMessage());
+        ErrorResponse.Builder errorBuilder = ErrorResponse.builder();
+        if(ex.getMessage() != null) {
+            errorBuilder.withMessage(ex.getMessage());
+        } else {
+            errorBuilder.withMessage("Invalid input");
+        }
 
         List<String> errorFields = ex.getErrorFields();
         if (errorFields != null && !errorFields.isEmpty()) {
@@ -58,4 +63,22 @@ public class ResponseExceptionHandler {
         log.error("Uncaught exception [ERROR: {}]", ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleValidationErrors(MethodArgumentNotValidException ex) {
+        ErrorResponse.Builder errorBuilder = ErrorResponse.builder();
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            ObjectNode errorNode = objectMapper.createObjectNode();
+            String fieldName = error.getField();
+            String errorMessage = error.getDefaultMessage();
+            errorNode.put(fieldName, errorMessage);
+            errorBuilder.withError(errorNode);
+        });
+        errorBuilder.withMessage("Invalid input");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorBuilder.build());
+    }
+
+
 }
