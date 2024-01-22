@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": "./"
+    "strict": true,
+    "baseUrl": "./",
+    "strictNullChecks": true
   },
   "extends": "expo/tsconfig.base"
 }
