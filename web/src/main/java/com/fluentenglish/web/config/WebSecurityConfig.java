@@ -6,6 +6,7 @@ import com.fluentenglish.web.auth.token.jwt.JWTAuthenticationProvider;
 import com.fluentenglish.web.auth.token.jwt.JWTProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -36,6 +37,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    @Order(1)
     public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http,
                                                         JWTProcessor jwtProcessor) throws Exception {
         AuthenticationManager authenticationManager = authManager(http, jwtProcessor);
@@ -50,6 +52,27 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin/api/login").permitAll()
                         .anyRequest().hasRole(Role.ADMIN.name())
+                ).cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain userSecurityFilterChain(HttpSecurity http,
+                                                       JWTProcessor jwtProcessor) throws Exception {
+        AuthenticationManager authenticationManager = authManager(http, jwtProcessor);
+
+        http.csrf(AbstractHttpConfigurer::disable);
+        http.authenticationManager(authenticationManager)
+                .sessionManagement((sessionManagement) -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterAfter(new BearerTokenAuthenticationFilter(authenticationManager), SecurityContextHolderFilter.class);
+
+        http.securityMatcher("/api/**")
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/login").permitAll()
+                        .anyRequest().hasRole(Role.USER.name())
                 ).cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
