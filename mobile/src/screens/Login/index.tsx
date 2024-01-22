@@ -1,3 +1,4 @@
+import ROUTE_NAMES from "src/routes/routeNames";
 import { COLORS } from "./styles";
 import globalStyles from "src/styles/globalStyles";
 import styles from "./styles";
@@ -7,7 +8,14 @@ import { useState, useContext } from "react";
 import useRequest from "src/hooks/useRequest";
 import AuthContext from "src/contexts/AuthContext";
 
-import { Pressable, StatusBar, Text, TextInput, View } from "react-native";
+import {
+  Pressable,
+  StatusBar,
+  Text,
+  TextInput,
+  View,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faEnvelope,
@@ -16,7 +24,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 
-function Login() {
+function Login({ navigation }: { navigation: any }) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -70,6 +78,10 @@ function Login() {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleGotoSignup = () => {
+    navigation.navigate(ROUTE_NAMES.REGISTER);
   };
 
   type EmailValidation = (email: string) => string | null;
@@ -147,7 +159,9 @@ function Login() {
       <View style={styles.bottomPanel}>
         <Text style={styles.text}>
           Don't have an account?{" "}
-          <Text style={[styles.text, { fontWeight: "bold" }]}>Sign up</Text>
+          <TouchableWithoutFeedback onPress={handleGotoSignup}>
+            <Text style={[styles.text, { fontWeight: "bold" }]}>Sign up</Text>
+          </TouchableWithoutFeedback>
         </Text>
       </View>
     </View>
