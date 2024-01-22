@@ -1,7 +1,7 @@
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
-import Login from "../screens/Login";
-import Register from "src/screens/Register";
-import RegisterSuccess from "src/screens/RegisterSuccess";
+import Login from "../screens/auth/Login";
+import Register from "src/screens/auth/Register";
+import RegisterSuccess from "src/screens/auth/RegisterSuccess";
 import ROUTE_NAMES from "./routeNames";
 
 interface Route {
