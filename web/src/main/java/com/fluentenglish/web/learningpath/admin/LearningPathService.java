@@ -4,7 +4,6 @@ import com.fluentenglish.web.common.paging.PageDto;
 import com.fluentenglish.web.learningmaterial.lesson.Lesson;
 import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonSearchDto;
 import com.fluentenglish.web.learningpath.LearningPath;
-import com.fluentenglish.web.learningpath.admin.detail.LearningPathDetail;
 import com.fluentenglish.web.learningpath.admin.request.LearningPathCreateDto;
 import com.fluentenglish.web.learningpath.admin.request.LearningPathUpdateDto;
 

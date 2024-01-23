@@ -1,30 +1,27 @@
 package com.fluentenglish.web.learningpath.admin;
 
 import com.fluentenglish.web.common.paging.PageDto;
+import com.fluentenglish.web.common.request.PublicityRequest;
 import com.fluentenglish.web.learningmaterial.lesson.Lesson;
 import com.fluentenglish.web.learningmaterial.lesson.admin.mapper.ServiceLessonMapper;
 import com.fluentenglish.web.learningmaterial.lesson.admin.request.LessonSearchDto;
 import com.fluentenglish.web.learningmaterial.lesson.admin.response.LessonDto;
 import com.fluentenglish.web.learningpath.LearningPath;
-import com.fluentenglish.web.learningpath.admin.detail.LearningPathDetail;
+import com.fluentenglish.web.learningpath.admin.request.AddLessonToLearningPathDto;
 import com.fluentenglish.web.learningpath.admin.request.LearningPathCreateDto;
 import com.fluentenglish.web.learningpath.admin.request.LearningPathUpdateDto;
 import com.fluentenglish.web.learningpath.admin.response.LearningPathDto;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin/api/learning-paths")
-@Slf4j
 public class LearningPathController {
     private final LearningPathServiceImpl learningPathService;
     private final LearningPathMapper learningPathMapper;
@@ -59,7 +56,6 @@ public class LearningPathController {
     @PostMapping
     public ResponseEntity<Map<String, Integer>> createLearningPath(@RequestBody @Valid LearningPathCreateDto form) {
         LearningPath learningPathSaved = learningPathService.createLearningPath(form);
-        log.debug(learningPathSaved + " created successfully");
 
         Map<String, Integer> response = new HashMap<>();
         response.put("learning-path-id", learningPathSaved.getId());
@@ -70,24 +66,22 @@ public class LearningPathController {
     @PutMapping("/{learningPathId}")
     public ResponseEntity<Void> updateLearningPath(@PathVariable("learningPathId") Integer learningPathId,
                                      @RequestBody @Valid LearningPathUpdateDto form) {
-        LearningPath learningPathSaved = learningPathService.updateLearningPath(learningPathId, form);
-        log.debug(learningPathSaved + " updated successfully");
+        learningPathService.updateLearningPath(learningPathId, form);
 
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{learning-path-id}/publicity")
     public ResponseEntity<Void> setPublicity(@PathVariable("learning-path-id") Integer learningPathId,
-                                             @RequestParam("isPublished") boolean isPublic) {
-        LearningPath saved = learningPathService.setLearningPathPublicity(learningPathId, isPublic);
-        log.debug("set learning path publicity -> " + saved);
+                                             @RequestBody PublicityRequest isPublic) {
+        learningPathService.setLearningPathPublicity(learningPathId,isPublic.getIsPublic());
+
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{learningPathId}")
     public ResponseEntity<Void> deleteLearningPath(@PathVariable("learningPathId") Integer learningPathId) {
         learningPathService.deleteLearningPath(learningPathId);
-        log.debug("delete learning path -> " + learningPathId);
 
         return ResponseEntity.noContent().build();
     }
@@ -101,20 +95,18 @@ public class LearningPathController {
         return ResponseEntity.ok(lessonDtos);
     }
     @PostMapping("/{learningPathId}/lessons")
-    public ResponseEntity<Void> addLesson(
-            @PathVariable("learningPathId") int learningPathId,
-            @RequestParam("lessonId") int lessonId) {
-        learningPathService.addLesson(learningPathId, lessonId);
-        log.debug("Added successfully");
+    public ResponseEntity<Void> addLessonToLearningPath(
+            @PathVariable("learningPathId") Integer learningPathId,
+            @   RequestBody AddLessonToLearningPathDto lessonDto) {
+        learningPathService.addLesson(learningPathId, lessonDto.getLessonId());
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-    @DeleteMapping("/{learningPathId}/lessons")
-    public ResponseEntity<Void> deleteLesson(
-            @PathVariable("learningPathId") int learningPathId,
-            @RequestParam("lessonId") int lessonId) {
+    @DeleteMapping("/{learningPathId}/lessons/{lessonId}")
+    public ResponseEntity<Void> removeLessonFromLearningPath(
+            @PathVariable("learningPathId") Integer learningPathId,
+            @PathVariable("lessonId") Integer lessonId) {
         learningPathService.removeLesson(learningPathId, lessonId);
-        log.debug("removed successfully");
 
         return ResponseEntity.noContent().build();
     }
