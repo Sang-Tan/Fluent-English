@@ -26,9 +26,7 @@ import java.util.Map;
 public class LessonServiceImpl implements LessonService {
     private final static int PAGE_SIZE = 10;
     private final LessonRepository lessonRepository;
-
     private final ServiceLessonMapper lessonMapper;
-
     private final ExerciseRepository exerciseRepository;
     private final PageMapper pageMapper;
 
