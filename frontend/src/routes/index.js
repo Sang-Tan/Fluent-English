@@ -1,4 +1,5 @@
 import { LessonList, CreateLesson, LessonDetail } from "src/pages/lesson";
+import { LearningPathDetail, CreateLearningPath, LearningPathList } from "src/pages/learningpath";
 import { QuizDetail, CreateQuiz } from "src/pages/quiz";
 import { PATH_EXERCISE } from "./paths";
 import { ExerciseDetail, CreateExercise } from "src/pages/exercise";
@@ -21,7 +22,16 @@ const privateRoutes = [
     page: LessonDetail,
   },
   {
+    path: "/learning-path/create",
+    page: CreateLearningPath
+  },
+  {
     path: "/learning-path",
+    page: LearningPathList
+  },
+  {
+    path: "/learning-path/:learningPathId",
+    page: LearningPathDetail
   },
   {
     path: "/learning-material",
