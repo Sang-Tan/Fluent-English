@@ -1,7 +1,0 @@
-CREATE TABLE IF NOT EXISTS learning_paths
-(
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) UNIQUE NOT NULL,
-    description TEXT NOT NULL,
-    is_public BOOLEAN NOT NULL DEFAULT FALSE
-);
