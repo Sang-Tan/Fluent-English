@@ -13,6 +13,17 @@ services:
         aliases:
           - postgres
 
+  redis:
+    build:
+      context: .
+      dockerfile: Dockerfile-redis
+    ports:
+      - "6379:6379"
+    networks:
+      fluent-english-network:
+        aliases:
+          - redis
+
   appserver:
     build:
       context: .
@@ -21,6 +32,7 @@ services:
         - RUNTIME_DIR=/var/fluent-english/runtime
     depends_on:
       - postgres
+      - redis
     image: "fluent-english:latest"
     ports:
       - "8080:8080"
