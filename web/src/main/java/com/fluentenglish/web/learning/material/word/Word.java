@@ -15,7 +15,7 @@ import java.util.Set;
 @Table(name = "words")
 public class Word {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String text;
@@ -28,6 +28,7 @@ public class Word {
 
     private String vietnameseMeaning;
 
+    @JdbcTypeCode(SqlTypes.SMALLINT)
     private Integer difficulty;
 
     @ManyToMany(cascade = {

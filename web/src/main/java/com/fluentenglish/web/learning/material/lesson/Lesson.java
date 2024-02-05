@@ -4,6 +4,8 @@ import com.fluentenglish.web.learning.material.word.Word;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.Set;
 
@@ -13,11 +15,12 @@ import java.util.Set;
 @Table(name = "lessons")
 public class Lesson {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
 
+    @JdbcTypeCode(SqlTypes.SMALLINT)
     private Integer difficulty;
 
     @ManyToMany(cascade = {
