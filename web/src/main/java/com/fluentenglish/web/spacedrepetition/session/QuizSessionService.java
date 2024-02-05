@@ -7,15 +7,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Getter
 @Setter
 @Service
-public class SessionService {
+public class QuizSessionService {
     private final SessionRepository sessionRepository;
     private final QuizMemoRepository quizMemoRepository;
-    public SessionService(SessionRepository sessionRepository, QuizMemoRepository quizMemoRepository) {
+    public QuizSessionService(SessionRepository sessionRepository, QuizMemoRepository quizMemoRepository) {
         this.quizMemoRepository = quizMemoRepository;
         this.sessionRepository = sessionRepository;
     }
@@ -30,7 +28,4 @@ public class SessionService {
         quizMemo.setPoints(calculatePoints(dto.getTimeAnsweredMs(), quizMemo.getMaxTimeMs()));
         quizMemoRepository.save(quizMemo);
     }
-    public void renewSession(Integer sessionId) {
-    }
-
 }
