@@ -5,7 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DefeatEnemyDto {
-    private Integer currentHp;
+public class GainExperienceDto {
     private Integer experienceGained;
 }
