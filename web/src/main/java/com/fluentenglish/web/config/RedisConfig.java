@@ -15,6 +15,7 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.port}")
     private int redisPort;
+
     @Value("${spring.data.redis.password}")
     private String redisPassword;
 
@@ -24,6 +25,7 @@ public class RedisConfig {
         redisStandaloneConfiguration.setPassword(RedisPassword.of(redisPassword));
         return new JedisConnectionFactory(redisStandaloneConfiguration);
     }
+
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
