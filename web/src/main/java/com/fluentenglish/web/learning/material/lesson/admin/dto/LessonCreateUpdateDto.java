@@ -1,4 +1,4 @@
-package com.fluentenglish.web.learning.material.lesson.dto;
+package com.fluentenglish.web.learning.material.lesson.admin.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

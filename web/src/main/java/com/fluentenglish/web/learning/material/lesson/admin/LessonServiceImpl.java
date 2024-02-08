@@ -8,7 +8,7 @@ import com.fluentenglish.web.common.paging.PageDto;
 import com.fluentenglish.web.learning.material.lesson.Lesson;
 import com.fluentenglish.web.learning.material.lesson.LessonRepository;
 import com.fluentenglish.web.learning.material.lesson.ServiceLessonMapper;
-import com.fluentenglish.web.learning.material.lesson.dto.LessonCreateUpdateDto;
+import com.fluentenglish.web.learning.material.lesson.admin.dto.LessonCreateUpdateDto;
 import com.fluentenglish.web.learning.material.lesson.dto.LessonSearchDto;
 import com.fluentenglish.web.learning.material.lesson.dto.LessonDto;
 import org.springframework.data.domain.Page;

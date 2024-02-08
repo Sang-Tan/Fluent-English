@@ -1,4 +1,4 @@
-package com.fluentenglish.web.learning.material.word.dto;
+package com.fluentenglish.web.learning.material.word.admin.dto;
 
 import com.fluentenglish.web.common.fileresource.FileResourceDto;
 import jakarta.validation.constraints.NotBlank;

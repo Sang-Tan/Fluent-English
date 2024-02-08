@@ -1,6 +1,6 @@
 package com.fluentenglish.web.learning.material.word;
 
-import com.fluentenglish.web.learning.material.word.dto.WordCreateUpdateDto;
+import com.fluentenglish.web.learning.material.word.admin.dto.WordCreateUpdateDto;
 
 public interface WordMediaService {
     void saveMediaOnCreated(WordCreateUpdateDto wordCreateUpdateDto);

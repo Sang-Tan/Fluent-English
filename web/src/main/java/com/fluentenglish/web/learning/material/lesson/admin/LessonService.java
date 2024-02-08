@@ -1,7 +1,7 @@
 package com.fluentenglish.web.learning.material.lesson.admin;
 
 import com.fluentenglish.web.common.paging.PageDto;
-import com.fluentenglish.web.learning.material.lesson.dto.LessonCreateUpdateDto;
+import com.fluentenglish.web.learning.material.lesson.admin.dto.LessonCreateUpdateDto;
 import com.fluentenglish.web.learning.material.lesson.dto.LessonSearchDto;
 import com.fluentenglish.web.learning.material.lesson.dto.LessonDto;
 

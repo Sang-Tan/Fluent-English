@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fluentenglish.web.common.fileresource.CloudinaryFileResourceDto;
 import com.fluentenglish.web.common.fileresource.FileResourceDto;
-import com.fluentenglish.web.learning.material.word.dto.WordCreateUpdateDto;
+import com.fluentenglish.web.learning.material.word.admin.dto.WordCreateUpdateDto;
 import com.fluentenglish.web.upload.cloud.StorageExecutorService;
 import org.springframework.stereotype.Service;
 

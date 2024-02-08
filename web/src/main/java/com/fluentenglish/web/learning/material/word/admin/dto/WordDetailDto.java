@@ -1,4 +1,4 @@
-package com.fluentenglish.web.learning.material.word.dto;
+package com.fluentenglish.web.learning.material.word.admin.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;

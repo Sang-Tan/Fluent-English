@@ -2,7 +2,7 @@ package com.fluentenglish.web.learning.material.lesson.admin;
 
 import com.fluentenglish.web.common.paging.PageDto;
 import com.fluentenglish.web.learning.material.lesson.dto.LessonSearchDto;
-import com.fluentenglish.web.learning.material.lesson.dto.LessonCreateUpdateDto;
+import com.fluentenglish.web.learning.material.lesson.admin.dto.LessonCreateUpdateDto;
 import com.fluentenglish.web.learning.material.lesson.dto.LessonDto;
 import com.fluentenglish.web.learning.material.word.admin.WordService;
 import com.fluentenglish.web.learning.material.word.dto.WordDto;
@@ -14,7 +14,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController("AdminLessonController")
-@RequestMapping("/admin/api/lessons")
+@RequestMapping("/api/lessons")
 public class LessonController {
     private final LessonService lessonService;
 

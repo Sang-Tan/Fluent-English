@@ -1,7 +1,7 @@
 package com.fluentenglish.web.learning.material.word.admin;
 
-import com.fluentenglish.web.learning.material.word.dto.WordCreateUpdateDto;
-import com.fluentenglish.web.learning.material.word.dto.WordDetailDto;
+import com.fluentenglish.web.learning.material.word.admin.dto.WordCreateUpdateDto;
+import com.fluentenglish.web.learning.material.word.admin.dto.WordDetailDto;
 import com.fluentenglish.web.learning.material.word.dto.WordDto;
 import com.fluentenglish.web.learning.material.word.dto.WordSearchDto;
 

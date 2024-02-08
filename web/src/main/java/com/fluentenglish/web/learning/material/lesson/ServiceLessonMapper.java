@@ -1,6 +1,6 @@
 package com.fluentenglish.web.learning.material.lesson;
 
-import com.fluentenglish.web.learning.material.lesson.dto.LessonCreateUpdateDto;
+import com.fluentenglish.web.learning.material.lesson.admin.dto.LessonCreateUpdateDto;
 import com.fluentenglish.web.learning.material.lesson.dto.LessonDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
