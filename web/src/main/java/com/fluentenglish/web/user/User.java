@@ -27,7 +27,8 @@ public class User {
 
     private Float chapterProgress = 0.0f;
 
-    private Float currentHp = 1.0f;
+    @Column(name = "current_hp")
+    private Float currentHpPercent = 1.0f;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "level", referencedColumnName = "level")
