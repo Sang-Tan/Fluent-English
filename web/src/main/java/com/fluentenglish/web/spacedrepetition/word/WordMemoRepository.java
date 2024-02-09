@@ -1,6 +1,8 @@
 package com.fluentenglish.web.spacedrepetition.word;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface WordMemoRepository extends JpaRepository<WordMemo, WordMemoId> {
+public interface WordMemoRepository extends JpaRepository<WordMemo, WordMemoId>,
+        JpaSpecificationExecutor<WordMemo> {
 }

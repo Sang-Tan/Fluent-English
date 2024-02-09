@@ -42,4 +42,8 @@ public class Word {
             inverseJoinColumns = @JoinColumn(name = "lesson_id")
     )
     private Set<Lesson> lessons;
+
+    public Word(int wordId) {
+        this.id = wordId;
+    }
 }
