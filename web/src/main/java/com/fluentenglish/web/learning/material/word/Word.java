@@ -2,8 +2,7 @@ package com.fluentenglish.web.learning.material.word;
 
 import com.fluentenglish.web.learning.material.lesson.Lesson;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -13,6 +12,9 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "words")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Word {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
