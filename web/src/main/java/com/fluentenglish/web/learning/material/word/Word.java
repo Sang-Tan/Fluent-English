@@ -41,4 +41,7 @@ public class Word {
     )
     private Set<Lesson> lessons;
 
+    public Word(int wordId) {
+        this.id = wordId;
+    }
 }

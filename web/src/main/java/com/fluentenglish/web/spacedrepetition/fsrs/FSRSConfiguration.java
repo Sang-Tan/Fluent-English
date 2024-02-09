@@ -1,13 +1,9 @@
 package com.fluentenglish.web.spacedrepetition.fsrs;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class FSRSConfiguration {
     @Builder.Default
@@ -21,4 +17,11 @@ public class FSRSConfiguration {
 
     @Builder.Default
     private float maxDifficulty = 10.0f;
+
+    public FSRSConfiguration(float[] params, float requestRetention, float minDifficulty, float maxDifficulty) {
+        this.params = params;
+        this.requestRetention = requestRetention;
+        this.minDifficulty = minDifficulty;
+        this.maxDifficulty = maxDifficulty;
+    }
 }

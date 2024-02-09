@@ -3,12 +3,15 @@ package com.fluentenglish.web.user;
 import com.fluentenglish.web.gaming.chapter.Chapter;
 import com.fluentenglish.web.gaming.user.level.UserLevel;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
@@ -35,4 +38,8 @@ public class User {
     private UserLevel level;
 
     private Integer experience = 0;
+
+    public User(Integer id) {
+        this.id = id;
+    }
 }

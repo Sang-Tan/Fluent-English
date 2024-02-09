@@ -1,7 +1,10 @@
 package com.fluentenglish.web.spacedrepetition.fsrs;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Date;
 
+@Component
 public class FSRS4Scheduler implements FSRSScheduler {
     private final float[] params;
 
