@@ -32,13 +32,13 @@ public class LessonServiceImpl implements LessonService {
         return lessonMapper.lessonToLessonDto(lesson);
     }
 
-    public PageDto getAllLessons(int page) {
+    public PageDto<LessonDto> getAllLessons(int page) {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("name"));
         Page<Lesson> lessons = lessonRepository.findAll(pageable);
         return pageMapper.toPageDto(lessons.map(lessonMapper::lessonToLessonDto));
     }
 
-    public PageDto searchLessons(LessonSearchDto lessonSearchDto, int page) {
+    public PageDto<LessonDto> searchLessons(LessonSearchDto lessonSearchDto, int page) {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("name"));
         Page<Lesson> lessons = lessonRepository.searchLessons(lessonSearchDto, pageable);
         return pageMapper.toPageDto(lessons.map(lessonMapper::lessonToLessonDto));

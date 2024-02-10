@@ -10,9 +10,9 @@ public interface LessonService {
 
     LessonDto getLessonById(int id);
 
-    PageDto getAllLessons(int page);
+    PageDto<LessonDto> getAllLessons(int page);
 
-    PageDto searchLessons(LessonSearchDto lessonSearchDto, int page);
+    PageDto<LessonDto> searchLessons(LessonSearchDto lessonSearchDto, int page);
 
     void updateLesson(int id, LessonCreateUpdateDto lessonDto);
 
