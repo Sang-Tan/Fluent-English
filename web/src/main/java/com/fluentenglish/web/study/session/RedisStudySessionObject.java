@@ -9,7 +9,6 @@ public abstract class RedisStudySessionObject {
         if (this.metadata != null) {
             throw new IllegalStateException("Session's metadata is already set and cannot be changed");
         }
-        assert metadata != null;
 
         this.metadata = metadata;
     }

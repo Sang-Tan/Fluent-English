@@ -22,7 +22,10 @@ public class RedisSessionWordsScores extends RedisStudySessionObject implements 
     @Override
     public WordScore getWordScore(int wordId) {
         String wordScore = hashOperations.get(getWordScoreKey(), wordId);
-        assert wordScore != null;
+        if (wordScore == null) {
+            throw new RuntimeException("Word score's key does not exist or the it " +
+                    "has been set in the same transaction");
+        }
         String[] wordScoreArray = wordScore.split("\\|");
 
         WordScore score = new WordScore();
