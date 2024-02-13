@@ -29,7 +29,7 @@ public class UserInfoService {
 
     public CurrentStateDto getCurrentState(Integer userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-        return new CurrentStateDto(user.getCurrentHpPercent());
+        return new CurrentStateDto((int) (user.getCurrentHpPercent() * user.getLevel().getBaseHp()));
     }
 
     public LevelProgressDto getLevelProgress(Integer userId) {
@@ -61,5 +61,15 @@ public class UserInfoService {
             user.setCurrentHpPercent(currentHp/ (float) user.getLevel().getBaseHp());
             userRepository.save(user);
         }
+    }
+
+    public CurrentStateDto updateCurrentState(Integer userId, CurrentStateDto currentStateDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        if(currentStateDto.getCurrentHp() < 0 || currentStateDto.getCurrentHp() > user.getLevel().getBaseHp()) {
+            user.setCurrentHpPercent(currentStateDto.getCurrentHp()/ (float) user.getLevel().getBaseHp());
+            userRepository.save(user);
+        }
+
+        return new CurrentStateDto((int) (user.getCurrentHpPercent() * user.getLevel().getBaseHp()));
     }
 }
