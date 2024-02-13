@@ -24,8 +24,8 @@ public class QuizSessionServiceImpl implements QuizSessionService{
     }
 
     @Override
-    public SessionQuizzesQueue createQuizzesQueue(String sessionId, Set<Integer> wordIds) {
-        return createRedisQuizzesQueue(sessionId, wordIds);
+    public Quiz initializeQuizzes(String sessionId, Set<Integer> wordIds) {
+        return createRedisQuizzesQueue(sessionId, wordIds).peek();
     }
 
     @Override
