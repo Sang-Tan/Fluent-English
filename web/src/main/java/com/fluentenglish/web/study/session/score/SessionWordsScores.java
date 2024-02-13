@@ -1,5 +1,7 @@
 package com.fluentenglish.web.study.session.score;
 
+import java.util.Map;
+
 public interface SessionWordsScores {
 
     /**
@@ -7,7 +9,11 @@ public interface SessionWordsScores {
      */
     WordScore getWordScore(int wordId);
 
+    Map<Integer, WordScore> getWordsScores();
+
     void setWordScore(int wordId, WordScore wordScore);
+
+    void setWordsScores(Map<Integer, WordScore> wordScores);
 
     void removeWordScore(int wordId);
 }
