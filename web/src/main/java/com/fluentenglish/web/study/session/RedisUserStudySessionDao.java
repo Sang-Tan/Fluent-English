@@ -22,12 +22,12 @@ public class RedisUserStudySessionDao implements UserStudySessionDao {
 
     public RedisUserStudySessionDao(BeanFactory beanFactory,
                                     RedisTemplate<String, Object> redisTemplate,
-                                    ValueOperations<String, Integer> integerOperations,
-                                    ValueOperations<String, String> stringOperations) {
+                                    RedisTemplate<String, Integer> integerTemplate,
+                                    RedisTemplate<String, String> stringTemplate) {
         this.beanFactory = beanFactory;
         this.redisTemplate = redisTemplate;
-        this.integerOperations = integerOperations;
-        this.stringOperations = stringOperations;
+        this.integerOperations = integerTemplate.opsForValue();
+        this.stringOperations = stringTemplate.opsForValue();
     }
 
     @Override
