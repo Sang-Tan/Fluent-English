@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class CurrentStateDto {
-    private Integer currentHp;
+public class StoryContentDto {
+    private String vietnameseContent;
+    private String englishContent;
 }
