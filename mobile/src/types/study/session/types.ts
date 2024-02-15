@@ -24,3 +24,18 @@ export interface InputAnswer extends Answer {
   type: "input";
   answer: string;
 }
+
+export interface Quiz<T extends Answer> {
+  wordId: number;
+  question: Question;
+  answer: T;
+}
+
+export interface BattleInfo {
+  userHp: number;
+  userShield: number;
+  userStreak: number;
+  enemyName: string;
+  enemyDmg: number;
+  expGain: number;
+}
