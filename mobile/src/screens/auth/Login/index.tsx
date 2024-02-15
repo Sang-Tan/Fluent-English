@@ -1,5 +1,6 @@
 import ROUTE_NAMES from "src/routes/routeNames";
 import { COLORS } from "./styles";
+import { MAIN_COLORS } from "src/styles/globalColors";
 import globalStyles from "src/styles/globalStyles";
 import styles from "./styles";
 
@@ -30,8 +31,6 @@ function Login({ navigation }: { navigation: any }) {
   const [password, setPassword] = useState<string>("");
   const doRequest = useRequest();
   const authContext = useContext(AuthContext);
-
-  StatusBar.setBarStyle("light-content", true);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -69,7 +68,7 @@ function Login({ navigation }: { navigation: any }) {
           accessToken: respData.accessToken,
         });
 
-        alert("Login successful");
+        navigation.navigate(ROUTE_NAMES.HOME);
       } else if (response.status === 401) {
         alert("Invalid credentials");
       } else {
@@ -104,67 +103,73 @@ function Login({ navigation }: { navigation: any }) {
   };
 
   return (
-    <View style={[globalStyles.statusBarPadding, styles.container]}>
-      <View style={styles.topPanel}>
-        <View style={styles.logoWrapper}>
-          <FontAwesomeIcon
-            icon={faLock}
-            size={40}
-            color={COLORS.OUTLINE}
-            style={styles.logo}
-          />
-        </View>
-        <Text style={styles.title}>Welcome back!</Text>
-        <View style={styles.inputWrapper}>
-          <View>
+    <>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={MAIN_COLORS.BACKGROUND}
+      />
+      <View style={[globalStyles.statusBarPadding, styles.container]}>
+        <View style={styles.topPanel}>
+          <View style={styles.logoWrapper}>
             <FontAwesomeIcon
-              icon={faEnvelope}
-              size={20}
+              icon={faLock}
+              size={40}
               color={COLORS.OUTLINE}
-              style={styles.inputIcon}
+              style={styles.logo}
             />
           </View>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Email"
-            placeholderTextColor="#aaa"
-            value={email}
-            onChangeText={setEmail}
-          />
-        </View>
-        <View style={styles.inputWrapper}>
-          <View>
-            <Pressable onPress={toggleShowPassword}>
+          <Text style={styles.title}>Welcome back!</Text>
+          <View style={styles.inputWrapper}>
+            <View>
               <FontAwesomeIcon
-                icon={showPassword ? faEye : faEyeSlash}
+                icon={faEnvelope}
                 size={20}
                 color={COLORS.OUTLINE}
                 style={styles.inputIcon}
               />
-            </Pressable>
+            </View>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Email"
+              placeholderTextColor="#aaa"
+              value={email}
+              onChangeText={setEmail}
+            />
           </View>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Password"
-            placeholderTextColor="#aaa"
-            secureTextEntry={!showPassword}
-            value={password}
-            onChangeText={setPassword}
-          />
+          <View style={styles.inputWrapper}>
+            <View>
+              <Pressable onPress={toggleShowPassword}>
+                <FontAwesomeIcon
+                  icon={showPassword ? faEye : faEyeSlash}
+                  size={20}
+                  color={COLORS.OUTLINE}
+                  style={styles.inputIcon}
+                />
+              </Pressable>
+            </View>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Password"
+              placeholderTextColor="#aaa"
+              secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={setPassword}
+            />
+          </View>
+          <Pressable style={styles.loginButton} onPress={handleLoginSubmit}>
+            <Text style={styles.loginButtonText}>Login</Text>
+          </Pressable>
         </View>
-        <Pressable style={styles.loginButton} onPress={handleLoginSubmit}>
-          <Text style={styles.loginButtonText}>Login</Text>
-        </Pressable>
+        <View style={styles.bottomPanel}>
+          <Text style={styles.text}>
+            Don't have an account?{" "}
+            <TouchableWithoutFeedback onPress={handleGotoSignup}>
+              <Text style={[styles.text, { fontWeight: "bold" }]}>Sign up</Text>
+            </TouchableWithoutFeedback>
+          </Text>
+        </View>
       </View>
-      <View style={styles.bottomPanel}>
-        <Text style={styles.text}>
-          Don't have an account?{" "}
-          <TouchableWithoutFeedback onPress={handleGotoSignup}>
-            <Text style={[styles.text, { fontWeight: "bold" }]}>Sign up</Text>
-          </TouchableWithoutFeedback>
-        </Text>
-      </View>
-    </View>
+    </>
   );
 }
 
