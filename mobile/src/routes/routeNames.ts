@@ -3,6 +3,7 @@ const ROUTE_NAMES = Object.freeze({
   REGISTER: "Register",
   REGISTER_SUCCESS: "RegisterSuccess",
   LESSON_SEARCH: "LessonSearch",
+  LESSON_DETAIL: "LessonDetail",
   HOME: "LessonSearch",
 });
 

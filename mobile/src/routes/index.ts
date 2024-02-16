@@ -3,6 +3,7 @@ import Login from "../screens/auth/Login";
 import Register from "src/screens/auth/Register";
 import RegisterSuccess from "src/screens/auth/RegisterSuccess";
 import LessonSearch from "src/screens/learningMaterial/LessonSearch";
+import LessonDetail from "src/screens/learningMaterial/LessonDetail";
 import ROUTE_NAMES from "./routeNames";
 import React from "react";
 
@@ -37,6 +38,13 @@ const routes: Route[] = [
   {
     name: ROUTE_NAMES.LESSON_SEARCH,
     component: LessonSearch,
+    options: {
+      headerShown: false,
+    },
+  },
+  {
+    name: ROUTE_NAMES.LESSON_DETAIL,
+    component: LessonDetail,
     options: {
       headerShown: false,
     },
