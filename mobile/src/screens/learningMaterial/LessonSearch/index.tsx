@@ -1,3 +1,5 @@
+import ROUTE_NAMES from "src/routes/routeNames";
+
 import styles from "./styles";
 import { useState, useEffect, useMemo } from "react";
 import {
@@ -37,7 +39,11 @@ const isScrollToBottom = ({
   );
 };
 
-function LessonSearch() {
+interface LessonSearchProps {
+  navigation: any;
+}
+
+function LessonSearch({ navigation }: LessonSearchProps) {
   const [searchText, setSearchText] = useState<string>("");
   const [curPage, setCurPage] = useState<number>(0);
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -118,7 +124,9 @@ function LessonSearch() {
             lessonName={lesson.name}
             difficulty={lesson.difficulty}
             onPress={() => {
-              console.log(`Pressed on ${lesson.name}`);
+              navigation.navigate(ROUTE_NAMES.LESSON_DETAIL, {
+                lesson: lesson,
+              });
             }}
           />
         ))}

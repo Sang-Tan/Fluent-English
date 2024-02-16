@@ -1,5 +1,6 @@
 const MAIN_COLORS = Object.freeze({
   PRIMARY: "#543EE9",
+  PRIMARY_DARK: "#3F2A8A",
   SECONDARY: "#39D4D8",
   BACKGROUND: "#0C042E",
   TEXT: "#FFFFFF",
