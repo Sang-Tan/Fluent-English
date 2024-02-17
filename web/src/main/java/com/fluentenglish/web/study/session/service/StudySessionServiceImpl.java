@@ -45,10 +45,13 @@ public class StudySessionServiceImpl implements StudySessionService {
         Quiz firstQuiz = quizSessionService.initializeQuizzes(studySessionId, wordIds);
         BattleInfo battleInfo = battleService.initializeBattle(studySessionId);
 
+        int remainingQuizzesCount = quizSessionService.countRemainingQuizzes(studySessionId);
+
         StudySessionUpdateInfo sessionInfo = new StudySessionUpdateInfo();
         sessionInfo.setNextQuiz(firstQuiz);
         sessionInfo.setBattleInfo(battleInfo);
         sessionInfo.setSessionId(studySessionId);
+        sessionInfo.setRemainingQuizzesCount(remainingQuizzesCount);
 
         return sessionInfo;
     }
@@ -97,6 +100,7 @@ public class StudySessionServiceImpl implements StudySessionService {
         StudySessionUpdateInfo sessionInfo = new StudySessionUpdateInfo();
         sessionInfo.setNextQuiz(nextQuiz);
         sessionInfo.setBattleInfo(battleService.updateBattle(studySessionId, score));
+        sessionInfo.setRemainingQuizzesCount(quizSessionService.countRemainingQuizzes(studySessionId));
 
         return sessionInfo;
     }

@@ -18,4 +18,6 @@ public interface QuizSessionService {
      * @return score of answered quiz
      */
     Integer submitAnswer(String sessionId, AnswerSubmission answer);
+
+    int countRemainingQuizzes(String studySessionId);
 }
