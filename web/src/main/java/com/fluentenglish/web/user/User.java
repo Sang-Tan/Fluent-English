@@ -2,11 +2,14 @@ package com.fluentenglish.web.user;
 
 import com.fluentenglish.web.gaming.chapter.Chapter;
 import com.fluentenglish.web.gaming.user.level.UserLevel;
+import com.fluentenglish.web.learning.material.word.Word;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -42,4 +45,14 @@ public class User {
     public User(Integer id) {
         this.id = id;
     }
+
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "users__ignored_words",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "word_id")
+    )
+    private Set<Word> ignoredWords;
 }
