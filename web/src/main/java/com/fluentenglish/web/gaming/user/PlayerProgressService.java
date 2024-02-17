@@ -3,9 +3,9 @@ package com.fluentenglish.web.gaming.user;
 import com.fluentenglish.web.common.exception.errorresponse.NotFoundException;
 import com.fluentenglish.web.gaming.chapter.Chapter;
 import com.fluentenglish.web.gaming.chapter.ChapterRepository;
-import com.fluentenglish.web.gaming.user.dto.BeforeAfterStoryProcessDto;
+import com.fluentenglish.web.gaming.user.dto.BeforeAfterStoryProgressDto;
 import com.fluentenglish.web.gaming.user.dto.StoryContentDto;
-import com.fluentenglish.web.gaming.user.dto.StoryProcessDto;
+import com.fluentenglish.web.gaming.user.dto.StoryProgressDto;
 import com.fluentenglish.web.user.User;
 import com.fluentenglish.web.user.UserRepository;
 import org.springframework.stereotype.Service;
@@ -15,22 +15,22 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PlayerProcessService {
+public class PlayerProgressService {
     private final UserRepository userRepository;
     private final ChapterRepository chapterRepository;
-    public PlayerProcessService(UserRepository userRepository,
-                                ChapterRepository chapterRepository) {
+    public PlayerProgressService(UserRepository userRepository,
+                                 ChapterRepository chapterRepository) {
         this.userRepository = userRepository;
         this.chapterRepository = chapterRepository;
     }
-    public StoryProcessDto getStoryProcess(Integer userId) {
+    public StoryProgressDto getStoryProgress(Integer userId) {
         return userRepository.findById(userId)
-                .map(user -> new StoryProcessDto(user.getChapter().getNumber(), user.getChapterProgress()))
+                .map(user -> new StoryProgressDto(user.getChapter().getNumber(), user.getChapterProgress()))
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
-    public BeforeAfterStoryProcessDto addChapterProgress(Integer userId, Float progress) {
+    public BeforeAfterStoryProgressDto addChapterProgress(Integer userId, Float progress) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-        StoryProcessDto before = new StoryProcessDto(user.getChapter().getNumber(), user.getChapterProgress());
+        StoryProgressDto before = new StoryProgressDto(user.getChapter().getNumber(), user.getChapterProgress());
         List<StoryContentDto> storyContentReceived = new ArrayList<>();
 
         if(user.getChapterProgress() + progress < 1.0f) {
@@ -52,8 +52,8 @@ public class PlayerProcessService {
         }
 
         userRepository.save(user);
-        StoryProcessDto after = new StoryProcessDto(user.getChapter().getNumber(), user.getChapterProgress());
+        StoryProgressDto after = new StoryProgressDto(user.getChapter().getNumber(), user.getChapterProgress());
 
-        return new BeforeAfterStoryProcessDto(before, after, storyContentReceived);
+        return new BeforeAfterStoryProgressDto(before, after, storyContentReceived);
     }
 }

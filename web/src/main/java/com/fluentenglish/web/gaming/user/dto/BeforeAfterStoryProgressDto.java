@@ -9,10 +9,10 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class BeforeAfterStoryProcessDto {
-    private StoryProcessDto before;
+public class BeforeAfterStoryProgressDto {
+    private StoryProgressDto before;
 
-    private StoryProcessDto after;
+    private StoryProgressDto after;
 
     private List<StoryContentDto> storyContentReceived;
 }
