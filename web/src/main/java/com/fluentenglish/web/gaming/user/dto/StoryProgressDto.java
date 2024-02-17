@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class StoryProcessDto {
+public class StoryProgressDto {
     private Integer chapterNumber;
     private Float chapterProgress;
 }
