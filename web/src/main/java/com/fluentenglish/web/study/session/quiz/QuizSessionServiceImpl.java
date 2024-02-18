@@ -38,6 +38,11 @@ public class QuizSessionServiceImpl implements QuizSessionService{
         return submitAnswerToRedisQueue(sessionId, answer);
     }
 
+    @Override
+    public int countRemainingQuizzes(String studySessionId) {
+        return redisUserStudySessionDao.getSessionById(studySessionId).getQuizzesQueue().quizzesCount();
+    }
+
     private Optional<Quiz> getNextQuizFromRedisQueue(String sessionId) {
         StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
         SessionQuizzesQueue quizzesQueue = studySession.getQuizzesQueue();

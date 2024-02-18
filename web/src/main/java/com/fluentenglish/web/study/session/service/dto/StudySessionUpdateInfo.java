@@ -10,4 +10,5 @@ import lombok.Setter;
 public class StudySessionUpdateInfo extends StudySessionInfo {
     private Quiz nextQuiz;
     private BattleInfo battleInfo;
+    private int remainingQuizzesCount;
 }
