@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SubmitAnswerDto extends ExistStudySessionRequestDto{
+public class SubmitAnswerDto {
     @NotNull
     private AnswerSubmission answer;
 }
