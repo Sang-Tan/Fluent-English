@@ -14,7 +14,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController("AdminLessonController")
-@RequestMapping("/api/lessons")
+@RequestMapping("/admin/api/lessons")
 public class LessonController {
     private final LessonService lessonService;
 
@@ -25,12 +25,12 @@ public class LessonController {
     }
 
     @GetMapping
-    public ResponseEntity<PageDto> index(@RequestParam(name = "q", required = false, defaultValue = "") String lessonSearch,
+    public ResponseEntity<PageDto<LessonDto>> index(@RequestParam(name = "q", required = false, defaultValue = "") String lessonSearch,
                                          @RequestParam(name = "page", required = false, defaultValue = "1") int page
     ) {
         LessonSearchDto lessonSearchDto = new LessonSearchDto();
         lessonSearchDto.setName(lessonSearch.trim());
-        PageDto lessonsPage = lessonSearchDto.getName().isEmpty()
+        PageDto<LessonDto> lessonsPage = lessonSearchDto.getName().isEmpty()
                 ? lessonService.getAllLessons(page)
                 : lessonService.searchLessons(lessonSearchDto, page);
 

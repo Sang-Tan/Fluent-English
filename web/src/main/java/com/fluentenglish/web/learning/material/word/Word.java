@@ -1,6 +1,7 @@
 package com.fluentenglish.web.learning.material.word;
 
 import com.fluentenglish.web.learning.material.lesson.Lesson;
+import com.fluentenglish.web.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -42,6 +43,16 @@ public class Word {
             inverseJoinColumns = @JoinColumn(name = "lesson_id")
     )
     private Set<Lesson> lessons;
+
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "users__ignored_words",
+            joinColumns = @JoinColumn(name = "word_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> ignoredBy;
 
     public Word(int wordId) {
         this.id = wordId;
