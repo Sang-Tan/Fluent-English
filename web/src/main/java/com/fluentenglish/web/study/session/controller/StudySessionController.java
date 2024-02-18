@@ -1,28 +1,21 @@
 package com.fluentenglish.web.study.session.controller;
 
-import com.fluentenglish.web.study.session.controller.dto.ExistStudySessionRequestDto;
 import com.fluentenglish.web.study.session.controller.dto.StartStudySessionDto;
-import com.fluentenglish.web.study.session.controller.dto.SubmitAnswerDto;
+import com.fluentenglish.web.study.session.quiz.dto.AnswerSubmission;
 import com.fluentenglish.web.study.session.service.StudySessionService;
 import com.fluentenglish.web.study.session.service.dto.StudySessionInfo;
 import com.fluentenglish.web.study.session.service.dto.StudySessionUpdateInfo;
 import com.fluentenglish.web.user.UserService;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/study-session")
-@Secured("ROLE_USER")
+@RequestMapping("/api/study-sessions")
 public class StudySessionController {
 
     private final StudySessionService studySessionService;
@@ -51,20 +44,18 @@ public class StudySessionController {
         return ResponseEntity.ok(sessionInfo);
     }
 
-    @PostMapping("/continue")
-    public ResponseEntity<Object> continueStudySession(
-            @RequestBody @Valid ExistStudySessionRequestDto sessionRequestDto) {
+    @GetMapping("/{sessionId}")
+    public ResponseEntity<Object> continueStudySession(@PathVariable String sessionId) {
         StudySessionUpdateInfo sessionInfo = studySessionService
-                .continueStudySession(sessionRequestDto.getSessionId());
+                .continueStudySession(sessionId);
 
         return ResponseEntity.ok(sessionInfo);
     }
 
-    @PostMapping("/answer")
-    public ResponseEntity<Object> submitAnswer(
-            @RequestBody @Valid SubmitAnswerDto answerSubmission) {
-        StudySessionInfo sessionInfo = studySessionService.submitAnswer(
-                answerSubmission.getSessionId(), answerSubmission.getAnswer());
+    @PostMapping("/{sessionId}/answer")
+    public ResponseEntity<Object> submitAnswer(@PathVariable String sessionId,
+            @RequestBody AnswerSubmission answerSubmission) {
+        StudySessionInfo sessionInfo = studySessionService.submitAnswer(sessionId, answerSubmission);
 
         return ResponseEntity.ok(sessionInfo);
     }
