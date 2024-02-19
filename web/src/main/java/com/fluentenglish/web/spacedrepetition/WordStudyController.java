@@ -8,6 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class WordStudyController {
@@ -18,6 +20,15 @@ public class WordStudyController {
     public WordStudyController(WordMemoService wordMemoService, UserService userService) {
         this.wordMemoService = wordMemoService;
         this.userService = userService;
+    }
+
+    @ResponseBody
+    @GetMapping("/api/words-to-study")
+    public ResponseEntity<List<Integer>> getNeedToStudyWordIds(
+            @RequestParam("userId") int userId,
+            @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
+        List<Integer> words = wordMemoService.getNeedToStudyWordIds(userId, limit);
+        return ResponseEntity.ok(words);
     }
     
     @PostMapping("/ignore-words")
