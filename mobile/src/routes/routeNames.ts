@@ -5,6 +5,7 @@ const ROUTE_NAMES = Object.freeze({
   LESSON_SEARCH: "LessonSearch",
   LESSON_DETAIL: "LessonDetail",
   HOME: "LessonSearch",
+  QUIZ_SCREEN: "QuizScreen",
 });
 
 export default ROUTE_NAMES;
