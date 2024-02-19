@@ -1,6 +1,9 @@
 // types
 import { Lesson } from "../LessonSearch/types";
-import { Quiz, BattleInfo } from "src/types/study/session/types";
+import { SessionInitializationDto } from "src/screens/studySession/types";
+
+// constants
+import ROUTE_NAMES from "src/routes/routeNames";
 
 import getEnv from "src/helpers/getEnv";
 import { useState, useEffect } from "react";
@@ -20,12 +23,6 @@ interface Word {
   text: string;
   vietnameseMeaning: string;
   nextStudy: number;
-}
-
-interface StartStudySessionInfo {
-  sessionId: string;
-  nextQuiz: Quiz<any>;
-  battleInfo: BattleInfo;
 }
 
 interface LessonDetailProps {
@@ -60,13 +57,15 @@ function LessonDetail({ route, navigation }: LessonDetailProps) {
   const handleStudyPressed = () => {
     const startStudySession = async (wordsToStudy: Word[]) => {
       const wordIds = wordsToStudy.map((word) => word.id);
-      const resp = await request("/study-session", {
+      const resp = await request("/study-sessions", {
         method: "POST",
         body: JSON.stringify({ wordIds }),
       });
       if (resp.ok) {
-        const data: StartStudySessionInfo = await resp.json();
-        console.log(data);
+        const data: SessionInitializationDto = await resp.json();
+        navigation.navigate(ROUTE_NAMES.QUIZ_SCREEN, {
+          startInfo: data,
+        });
       }
     };
 
@@ -76,6 +75,7 @@ function LessonDetail({ route, navigation }: LessonDetailProps) {
       0,
       Math.min(STUDY_SESSION_MAX_WORDS, arr.length)
     );
+    startStudySession(wordsToStudy);
   };
 
   return (
@@ -102,6 +102,7 @@ function LessonDetail({ route, navigation }: LessonDetailProps) {
           styles.button,
           pressed && styles.buttonPressed,
         ]}
+        onPress={handleStudyPressed}
       >
         <Text style={styles.buttonText}>Học</Text>
       </Pressable>

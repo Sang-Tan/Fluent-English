@@ -7,15 +7,15 @@ export enum MediaType {
 
 export interface FileResource {
   mediaType?: MediaType;
+  type: string;
+  url: string;
 }
 
 export interface CloudinaryResource extends FileResource {
   type: "cloudinary";
   publicId: string;
-  url: string;
 }
 
 export interface ExternalResource extends FileResource {
   type: "ext";
-  url: string;
 }
