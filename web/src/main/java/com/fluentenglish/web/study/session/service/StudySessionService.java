@@ -1,17 +1,18 @@
 package com.fluentenglish.web.study.session.service;
 
 import com.fluentenglish.web.study.session.quiz.dto.AnswerSubmission;
-import com.fluentenglish.web.study.session.service.dto.StudySessionInfo;
-import com.fluentenglish.web.study.session.service.dto.StudySessionUpdateInfo;
+import com.fluentenglish.web.study.session.service.dto.StudySessionSubmissionDto;
+import com.fluentenglish.web.study.session.service.dto.StudySessionInitializationDto;
+import com.fluentenglish.web.study.session.service.dto.StudySessionUpdateDto;
 
 import java.util.Set;
 
 public interface StudySessionService {
-    StudySessionUpdateInfo startStudySession(int userId, Set<Integer> wordIds);
+    StudySessionInitializationDto startStudySession(int userId, Set<Integer> wordIds);
 
-    StudySessionUpdateInfo continueStudySession(String sessionId);
+    StudySessionUpdateDto continueStudySession(String sessionId);
 
     boolean studySessionExists(String sessionId);
 
-    StudySessionInfo submitAnswer(String sessionId, AnswerSubmission answer);
+    StudySessionSubmissionDto submitAnswer(String sessionId, AnswerSubmission answer);
 }
