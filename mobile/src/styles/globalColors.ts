@@ -1,9 +1,27 @@
+const COMMON_COLORS = Object.freeze({
+  WHITE: "#FFFFFF",
+  BLACK: "#000000",
+  GREEN: "#00FF00",
+  DARK_GREEN: "#0dba10",
+  GRAY: "#808080",
+});
+
 const MAIN_COLORS = Object.freeze({
   PRIMARY: "#543EE9",
   PRIMARY_DARK: "#3F2A8A",
+  PRIMARY_LIGHT: "#7A6FF0",
   SECONDARY: "#39D4D8",
   BACKGROUND: "#0C042E",
   TEXT: "#FFFFFF",
 });
 
-export { MAIN_COLORS };
+const LIGHT_THEME_COLORS = Object.freeze({
+  PRIMARY: "#543EE9",
+  PRIMARY_DARK: "#3F2A8A",
+  PRIMARY_LIGHT: "#7A6FF0",
+  SECONDARY: "#39D4D8",
+  BACKGROUND: "#FFFFFF",
+  TEXT: "#000000",
+});
+
+export { MAIN_COLORS, LIGHT_THEME_COLORS, COMMON_COLORS };
