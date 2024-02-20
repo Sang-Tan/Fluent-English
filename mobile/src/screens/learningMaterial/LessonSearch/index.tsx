@@ -47,7 +47,10 @@ function LessonSearch({ navigation }: LessonSearchProps) {
   const [searchText, setSearchText] = useState<string>("");
   const [curPage, setCurPage] = useState<number>(0);
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  const [pendingSearch, setPendingSearch] = useState<SearchProps | null>(null);
+  const [pendingSearch, setPendingSearch] = useState<SearchProps | null>({
+    text: "",
+    page: 1,
+  });
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const request = useRequest();
 
