@@ -119,12 +119,12 @@ public class QuizSessionServiceImpl implements QuizSessionService {
         throw new IllegalArgumentException("Answer type not supported");
     }
 
-    private boolean isInputAnswerCorrect(String submittedAnswer, String correctAnswer) {
-        return correctAnswer.equals(submittedAnswer);
+    private boolean isInputAnswerCorrect(String inputAnswer, String correctAnswer) {
+        return correctAnswer.equalsIgnoreCase(inputAnswer.trim());
     }
 
-    private boolean isMultipleChoiceAnswerCorrect(String submittedAnswer, String correctAnswer) {
-        return correctAnswer.equalsIgnoreCase(submittedAnswer.trim());
+    private boolean isMultipleChoiceAnswerCorrect(String choiceIndex, String correctIndex) {
+        return correctIndex.equals(choiceIndex);
     }
 
 
