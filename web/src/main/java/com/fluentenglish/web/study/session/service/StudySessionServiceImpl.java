@@ -9,9 +9,10 @@ import com.fluentenglish.web.study.session.quiz.Quiz;
 import com.fluentenglish.web.study.session.quiz.QuizSessionService;
 import com.fluentenglish.web.study.session.quiz.dto.AnswerSubmission;
 import com.fluentenglish.web.study.session.quiz.dto.resp.AnswerSubmissionResult;
-import com.fluentenglish.web.study.session.service.dto.StudySessionInfo;
-import com.fluentenglish.web.study.session.service.dto.StudySessionSummary;
-import com.fluentenglish.web.study.session.service.dto.StudySessionUpdateInfo;
+import com.fluentenglish.web.study.session.service.dto.StudySessionSubmissionDto;
+import com.fluentenglish.web.study.session.service.dto.StudySessionInitializationDto;
+import com.fluentenglish.web.study.session.service.dto.StudySessionSummaryDto;
+import com.fluentenglish.web.study.session.service.dto.StudySessionUpdateDto;
 import com.fluentenglish.web.study.spacedrepetition.SRSessionService;
 import com.fluentenglish.web.study.spacedrepetition.WordsScoresResult;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class StudySessionServiceImpl implements StudySessionService {
     }
 
     @Override
-    public StudySessionUpdateInfo startStudySession(int userId, Set<Integer> wordIds) {
+    public StudySessionInitializationDto startStudySession(int userId, Set<Integer> wordIds) {
         String studySessionId = userStudySessionDao.createSession(userId).getId();
 
         Quiz firstQuiz = quizSessionService.initializeQuizzes(studySessionId, wordIds);
@@ -48,7 +49,7 @@ public class StudySessionServiceImpl implements StudySessionService {
 
         int remainingQuizzesCount = quizSessionService.countRemainingQuizzes(studySessionId);
 
-        StudySessionUpdateInfo sessionInfo = new StudySessionUpdateInfo();
+        StudySessionInitializationDto sessionInfo = new StudySessionInitializationDto();
         sessionInfo.setNextQuiz(firstQuiz);
         sessionInfo.setBattleInfo(battleInfo);
         sessionInfo.setSessionId(studySessionId);
@@ -58,7 +59,7 @@ public class StudySessionServiceImpl implements StudySessionService {
     }
 
     @Override
-    public StudySessionUpdateInfo continueStudySession(String sessionId) {
+    public StudySessionUpdateDto continueStudySession(String sessionId) {
         //TODO: implement
         throw new UnsupportedOperationException();
     }
@@ -69,7 +70,7 @@ public class StudySessionServiceImpl implements StudySessionService {
     }
 
     @Override
-    public StudySessionInfo submitAnswer(String sessionId, AnswerSubmission answer) {
+    public StudySessionSubmissionDto submitAnswer(String sessionId, AnswerSubmission answer) {
         StudySession studySession = userStudySessionDao.getSessionById(sessionId);
         String studySessionId = studySession.getId();
 
@@ -82,19 +83,19 @@ public class StudySessionServiceImpl implements StudySessionService {
         Optional<Quiz> quizOpt = quizSessionService.getNextQuiz(studySessionId);
         return quizOpt
                 .map(quiz -> {
-                    StudySessionUpdateInfo updateInfo = continueStudySession(studySessionId, quiz, score);
+                    StudySessionUpdateDto updateInfo = continueStudySession(studySessionId, quiz, score);
                     updateInfo.setAnswerSubmissionResult(result);
-                    return (StudySessionInfo)updateInfo;
+                    return (StudySessionSubmissionDto)updateInfo;
                 })
                 .orElseGet(() -> {
-                    StudySessionSummary summary = endStudySession(studySessionId);
+                    StudySessionSummaryDto summary = endStudySession(studySessionId);
                     summary.setAnswerSubmissionResult(result);
                     return summary;
                 });
     }
 
-    private StudySessionSummary endStudySession(String studySessionId) {
-        StudySessionSummary summary = new StudySessionSummary();
+    private StudySessionSummaryDto endStudySession(String studySessionId) {
+        StudySessionSummaryDto summary = new StudySessionSummaryDto();
 
         WordsScoresResult wordsScoresResult = srSessionService.endSession(studySessionId);
         BattleResult battleResult = battleService.endBattle(studySessionId);
@@ -107,8 +108,8 @@ public class StudySessionServiceImpl implements StudySessionService {
         return summary;
     }
 
-    private StudySessionUpdateInfo continueStudySession(String studySessionId, Quiz nextQuiz, int score) {
-        StudySessionUpdateInfo sessionInfo = new StudySessionUpdateInfo();
+    private StudySessionUpdateDto continueStudySession(String studySessionId, Quiz nextQuiz, int score) {
+        StudySessionUpdateDto sessionInfo = new StudySessionUpdateDto();
         sessionInfo.setNextQuiz(nextQuiz);
         sessionInfo.setBattleInfo(battleService.updateBattle(studySessionId, score));
         sessionInfo.setRemainingQuizzesCount(quizSessionService.countRemainingQuizzes(studySessionId));

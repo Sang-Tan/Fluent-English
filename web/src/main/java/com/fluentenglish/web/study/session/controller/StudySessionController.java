@@ -3,8 +3,9 @@ package com.fluentenglish.web.study.session.controller;
 import com.fluentenglish.web.study.session.controller.dto.StartStudySessionDto;
 import com.fluentenglish.web.study.session.quiz.dto.AnswerSubmission;
 import com.fluentenglish.web.study.session.service.StudySessionService;
-import com.fluentenglish.web.study.session.service.dto.StudySessionInfo;
-import com.fluentenglish.web.study.session.service.dto.StudySessionUpdateInfo;
+import com.fluentenglish.web.study.session.service.dto.StudySessionSubmissionDto;
+import com.fluentenglish.web.study.session.service.dto.StudySessionInitializationDto;
+import com.fluentenglish.web.study.session.service.dto.StudySessionUpdateDto;
 import com.fluentenglish.web.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -38,7 +39,7 @@ public class StudySessionController {
             return ResponseEntity.badRequest().body("Word ids must be distinct");
         }
 
-        StudySessionUpdateInfo sessionInfo =
+        StudySessionInitializationDto sessionInfo =
                 studySessionService.startStudySession(userId, wordIdsSet);
 
         return ResponseEntity.ok(sessionInfo);
@@ -46,7 +47,7 @@ public class StudySessionController {
 
     @GetMapping("/{sessionId}")
     public ResponseEntity<Object> continueStudySession(@PathVariable String sessionId) {
-        StudySessionUpdateInfo sessionInfo = studySessionService
+        StudySessionUpdateDto sessionInfo = studySessionService
                 .continueStudySession(sessionId);
 
         return ResponseEntity.ok(sessionInfo);
@@ -55,7 +56,7 @@ public class StudySessionController {
     @PostMapping("/{sessionId}/answer")
     public ResponseEntity<Object> submitAnswer(@PathVariable String sessionId,
             @RequestBody AnswerSubmission answerSubmission) {
-        StudySessionInfo sessionInfo = studySessionService.submitAnswer(sessionId, answerSubmission);
+        StudySessionSubmissionDto sessionInfo = studySessionService.submitAnswer(sessionId, answerSubmission);
 
         return ResponseEntity.ok(sessionInfo);
     }

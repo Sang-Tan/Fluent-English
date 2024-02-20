@@ -8,9 +8,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StudySessionUpdateInfo extends StudySessionInfo {
+public class StudySessionUpdateDto extends StudySessionSubmissionDto implements StudySessionStatusDto {
+    private AnswerSubmissionResult answerSubmissionResult;
     private Quiz nextQuiz;
     private BattleInfo battleInfo;
     private int remainingQuizzesCount;
-    private AnswerSubmissionResult answerSubmissionResult;
 }
