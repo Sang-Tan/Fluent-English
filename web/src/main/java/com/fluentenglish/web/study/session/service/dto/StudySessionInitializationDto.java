@@ -1,7 +1,7 @@
 package com.fluentenglish.web.study.session.service.dto;
 
-import com.fluentenglish.web.study.session.battle.BattleInfo;
-import com.fluentenglish.web.study.session.quiz.Quiz;
+import com.fluentenglish.web.study.session.dao.battle.BattleInfo;
+import com.fluentenglish.web.study.session.dao.quiz.Quiz;
 import lombok.Getter;
 import lombok.Setter;
 

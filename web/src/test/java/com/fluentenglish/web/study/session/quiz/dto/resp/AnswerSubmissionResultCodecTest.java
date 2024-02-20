@@ -2,6 +2,8 @@ package com.fluentenglish.web.study.session.quiz.dto.resp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fluentenglish.web.study.session.service.quiz.dto.resp.CorrectAnswerSubmissionResult;
+import com.fluentenglish.web.study.session.service.quiz.dto.resp.IncorrectAnswerSubmissionResult;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

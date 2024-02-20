@@ -1,20 +1,20 @@
 package com.fluentenglish.web.study.session.service;
 
-import com.fluentenglish.web.study.session.StudySession;
-import com.fluentenglish.web.study.session.UserStudySessionDao;
-import com.fluentenglish.web.study.session.battle.BattleInfo;
-import com.fluentenglish.web.study.session.battle.BattleResult;
-import com.fluentenglish.web.study.session.battle.BattleService;
-import com.fluentenglish.web.study.session.quiz.Quiz;
-import com.fluentenglish.web.study.session.quiz.QuizSessionService;
-import com.fluentenglish.web.study.session.quiz.dto.AnswerSubmission;
-import com.fluentenglish.web.study.session.quiz.dto.resp.AnswerSubmissionResult;
+import com.fluentenglish.web.study.session.dao.StudySession;
+import com.fluentenglish.web.study.session.dao.UserStudySessionDao;
+import com.fluentenglish.web.study.session.dao.battle.BattleInfo;
+import com.fluentenglish.web.study.session.service.battle.BattleResult;
+import com.fluentenglish.web.study.session.service.battle.BattleService;
+import com.fluentenglish.web.study.session.dao.quiz.Quiz;
+import com.fluentenglish.web.study.session.service.quiz.QuizSessionService;
+import com.fluentenglish.web.study.session.service.quiz.dto.AnswerSubmission;
+import com.fluentenglish.web.study.session.service.quiz.dto.resp.AnswerSubmissionResult;
 import com.fluentenglish.web.study.session.service.dto.StudySessionSubmissionDto;
 import com.fluentenglish.web.study.session.service.dto.StudySessionInitializationDto;
 import com.fluentenglish.web.study.session.service.dto.StudySessionSummaryDto;
 import com.fluentenglish.web.study.session.service.dto.StudySessionUpdateDto;
-import com.fluentenglish.web.study.spacedrepetition.SRSessionService;
-import com.fluentenglish.web.study.spacedrepetition.WordsScoresResult;
+import com.fluentenglish.web.study.session.service.spacedrepetition.SRSessionService;
+import com.fluentenglish.web.study.session.service.spacedrepetition.WordsScoresResult;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

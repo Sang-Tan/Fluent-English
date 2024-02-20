@@ -1,7 +1,7 @@
 package com.fluentenglish.web.study.session.controller;
 
 import com.fluentenglish.web.study.session.controller.dto.StartStudySessionDto;
-import com.fluentenglish.web.study.session.quiz.dto.AnswerSubmission;
+import com.fluentenglish.web.study.session.service.quiz.dto.AnswerSubmission;
 import com.fluentenglish.web.study.session.service.StudySessionService;
 import com.fluentenglish.web.study.session.service.dto.StudySessionSubmissionDto;
 import com.fluentenglish.web.study.session.service.dto.StudySessionInitializationDto;
