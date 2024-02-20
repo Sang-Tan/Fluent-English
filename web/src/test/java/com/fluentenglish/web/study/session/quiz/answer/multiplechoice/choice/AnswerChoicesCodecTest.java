@@ -3,6 +3,9 @@ package com.fluentenglish.web.study.session.quiz.answer.multiplechoice.choice;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fluentenglish.web.study.session.dao.quiz.answer.multiplechoice.choice.AnswerChoices;
+import com.fluentenglish.web.study.session.dao.quiz.answer.multiplechoice.choice.AudioAnswerChoices;
+import com.fluentenglish.web.study.session.dao.quiz.answer.multiplechoice.choice.TextAnswerChoices;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,7 +36,7 @@ class AnswerChoicesCodecTest {
         AnswerChoices<?> choices = mapper.readValue(json, AnswerChoices.class);
 
         assertInstanceOf(TextAnswerChoices.class, choices);
-        assertEquals(0, choices.data.size());
+        assertEquals(0, choices.getData().size());
     }
 
     @Test
@@ -59,7 +62,7 @@ class AnswerChoicesCodecTest {
         AnswerChoices<?> choices = mapper.readValue(json, AnswerChoices.class);
 
         assertInstanceOf(AudioAnswerChoices.class, choices);
-        assertEquals(0, choices.data.size());
+        assertEquals(0, choices.getData().size());
     }
 
 }

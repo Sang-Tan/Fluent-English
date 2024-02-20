@@ -1,6 +1,6 @@
 package com.fluentenglish.web.study.session.service.dto;
 
-import com.fluentenglish.web.study.session.battle.BattleResult;
+import com.fluentenglish.web.study.session.service.battle.BattleResult;
 import lombok.Getter;
 import lombok.Setter;
 
