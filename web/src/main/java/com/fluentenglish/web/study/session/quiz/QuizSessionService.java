@@ -1,6 +1,7 @@
 package com.fluentenglish.web.study.session.quiz;
 
 import com.fluentenglish.web.study.session.quiz.dto.AnswerSubmission;
+import com.fluentenglish.web.study.session.quiz.dto.resp.AnswerSubmissionResult;
 
 import java.util.Optional;
 import java.util.Set;
@@ -14,10 +15,7 @@ public interface QuizSessionService {
 
     Optional<Quiz> getNextQuiz(String sessionId);
 
-    /**
-     * @return score of answered quiz
-     */
-    Integer submitAnswer(String sessionId, AnswerSubmission answer);
+    AnswerSubmissionResult submitAnswer(String sessionId, AnswerSubmission answer);
 
     int countRemainingQuizzes(String studySessionId);
 }

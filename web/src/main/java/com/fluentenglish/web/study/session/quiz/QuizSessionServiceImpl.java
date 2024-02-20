@@ -7,13 +7,18 @@ import com.fluentenglish.web.study.session.quiz.answer.input.InputAnswer;
 import com.fluentenglish.web.study.session.quiz.answer.multiplechoice.MultipleChoiceAnswer;
 import com.fluentenglish.web.study.session.quiz.dto.AnswerSubmission;
 import com.fluentenglish.web.study.session.quiz.dto.AnsweredSubmission;
+import com.fluentenglish.web.study.session.quiz.dto.NotAnswerSubmission;
+import com.fluentenglish.web.study.session.quiz.dto.resp.AnswerSubmissionResult;
+import com.fluentenglish.web.study.session.quiz.dto.resp.CorrectAnswerSubmissionResult;
+import com.fluentenglish.web.study.session.quiz.dto.resp.IncorrectAnswerSubmissionResult;
 import com.fluentenglish.web.study.session.quiz.generator.QuizGenerateService;
+import jakarta.annotation.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-public class QuizSessionServiceImpl implements QuizSessionService{
+public class QuizSessionServiceImpl implements QuizSessionService {
     private final QuizGenerateService quizGenerateService;
     private final RedisUserStudySessionDao redisUserStudySessionDao;
 
@@ -34,7 +39,7 @@ public class QuizSessionServiceImpl implements QuizSessionService{
     }
 
     @Override
-    public Integer submitAnswer(String sessionId, AnswerSubmission answer) {
+    public AnswerSubmissionResult submitAnswer(String sessionId, AnswerSubmission answer) {
         return submitAnswerToRedisQueue(sessionId, answer);
     }
 
@@ -50,18 +55,30 @@ public class QuizSessionServiceImpl implements QuizSessionService{
         return Optional.ofNullable(quizzesQueue.peek());
     }
 
-    private Integer submitAnswerToRedisQueue(String sessionId, AnswerSubmission answer) {
+    private AnswerSubmissionResult submitAnswerToRedisQueue(String sessionId, AnswerSubmission answer) {
         StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
         SessionQuizzesQueue quizzesQueue = studySession.getQuizzesQueue();
         Quiz quizAnswered = quizzesQueue.poll();
 
-        if(answer instanceof AnsweredSubmission answeredSubmission
-                && isAnswerSubmissionCorrect(answeredSubmission, quizAnswered)){
-                return calculateQuizScore(answeredSubmission.getTimeAnsweredSec(), quizAnswered.getMaxTimeSec());
+        String correctAnswer;
+
+        if (answer instanceof NotAnswerSubmission) {
+            correctAnswer = getCorrectAnswer(quizAnswered);
+            quizzesQueue.add(quizAnswered);
+
+            return new IncorrectAnswerSubmissionResult(correctAnswer);
+        } else if (answer instanceof AnsweredSubmission answeredSubmission) {
+            correctAnswer = getAnswerIfIncorrect(answeredSubmission.getAnswer(), quizAnswered);
+            if (correctAnswer != null) {
+                quizzesQueue.add(quizAnswered);
+                return new IncorrectAnswerSubmissionResult(correctAnswer);
+            }
+
+            Integer score = calculateQuizScore(answeredSubmission.getTimeAnsweredSec(), quizAnswered.getMaxTimeSec());
+            return new CorrectAnswerSubmissionResult(score);
         }
 
-        quizzesQueue.add(quizAnswered);
-        return 0;
+        throw new IllegalArgumentException("Answer submission type not supported");
     }
 
     private SessionQuizzesQueue createRedisQuizzesQueue(String sessionId, Set<Integer> wordIds) {
@@ -78,22 +95,41 @@ public class QuizSessionServiceImpl implements QuizSessionService{
         return sessionQuizzesQueue;
     }
 
-    private Boolean isAnswerSubmissionCorrect(AnsweredSubmission answeredSubmission, Quiz quizAnswered){
-        Answer answer = quizAnswered.getAnswer();
-        if (answer instanceof InputAnswer) {
-            return ((InputAnswer) quizAnswered.getAnswer())
-                    .getAnswer().equals(answeredSubmission.getAnswer());
-        } else if (answer instanceof MultipleChoiceAnswer) {
-            return ((MultipleChoiceAnswer) quizAnswered.getAnswer())
-                    .getCorrectChoice() == Integer.parseInt(answeredSubmission.getAnswer());
+    @Nullable
+    private String getAnswerIfIncorrect(String submittedAnswer, Quiz quizAnswered) {
+        String correctAnswer = getCorrectAnswer(quizAnswered);
+
+        if (quizAnswered.getAnswer() instanceof InputAnswer) {
+            return isInputAnswerCorrect(submittedAnswer, correctAnswer) ? null : correctAnswer;
+        } else if (quizAnswered.getAnswer() instanceof MultipleChoiceAnswer) {
+            return isMultipleChoiceAnswerCorrect(submittedAnswer, correctAnswer) ? null : correctAnswer;
         }
 
-        return false;
+        throw new IllegalArgumentException("Answer type not supported");
+    }
+
+    private String getCorrectAnswer(Quiz quizAnswered) {
+        Answer answer = quizAnswered.getAnswer();
+        if (answer instanceof InputAnswer) {
+            return ((InputAnswer) quizAnswered.getAnswer()).getAnswer();
+        } else if (answer instanceof MultipleChoiceAnswer) {
+            return String.valueOf(((MultipleChoiceAnswer) quizAnswered.getAnswer()).getCorrectChoice());
+        }
+
+        throw new IllegalArgumentException("Answer type not supported");
+    }
+
+    private boolean isInputAnswerCorrect(String inputAnswer, String correctAnswer) {
+        return correctAnswer.equalsIgnoreCase(inputAnswer.trim());
+    }
+
+    private boolean isMultipleChoiceAnswerCorrect(String choiceIndex, String correctIndex) {
+        return correctIndex.equals(choiceIndex);
     }
 
 
-    private Integer calculateQuizScore(Integer timeAnsweredSec, Integer maxTimeSec){
-        if(timeAnsweredSec > maxTimeSec){
+    private Integer calculateQuizScore(Integer timeAnsweredSec, Integer maxTimeSec) {
+        if (timeAnsweredSec > maxTimeSec) {
             throw new IllegalArgumentException("Answer submission time exceeded max time");
         }
 
