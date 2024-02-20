@@ -1,7 +1,7 @@
-interface Lesson {
+interface LessonDto {
   id: number;
   name: string;
   difficulty: number;
 }
 
-export { Lesson };
+export { LessonDto };

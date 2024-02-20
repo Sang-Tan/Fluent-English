@@ -3,7 +3,7 @@ import {
   NativeStackNavigationOptions,
   NativeStackScreenProps,
 } from "@react-navigation/native-stack";
-import { Lesson } from "src/screens/learningMaterial/LessonSearch/types";
+import { LessonDto } from "src/types/learningMaterial";
 import { SessionInitializationDto } from "src/screens/studySession/types";
 
 import ROUTE_NAMES from "./routeNames";
@@ -19,7 +19,7 @@ export type RootStackParamList = {
   [ROUTE_NAMES.REGISTER]: undefined;
   [ROUTE_NAMES.REGISTER_SUCCESS]: undefined;
   [ROUTE_NAMES.LESSON_SEARCH]: undefined;
-  [ROUTE_NAMES.LESSON_DETAIL]: { lesson: Lesson };
+  [ROUTE_NAMES.LESSON_DETAIL]: { lesson: LessonDto };
   [ROUTE_NAMES.QUIZ_SCREEN]: {
     startInfo: SessionInitializationDto;
   };

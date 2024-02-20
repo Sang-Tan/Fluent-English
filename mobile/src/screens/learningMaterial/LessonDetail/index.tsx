@@ -1,5 +1,5 @@
 // types
-import { Lesson } from "../LessonSearch/types";
+import { LessonDto } from "../../../types/learningMaterial";
 import { SessionInitializationDto } from "src/screens/studySession/types";
 import { LessonDetailScreenProps } from "src/routes/types";
 // constants
