@@ -1,4 +1,4 @@
-import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
+import { Route } from "./types";
 import Login from "../screens/auth/Login";
 import Register from "src/screens/auth/Register";
 import RegisterSuccess from "src/screens/auth/RegisterSuccess";
@@ -6,13 +6,6 @@ import LessonSearch from "src/screens/learningMaterial/LessonSearch";
 import LessonDetail from "src/screens/learningMaterial/LessonDetail";
 import QuizScreen from "src/screens/studySession/QuizScreen";
 import ROUTE_NAMES from "./routeNames";
-import React from "react";
-
-interface Route {
-  name: string;
-  component: React.FC<any>;
-  options?: NativeStackNavigationOptions;
-}
 
 const routes: Route[] = [
   {

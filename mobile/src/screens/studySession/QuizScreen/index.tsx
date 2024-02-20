@@ -1,3 +1,5 @@
+import { QuizScreenProps } from "src/routes/types";
+
 import {
   SessionStatusDto,
   SessionSubmissionDto,
@@ -18,13 +20,8 @@ import QuizComp from "./components/QuizComp";
 import styles from "./styles";
 import BattleInfo from "./components/BattleInfo";
 
-interface Props {
-  navigation: any;
-  route: any;
-}
-
-function QuizScreen({ navigation, route }: Props) {
-  const { startInfo }: { startInfo: SessionInitializationDto } = route.params;
+function QuizScreen({ navigation, route }: QuizScreenProps) {
+  const { startInfo } = route.params;
   const sessionId = startInfo.sessionId;
 
   const [userAnswer, setUserAnswer] = useState("");

@@ -1,7 +1,7 @@
 // types
 import { Lesson } from "../LessonSearch/types";
 import { SessionInitializationDto } from "src/screens/studySession/types";
-
+import { LessonDetailScreenProps } from "src/routes/types";
 // constants
 import ROUTE_NAMES from "src/routes/routeNames";
 
@@ -25,13 +25,8 @@ interface Word {
   nextStudy: number;
 }
 
-interface LessonDetailProps {
-  route: any;
-  navigation: any;
-}
-
-function LessonDetail({ route, navigation }: LessonDetailProps) {
-  const { lesson }: { lesson: Lesson } = route.params;
+function LessonDetail({ route, navigation }: LessonDetailScreenProps) {
+  const { lesson } = route.params;
 
   const [words, setWords] = useState<Word[]>([]);
   const request = useRequest();

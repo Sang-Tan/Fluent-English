@@ -1,9 +1,11 @@
+import { RegisterSuccessScreenProps } from "src/routes/types";
+
 import ROUTE_NAMES from "src/routes/routeNames";
 import globalStyles from "src/styles/globalStyles";
 import styles from "./styles";
 import { Text, Pressable, View } from "react-native";
 
-function RegisterSuccess({ navigation }: { navigation: any }) {
+function RegisterSuccess({ navigation }: RegisterSuccessScreenProps) {
   const handleGoToLogin = () => {
     navigation.navigate(ROUTE_NAMES.LOGIN);
   };

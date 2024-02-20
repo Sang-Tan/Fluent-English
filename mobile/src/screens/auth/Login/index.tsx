@@ -1,3 +1,5 @@
+import { LoginScreenProps } from "src/routes/types";
+
 import ROUTE_NAMES from "src/routes/routeNames";
 import { COLORS } from "./styles";
 import { MAIN_COLORS } from "src/styles/globalColors";
@@ -25,7 +27,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 
-function Login({ navigation }: { navigation: any }) {
+function Login({ navigation }: LoginScreenProps) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");

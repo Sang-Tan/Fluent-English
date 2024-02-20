@@ -1,3 +1,5 @@
+import { LessonSearchScreenProps } from "src/routes/types";
+
 import ROUTE_NAMES from "src/routes/routeNames";
 
 import styles from "./styles";
@@ -39,11 +41,7 @@ const isScrollToBottom = ({
   );
 };
 
-interface LessonSearchProps {
-  navigation: any;
-}
-
-function LessonSearch({ navigation }: LessonSearchProps) {
+function LessonSearch({ navigation }: LessonSearchScreenProps) {
   const [searchText, setSearchText] = useState<string>("");
   const [curPage, setCurPage] = useState<number>(0);
   const [lessons, setLessons] = useState<Lesson[]>([]);
