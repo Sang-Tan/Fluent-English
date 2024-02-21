@@ -68,7 +68,7 @@ public class BattleServiceImpl implements BattleService{
         String enemyName = chapterEnemy.getId().getEnemy().getName();
 
         BattleInfo battleInfo = BattleInfo.builder()
-                .userHp(currentHp)
+                .userCurrentHp(currentHp)
                 .userShield(userShield)
                 .userStreak(userStreak)
                 .enemyName(enemyName)
@@ -84,7 +84,7 @@ public class BattleServiceImpl implements BattleService{
         StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
         BattleInfo battleInfo = studySession.getBattle().getBattleInfo();
 
-        int userHp = battleInfo.getUserHp();
+        int userHp = battleInfo.getUserCurrentHp();
         int userShield = battleInfo.getUserShield();
         int userStreak = battleInfo.getUserStreak();
         int enemyDmg = battleInfo.getEnemyDmg();
@@ -112,7 +112,7 @@ public class BattleServiceImpl implements BattleService{
             userStreak = 0;
         }
 
-        battleInfo.setUserHp(userHp);
+        battleInfo.setUserCurrentHp(userHp);
         battleInfo.setUserShield(userShield);
         battleInfo.setUserStreak(userStreak);
 
@@ -125,7 +125,7 @@ public class BattleServiceImpl implements BattleService{
 
         BeforeAfterStoryProgressDto chapterProgressDto = playerProgressService.addChapterProgress(studySession.getUserId(), getRandomChapterProgress(0.03f, 0.08f));
         LevelBeforeAfterDto levelProgressDto = userInfoService.addExperience(studySession.getUserId(), battleInfo.getExpGain());
-        CurrentStateDto currentStateDto = userInfoService.updateCurrentState(studySession.getUserId(), new CurrentStateDto(battleInfo.getUserHp()));
+        CurrentStateDto currentStateDto = userInfoService.updateCurrentState(studySession.getUserId(), new CurrentStateDto(battleInfo.getUserCurrentHp()));
 
         return new BattleResult(chapterProgressDto, levelProgressDto, currentStateDto);
     }
