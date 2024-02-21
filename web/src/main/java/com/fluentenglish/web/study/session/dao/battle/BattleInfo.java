@@ -8,7 +8,9 @@ import lombok.Setter;
 @Setter
 @Builder
 public class BattleInfo {
-    private int userHp;
+    private int userCurrentHp;
+
+    private int userMaxHp;
 
     private int userShield;
 
