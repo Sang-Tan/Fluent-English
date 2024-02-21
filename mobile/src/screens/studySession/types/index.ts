@@ -97,11 +97,8 @@ export interface BeforeAfterStoryProgressDto {
 //#region User level
 export interface LevelProgressDto {
   level: number;
-
-  /**
-   * Number in [0.0, 1.0], equivalent to [0%, 100%]
-   */
   experience: number;
+  expToNextLevel: number;
 }
 
 export interface LevelBeforeAfterDto {
@@ -110,9 +107,14 @@ export interface LevelBeforeAfterDto {
 }
 //#endregion
 
-//#region User state
+//#region User state and attributes
 export interface UserCurrentStateDto {
   currentHp: number;
+}
+
+export interface UserAttributesDto {
+  maxHp: number;
+  baseShield: number;
 }
 //#endregion
 
@@ -127,9 +129,10 @@ export interface BattleInfoDto {
 }
 
 export interface BattleResultDto {
-  storyProgress: StoryProgressDto;
-  levelProgress: LevelProgressDto;
+  storyProgress: BeforeAfterStoryProgressDto;
+  levelProgress: LevelBeforeAfterDto;
   currentState: UserCurrentStateDto;
+  attributes: UserAttributesDto;
 }
 //#endregion
 
@@ -161,10 +164,14 @@ export interface SessionInitializationDto extends SessionStatusDto {
   sessionId: string;
 }
 
+export interface WordsScoresDto {
+  [wordId: number]: number;
+}
+
 export interface SessionSummaryDto extends SessionSubmissionDto {
   type: SessionInfoSubmissionType.Summary;
   battleResult: BattleResultDto;
-  wordsScores: { [wordId: number]: number };
+  wordsScores: WordsScoresDto;
 }
 //#endregion
 //#endregion

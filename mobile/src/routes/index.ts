@@ -5,6 +5,7 @@ import RegisterSuccess from "src/screens/auth/RegisterSuccess";
 import LessonSearch from "src/screens/learningMaterial/LessonSearch";
 import LessonDetail from "src/screens/learningMaterial/LessonDetail";
 import QuizScreen from "src/screens/studySession/QuizScreen";
+import SummaryScreen from "src/screens/studySession/SummaryScreen";
 import ROUTE_NAMES from "./routeNames";
 
 const routes: Route[] = [
@@ -46,6 +47,13 @@ const routes: Route[] = [
   {
     name: ROUTE_NAMES.QUIZ_SCREEN,
     component: QuizScreen,
+    options: {
+      headerShown: false,
+    },
+  },
+  {
+    name: ROUTE_NAMES.STUDY_SESSION_SUMMARY,
+    component: SummaryScreen,
     options: {
       headerShown: false,
     },

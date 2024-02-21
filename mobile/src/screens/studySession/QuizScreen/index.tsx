@@ -19,6 +19,7 @@ import { SafeAreaView, Pressable, Text, View } from "react-native";
 import QuizComp from "./components/QuizComp";
 import styles from "./styles";
 import BattleInfo from "./components/BattleInfo";
+import ROUTE_NAMES from "src/routes/routeNames";
 
 function QuizScreen({ navigation, route }: QuizScreenProps) {
   const { startInfo } = route.params;
@@ -60,7 +61,9 @@ function QuizScreen({ navigation, route }: QuizScreenProps) {
           setSessionStatus(submissionInfo);
           setUserAnswer("");
         } else if (isSessionSummary(submissionInfo)) {
-          console.log("Session Summary", submissionInfo);
+          navigation.navigate(ROUTE_NAMES.STUDY_SESSION_SUMMARY, {
+            summary: submissionInfo,
+          });
         }
       } else {
         console.error("Failed to submit answer", resp);
