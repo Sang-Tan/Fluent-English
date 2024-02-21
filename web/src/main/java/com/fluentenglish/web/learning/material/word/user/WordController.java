@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @RestController("UserWordController")
 @RequestMapping("/api/words")
@@ -17,9 +18,16 @@ public class WordController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<WordDto>> getWords(@RequestParam(name = "q", required = false, defaultValue = "") String wordSearch) {
+    public ResponseEntity<List<WordDto>> getWords(
+            @RequestParam(name = "q", required = false, defaultValue = "") String wordSearch,
+            @RequestParam(name = "wordIds", required = false) String wordIdsStr) {
         WordSearchDto wordSearchDto = new WordSearchDto();
         wordSearchDto.setText(wordSearch.trim());
+
+        if (wordIdsStr != null) {
+            wordSearchDto.setWordIds(Stream.of(wordIdsStr.split(",")).map(Integer::parseInt).toList());
+        }
+
         List<WordDto> words = wordService.getWords(wordSearchDto);
 
         return ResponseEntity.ok(words);
