@@ -54,12 +54,13 @@ public class BattleServiceImpl implements BattleService{
         StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
         SessionBattle sessionBattle = studySession.getBattle();
         UserAttributesDto userAttributes = userInfoService.getUserAttributes(studySession.getUserId());
+        CurrentStateDto currentState = userInfoService.getCurrentState(studySession.getUserId());
         int chapterNumber = playerProgressService.getStoryProgress(studySession.getUserId()).getChapterNumber();
         ChapterEnemy chapterEnemy = chapterEnemyRepository
                 .findRandomByChapterNumber(chapterNumber)
                 .orElseThrow(() -> new NotFoundException("There is no enemy in this chapter"));
 
-        int userHp = userAttributes.getMaxHp();
+        int currentHp = currentState.getCurrentHp();
         int userShield = userAttributes.getBaseShield();
         int userStreak = 0;
         int enemyDmg = chapterEnemy.getDamage();
@@ -67,7 +68,7 @@ public class BattleServiceImpl implements BattleService{
         String enemyName = chapterEnemy.getId().getEnemy().getName();
 
         BattleInfo battleInfo = BattleInfo.builder()
-                .userHp(userHp)
+                .userHp(currentHp)
                 .userShield(userShield)
                 .userStreak(userStreak)
                 .enemyName(enemyName)
