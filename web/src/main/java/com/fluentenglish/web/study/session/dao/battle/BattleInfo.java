@@ -10,6 +10,8 @@ import lombok.Setter;
 public class BattleInfo {
     private int userCurrentHp;
 
+    private int userMaxHp;
+
     private int userShield;
 
     private int userStreak;

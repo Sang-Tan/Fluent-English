@@ -61,6 +61,7 @@ public class BattleServiceImpl implements BattleService{
                 .orElseThrow(() -> new NotFoundException("There is no enemy in this chapter"));
 
         int currentHp = currentState.getCurrentHp();
+        int userMaxHp = userAttributes.getMaxHp();
         int userShield = userAttributes.getBaseShield();
         int userStreak = 0;
         int enemyDmg = chapterEnemy.getDamage();
@@ -69,6 +70,7 @@ public class BattleServiceImpl implements BattleService{
 
         BattleInfo battleInfo = BattleInfo.builder()
                 .userCurrentHp(currentHp)
+                .userMaxHp(userMaxHp)
                 .userShield(userShield)
                 .userStreak(userStreak)
                 .enemyName(enemyName)
