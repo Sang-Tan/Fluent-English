@@ -1,3 +1,5 @@
+import { RegisterScreenProps } from "src/routes/types";
+
 import ROUTE_NAMES from "src/routes/routeNames";
 import styles, { COLORS } from "./styles";
 import globalStyles from "src/styles/globalStyles";
@@ -16,7 +18,7 @@ import { isValidEmail } from "src/helpers/validation";
 import { useState } from "react";
 import useRequest from "src/hooks/useRequest";
 
-function Register({ navigation }: { navigation: any }) {
+function Register({ navigation }: RegisterScreenProps) {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");

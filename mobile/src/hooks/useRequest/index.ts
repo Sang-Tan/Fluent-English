@@ -1,3 +1,5 @@
+import { RequestFunction } from "./types";
+
 import { useContext, useCallback, useState } from "react";
 import getEnv from "src/helpers/getEnv";
 import AuthContext from "src/contexts/AuthContext";
@@ -7,7 +9,7 @@ const API_URL: string = getEnv("EXPO_PUBLIC_API_URL");
 function useRequest() {
   const authContext = useContext(AuthContext);
 
-  const request = useCallback(
+  const request: RequestFunction = useCallback(
     async (url: string, options: RequestInit) => {
       const headers: any = options?.headers || {};
       const { auth, setAuth } = authContext;
