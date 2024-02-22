@@ -2,11 +2,14 @@ package com.fluentenglish.web.learning.material.word;
 
 import com.fluentenglish.web.learning.material.word.dto.WordSearchDto;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface WordRepository extends JpaRepository<Word, Integer> {
+@Repository
+public interface WordRepository extends JpaRepository<Word, Integer>, JpaSpecificationExecutor<Word> {
     @Query("SELECT w FROM Word w WHERE lower(w.text) LIKE lower(concat('%', :#{#wordSearchDto.text}, '%')) ORDER BY w.text ASC")
     List<Word> getWords(WordSearchDto wordSearchDto);
 
