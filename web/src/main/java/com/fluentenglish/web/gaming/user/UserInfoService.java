@@ -34,22 +34,22 @@ public class UserInfoService {
 
     public LevelProgressDto getLevelProgress(Integer userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-        return new LevelProgressDto(user.getLevel().getLevel(), user.getExperience());
+        return getLevelProgress(user);
     }
 
     public LevelBeforeAfterDto addExperience(Integer userId, Integer experienceGained) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-        LevelProgressDto before = new LevelProgressDto(user.getLevel().getLevel(), user.getExperience());
+        LevelProgressDto before = getLevelProgress(user);
 
         user.setExperience(user.getExperience() + experienceGained);
         UserLevel nextLevel = userLevelRepository.findById(user.getLevel().getLevel() + 1).orElse(null);
 
-        while(user.getExperience() >= user.getLevel().getExpToNextLevel() && nextLevel != null){
+        while (user.getExperience() >= user.getLevel().getExpToNextLevel() && nextLevel != null) {
             user.setExperience(user.getExperience() - user.getLevel().getExpToNextLevel());
             user.setLevel(nextLevel);
             nextLevel = userLevelRepository.findById(user.getLevel().getLevel() + 1).orElse(null);
         }
-        LevelProgressDto after = new LevelProgressDto(user.getLevel().getLevel(), user.getExperience());
+        LevelProgressDto after = getLevelProgress(user);
 
         userRepository.save(user);
         return new LevelBeforeAfterDto(before, after);
@@ -57,19 +57,27 @@ public class UserInfoService {
 
     public void updateCurrentHp(Integer userId, Integer currentHp) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-        if(currentHp < 0 || currentHp > user.getLevel().getBaseHp()) {
-            user.setCurrentHpPercent(currentHp/ (float) user.getLevel().getBaseHp());
+        if (currentHp < 0 || currentHp > user.getLevel().getBaseHp()) {
+            user.setCurrentHpPercent(currentHp / (float) user.getLevel().getBaseHp());
             userRepository.save(user);
         }
     }
 
     public CurrentStateDto updateCurrentState(Integer userId, CurrentStateDto currentStateDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-        if(currentStateDto.getCurrentHp() < 0 || currentStateDto.getCurrentHp() > user.getLevel().getBaseHp()) {
-            user.setCurrentHpPercent(currentStateDto.getCurrentHp()/ (float) user.getLevel().getBaseHp());
+        if (currentStateDto.getCurrentHp() < 0 || currentStateDto.getCurrentHp() > user.getLevel().getBaseHp()) {
+            user.setCurrentHpPercent(currentStateDto.getCurrentHp() / (float) user.getLevel().getBaseHp());
             userRepository.save(user);
         }
 
         return new CurrentStateDto((int) (user.getCurrentHpPercent() * user.getLevel().getBaseHp()));
+    }
+
+    private LevelProgressDto getLevelProgress(User user) {
+        return LevelProgressDto.builder()
+                .level(user.getLevel().getLevel())
+                .experience(user.getExperience())
+                .expToNextLevel(user.getLevel().getExpToNextLevel())
+                .build();
     }
 }

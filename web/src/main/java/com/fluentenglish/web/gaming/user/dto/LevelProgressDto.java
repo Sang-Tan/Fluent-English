@@ -1,13 +1,14 @@
 package com.fluentenglish.web.gaming.user.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class LevelProgressDto {
     private Integer level;
     private Integer experience;
+    private int expToNextLevel;
 }
