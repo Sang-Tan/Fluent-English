@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public abstract class AnswerSubmission {
-    private int wordId;
+public class AnswerSubmission {
+    private String answer;
+    private Integer timeAnsweredSec;
 }

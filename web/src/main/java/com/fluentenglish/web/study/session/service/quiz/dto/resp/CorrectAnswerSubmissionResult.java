@@ -6,7 +6,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class CorrectAnswerSubmissionResult extends AnswerSubmissionResult{
     private int score;
+    public CorrectAnswerSubmissionResult(int wordId, int score) {
+        super(wordId);
+        this.score = score;
+    }
 }

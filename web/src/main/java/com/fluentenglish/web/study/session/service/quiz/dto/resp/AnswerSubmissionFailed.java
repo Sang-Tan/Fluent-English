@@ -7,10 +7,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
-public class IncorrectAnswerSubmissionResult extends AnswerSubmissionResult{
+public class AnswerSubmissionFailed extends AnswerSubmissionResult{
     @NotNull
     private String correctAnswer;
+
+    public AnswerSubmissionFailed(int wordId, String correctAnswer) {
+        super(wordId);
+        this.correctAnswer = correctAnswer;
+    }
 
     @Override
     public int getScore() {

@@ -3,7 +3,7 @@ package com.fluentenglish.web.study.session.quiz.dto.resp;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fluentenglish.web.study.session.service.quiz.dto.resp.CorrectAnswerSubmissionResult;
-import com.fluentenglish.web.study.session.service.quiz.dto.resp.IncorrectAnswerSubmissionResult;
+import com.fluentenglish.web.study.session.service.quiz.dto.resp.AnswerSubmissionFailed;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ class AnswerSubmissionResultCodecTest {
 
     @Test
     void serializeCorrectAnswerSubmissionResult() throws IOException {
-        CorrectAnswerSubmissionResult correctAnswerSubmissionResult = new CorrectAnswerSubmissionResult(10);
+        CorrectAnswerSubmissionResult correctAnswerSubmissionResult = new CorrectAnswerSubmissionResult(1, 10);
 
         String json = objectMapper.writeValueAsString(correctAnswerSubmissionResult);
 
@@ -26,9 +26,9 @@ class AnswerSubmissionResultCodecTest {
 
     @Test
     void serializeIncorrectAnswerSubmissionResult() throws IOException {
-        IncorrectAnswerSubmissionResult incorrectAnswerSubmissionResult = new IncorrectAnswerSubmissionResult("correctAnswer");
+        AnswerSubmissionFailed answerSubmissionFailed = new AnswerSubmissionFailed(1, "correctAnswer");
 
-        String json = objectMapper.writeValueAsString(incorrectAnswerSubmissionResult);
+        String json = objectMapper.writeValueAsString(answerSubmissionFailed);
 
         ObjectNode objectNode = objectMapper.readValue(json, ObjectNode.class);
         assertFalse(objectNode.get("isCorrect").asBoolean());

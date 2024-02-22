@@ -15,4 +15,9 @@ public interface StudySessionService {
     boolean studySessionExists(String sessionId);
 
     StudySessionSubmissionDto submitAnswer(String sessionId, AnswerSubmission answer);
+
+    /**
+     * User failed to provide answer
+     */
+    StudySessionSubmissionDto handleFailedAnswerSubmission(String sessionId);
 }
