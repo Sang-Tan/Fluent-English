@@ -3,7 +3,7 @@ package com.fluentenglish.web.gaming.user;
 import com.fluentenglish.web.common.exception.errorresponse.NotFoundException;
 import com.fluentenglish.web.gaming.chapter.Chapter;
 import com.fluentenglish.web.gaming.chapter.ChapterRepository;
-import com.fluentenglish.web.gaming.user.dto.BeforeAfterStoryProgressDto;
+import com.fluentenglish.web.study.session.service.battle.dto.BeforeAfterStoryProgressDto;
 import com.fluentenglish.web.gaming.user.dto.StoryContentDto;
 import com.fluentenglish.web.gaming.user.dto.StoryProgressDto;
 import com.fluentenglish.web.user.User;

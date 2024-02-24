@@ -1,9 +1,6 @@
-package com.fluentenglish.web.study.session.service.battle;
+package com.fluentenglish.web.study.session.service.battle.dto;
 
-import com.fluentenglish.web.gaming.user.dto.AttributesBeforeAfterDto;
-import com.fluentenglish.web.gaming.user.dto.BeforeAfterStoryProgressDto;
 import com.fluentenglish.web.gaming.user.dto.CurrentStateDto;
-import com.fluentenglish.web.gaming.user.dto.LevelBeforeAfterDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

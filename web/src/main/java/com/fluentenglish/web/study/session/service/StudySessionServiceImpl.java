@@ -3,7 +3,7 @@ package com.fluentenglish.web.study.session.service;
 import com.fluentenglish.web.study.session.dao.StudySession;
 import com.fluentenglish.web.study.session.dao.UserStudySessionDao;
 import com.fluentenglish.web.study.session.dao.battle.BattleInfo;
-import com.fluentenglish.web.study.session.service.battle.BattleResult;
+import com.fluentenglish.web.study.session.service.battle.dto.BattleResult;
 import com.fluentenglish.web.study.session.service.battle.BattleService;
 import com.fluentenglish.web.study.session.dao.quiz.Quiz;
 import com.fluentenglish.web.study.session.service.quiz.QuizSessionService;
