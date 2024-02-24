@@ -1,5 +1,7 @@
-package com.fluentenglish.web.gaming.user.dto;
+package com.fluentenglish.web.study.session.service.battle.dto;
 
+import com.fluentenglish.web.gaming.user.dto.StoryContentDto;
+import com.fluentenglish.web.gaming.user.dto.StoryProgressDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,5 +1,6 @@
-package com.fluentenglish.web.gaming.user.dto;
+package com.fluentenglish.web.study.session.service.battle.dto;
 
+import com.fluentenglish.web.gaming.user.dto.UserAttributesDto;
 import lombok.*;
 
 @Getter

@@ -10,6 +10,10 @@ import com.fluentenglish.web.study.session.dao.RedisUserStudySessionDao;
 import com.fluentenglish.web.study.session.dao.StudySession;
 import com.fluentenglish.web.study.session.dao.battle.BattleInfo;
 import com.fluentenglish.web.study.session.dao.battle.SessionBattle;
+import com.fluentenglish.web.study.session.service.battle.dto.AttributesBeforeAfterDto;
+import com.fluentenglish.web.study.session.service.battle.dto.BattleResult;
+import com.fluentenglish.web.study.session.service.battle.dto.BeforeAfterStoryProgressDto;
+import com.fluentenglish.web.study.session.service.battle.dto.LevelBeforeAfterDto;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,6 +1,6 @@
 package com.fluentenglish.web.gaming.user;
 
-import com.fluentenglish.web.gaming.user.dto.LevelBeforeAfterDto;
+import com.fluentenglish.web.study.session.service.battle.dto.LevelBeforeAfterDto;
 import com.fluentenglish.web.gaming.user.dto.LevelProgressDto;
 import com.fluentenglish.web.gaming.user.level.UserLevel;
 import com.fluentenglish.web.gaming.user.level.UserLevelRepository;
