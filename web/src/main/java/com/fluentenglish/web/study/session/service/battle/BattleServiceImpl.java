@@ -5,10 +5,7 @@ import com.fluentenglish.web.gaming.chapter.enemy.ChapterEnemy;
 import com.fluentenglish.web.gaming.chapter.enemy.ChapterEnemyRepository;
 import com.fluentenglish.web.gaming.user.PlayerProgressService;
 import com.fluentenglish.web.gaming.user.UserInfoService;
-import com.fluentenglish.web.gaming.user.dto.BeforeAfterStoryProgressDto;
-import com.fluentenglish.web.gaming.user.dto.CurrentStateDto;
-import com.fluentenglish.web.gaming.user.dto.LevelBeforeAfterDto;
-import com.fluentenglish.web.gaming.user.dto.UserAttributesDto;
+import com.fluentenglish.web.gaming.user.dto.*;
 import com.fluentenglish.web.study.session.dao.RedisUserStudySessionDao;
 import com.fluentenglish.web.study.session.dao.StudySession;
 import com.fluentenglish.web.study.session.dao.battle.BattleInfo;
@@ -17,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BattleServiceImpl implements BattleService{
+    private static final float CHAPTER_PROGRESS_MIN_PERCENT = 0.03f;
+    private static final float CHAPTER_PROGRESS_MAX_PERCENT = 0.08f;
+
     private final RedisUserStudySessionDao redisUserStudySessionDao;
 
     private final ChapterEnemyRepository chapterEnemyRepository;
@@ -125,18 +125,35 @@ public class BattleServiceImpl implements BattleService{
         StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
         BattleInfo battleInfo = studySession.getBattle().getBattleInfo();
 
-        BeforeAfterStoryProgressDto chapterProgressDto = playerProgressService.addChapterProgress(studySession.getUserId(), getRandomChapterProgress(0.03f, 0.08f));
-        LevelBeforeAfterDto levelProgressDto = userInfoService.addExperience(studySession.getUserId(), battleInfo.getExpGain());
-        CurrentStateDto currentStateDto = userInfoService.updateCurrentState(studySession.getUserId(), new CurrentStateDto(battleInfo.getUserCurrentHp()));
+        AttributesBeforeAfterDto attributesChange = new AttributesBeforeAfterDto();
+        attributesChange.setBefore(userInfoService.getUserAttributes(studySession.getUserId()));
 
-        return new BattleResult(chapterProgressDto, levelProgressDto, currentStateDto);
+        BeforeAfterStoryProgressDto chapterProgressDto = playerProgressService
+                .addChapterProgress(studySession.getUserId(), getRandomChapterProgress());
+
+        LevelBeforeAfterDto levelProgressDto = userInfoService
+                .addExperience(studySession.getUserId(), battleInfo.getExpGain());
+
+        CurrentStateDto currentStateDto = userInfoService
+                .updateCurrentState(studySession.getUserId(), new CurrentStateDto(battleInfo.getUserCurrentHp()));
+
+        attributesChange.setAfter(userInfoService.getUserAttributes(studySession.getUserId()));
+
+        return BattleResult.builder()
+                .storyProgress(chapterProgressDto)
+                .levelProgress(levelProgressDto)
+                .attributesChange(attributesChange)
+                .currentState(currentStateDto)
+                .build();
     }
 
     private int calculateDamageTaken(int userStreak, int score, int enemyDmg) {
         return Math.toIntExact(Math.round(enemyDmg * (1 - userStreak * 0.1 + (10 - score) * 0.1)));
     }
 
-    public Float getRandomChapterProgress(Float minPercent, Float maxPercent) {
-        return (float) (Math.random() * (maxPercent - minPercent) + minPercent);
+    private Float getRandomChapterProgress() {
+        return (float) (Math.random() * (CHAPTER_PROGRESS_MAX_PERCENT - CHAPTER_PROGRESS_MIN_PERCENT) + CHAPTER_PROGRESS_MIN_PERCENT);
     }
+
+
 }
