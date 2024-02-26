@@ -71,13 +71,23 @@ public class StudySessionServiceImpl implements StudySessionService {
 
     @Override
     public StudySessionSubmissionDto submitAnswer(String sessionId, AnswerSubmission answer) {
+        AnswerSubmissionResult result = quizSessionService.submitAnswer(sessionId, answer);
+        return handleResult(sessionId, result);
+    }
+
+    @Override
+    public StudySessionSubmissionDto handleFailedAnswerSubmission(String sessionId) {
+        AnswerSubmissionResult result = quizSessionService.handleFailedAnswerSubmission(sessionId);
+        return handleResult(sessionId, result);
+    }
+
+    private StudySessionSubmissionDto handleResult(String sessionId, AnswerSubmissionResult result){
         StudySession studySession = userStudySessionDao.getSessionById(sessionId);
         String studySessionId = studySession.getId();
 
-        AnswerSubmissionResult result = quizSessionService.submitAnswer(studySessionId, answer);
         int score = result.getScore();
 
-        srSessionService.addAttempt(studySessionId, answer.getWordId(), score);
+        srSessionService.addAttempt(studySessionId, result.getWordId(), score);
         battleService.updateBattle(studySessionId, score);
 
         Optional<Quiz> quizOpt = quizSessionService.getNextQuiz(studySessionId);

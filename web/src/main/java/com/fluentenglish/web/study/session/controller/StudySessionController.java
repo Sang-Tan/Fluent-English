@@ -61,6 +61,13 @@ public class StudySessionController {
         return ResponseEntity.ok(sessionInfo);
     }
 
+    @PostMapping("/{sessionId}/failed-answer")
+    public ResponseEntity<Object> failedToAnswer(@PathVariable String sessionId) {
+        StudySessionSubmissionDto sessionInfo = studySessionService.handleFailedAnswerSubmission(sessionId);
+
+        return ResponseEntity.ok(sessionInfo);
+    }
+
     private int getUserIdCurrentRequest() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();

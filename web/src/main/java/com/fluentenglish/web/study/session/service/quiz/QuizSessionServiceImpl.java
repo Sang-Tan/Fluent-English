@@ -8,11 +8,9 @@ import com.fluentenglish.web.study.session.dao.quiz.answer.Answer;
 import com.fluentenglish.web.study.session.dao.quiz.answer.input.InputAnswer;
 import com.fluentenglish.web.study.session.dao.quiz.answer.multiplechoice.MultipleChoiceAnswer;
 import com.fluentenglish.web.study.session.service.quiz.dto.AnswerSubmission;
-import com.fluentenglish.web.study.session.service.quiz.dto.AnsweredSubmission;
-import com.fluentenglish.web.study.session.service.quiz.dto.NotAnswerSubmission;
 import com.fluentenglish.web.study.session.service.quiz.dto.resp.AnswerSubmissionResult;
 import com.fluentenglish.web.study.session.service.quiz.dto.resp.CorrectAnswerSubmissionResult;
-import com.fluentenglish.web.study.session.service.quiz.dto.resp.IncorrectAnswerSubmissionResult;
+import com.fluentenglish.web.study.session.service.quiz.dto.resp.AnswerSubmissionFailed;
 import com.fluentenglish.web.study.session.service.quiz.generator.QuizGenerateService;
 import jakarta.annotation.Nullable;
 import org.springframework.stereotype.Service;
@@ -46,6 +44,11 @@ public class QuizSessionServiceImpl implements QuizSessionService {
     }
 
     @Override
+    public AnswerSubmissionResult handleFailedAnswerSubmission(String sessionId) {
+        return handleFailedAnswerOfRedisQueue(sessionId);
+    }
+
+    @Override
     public int countRemainingQuizzes(String studySessionId) {
         return redisUserStudySessionDao.getSessionById(studySessionId).getQuizzesQueue().quizzesCount();
     }
@@ -57,30 +60,30 @@ public class QuizSessionServiceImpl implements QuizSessionService {
         return Optional.ofNullable(quizzesQueue.peek());
     }
 
+    private AnswerSubmissionResult handleFailedAnswerOfRedisQueue(String sessionId) {
+        StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
+        SessionQuizzesQueue quizzesQueue = studySession.getQuizzesQueue();
+        Quiz quizAnswered = quizzesQueue.poll();
+
+        String correctAnswer = getCorrectAnswer(quizAnswered);
+        quizzesQueue.add(quizAnswered);
+
+        return new AnswerSubmissionFailed(quizAnswered.getWordId(), correctAnswer);
+    }
+
     private AnswerSubmissionResult submitAnswerToRedisQueue(String sessionId, AnswerSubmission answer) {
         StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
         SessionQuizzesQueue quizzesQueue = studySession.getQuizzesQueue();
         Quiz quizAnswered = quizzesQueue.poll();
 
-        String correctAnswer;
-
-        if (answer instanceof NotAnswerSubmission) {
-            correctAnswer = getCorrectAnswer(quizAnswered);
+        String correctAnswer = getAnswerIfIncorrect(answer.getAnswer(), quizAnswered);
+        if (correctAnswer != null) {
             quizzesQueue.add(quizAnswered);
-
-            return new IncorrectAnswerSubmissionResult(correctAnswer);
-        } else if (answer instanceof AnsweredSubmission answeredSubmission) {
-            correctAnswer = getAnswerIfIncorrect(answeredSubmission.getAnswer(), quizAnswered);
-            if (correctAnswer != null) {
-                quizzesQueue.add(quizAnswered);
-                return new IncorrectAnswerSubmissionResult(correctAnswer);
-            }
-
-            Integer score = calculateQuizScore(answeredSubmission.getTimeAnsweredSec(), quizAnswered.getMaxTimeSec());
-            return new CorrectAnswerSubmissionResult(score);
+            return new AnswerSubmissionFailed(quizAnswered.getWordId(), correctAnswer);
         }
 
-        throw new IllegalArgumentException("Answer submission type not supported");
+        Integer score = calculateQuizScore(answer.getTimeAnsweredSec(), quizAnswered.getMaxTimeSec());
+        return new CorrectAnswerSubmissionResult(quizAnswered.getWordId(), score);
     }
 
     private SessionQuizzesQueue createRedisQuizzesQueue(String sessionId, Set<Integer> wordIds) {
