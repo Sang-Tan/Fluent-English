@@ -1,11 +1,10 @@
 package com.fluentenglish.web.study.session.controller;
 
 import com.fluentenglish.web.study.session.controller.dto.StartStudySessionDto;
-import com.fluentenglish.web.study.session.service.quiz.dto.AnswerSubmission;
 import com.fluentenglish.web.study.session.service.StudySessionService;
+import com.fluentenglish.web.study.session.service.dto.StudySessionActivationDto;
 import com.fluentenglish.web.study.session.service.dto.StudySessionSubmissionDto;
-import com.fluentenglish.web.study.session.service.dto.StudySessionInitializationDto;
-import com.fluentenglish.web.study.session.service.dto.StudySessionUpdateDto;
+import com.fluentenglish.web.study.session.service.quiz.dto.AnswerSubmission;
 import com.fluentenglish.web.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -39,23 +38,23 @@ public class StudySessionController {
             return ResponseEntity.badRequest().body("Word ids must be distinct");
         }
 
-        StudySessionInitializationDto sessionInfo =
+        StudySessionActivationDto sessionInfo =
                 studySessionService.startStudySession(userId, wordIdsSet);
 
         return ResponseEntity.ok(sessionInfo);
     }
 
     @GetMapping("/{sessionId}")
-    public ResponseEntity<Object> continueStudySession(@PathVariable String sessionId) {
-        StudySessionUpdateDto sessionInfo = studySessionService
-                .continueStudySession(sessionId);
+    public ResponseEntity<StudySessionActivationDto> continueStudySession(
+            @PathVariable String sessionId) {
+        int userId = getUserIdCurrentRequest();
 
-        return ResponseEntity.ok(sessionInfo);
+        return ResponseEntity.ok(studySessionService.continueStudySession(userId));
     }
 
     @PostMapping("/{sessionId}/answer")
     public ResponseEntity<Object> submitAnswer(@PathVariable String sessionId,
-            @RequestBody AnswerSubmission answerSubmission) {
+                                               @RequestBody AnswerSubmission answerSubmission) {
         StudySessionSubmissionDto sessionInfo = studySessionService.submitAnswer(sessionId, answerSubmission);
 
         return ResponseEntity.ok(sessionInfo);

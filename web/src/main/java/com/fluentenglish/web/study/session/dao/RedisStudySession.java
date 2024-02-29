@@ -2,6 +2,8 @@ package com.fluentenglish.web.study.session.dao;
 
 import com.fluentenglish.web.study.session.dao.battle.RedisSessionBattle;
 import com.fluentenglish.web.study.session.dao.battle.SessionBattle;
+import com.fluentenglish.web.study.session.dao.last_interaction.RedisSessionLastInteraction;
+import com.fluentenglish.web.study.session.dao.last_interaction.SessionLastInteraction;
 import com.fluentenglish.web.study.session.dao.quiz.RedisSessionQuizzesQueue;
 import com.fluentenglish.web.study.session.dao.quiz.SessionQuizzesQueue;
 import com.fluentenglish.web.study.session.dao.score.RedisSessionWordsScores;
@@ -20,6 +22,8 @@ public class RedisStudySession extends RedisStudySessionObject implements StudyS
     private RedisSessionQuizzesQueue sessionQuizzesQueue;
 
     private RedisSessionWordsScores sessionWordsScores;
+
+    private RedisSessionLastInteraction sessionLastInteraction;
 
     public RedisStudySession(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
@@ -40,6 +44,7 @@ public class RedisStudySession extends RedisStudySessionObject implements StudyS
         getRedisSessionBattle().delete();
         getRedisSessionQuizzesQueue().delete();
         getRedisSessionWordsScores().delete();
+        getRedisSessionLastInteraction().delete();
     }
 
     @Override
@@ -55,6 +60,11 @@ public class RedisStudySession extends RedisStudySessionObject implements StudyS
     @Override
     public SessionWordsScores getWordsScores() {
         return getRedisSessionWordsScores();
+    }
+
+    @Override
+    public SessionLastInteraction getLastInteraction() {
+        return getRedisSessionLastInteraction();
     }
 
     private RedisSessionBattle getRedisSessionBattle() {
@@ -76,6 +86,13 @@ public class RedisStudySession extends RedisStudySessionObject implements StudyS
             sessionWordsScores = createWordsScores();
         }
         return sessionWordsScores;
+    }
+
+    private RedisSessionLastInteraction getRedisSessionLastInteraction() {
+        if (sessionLastInteraction == null) {
+            sessionLastInteraction = createLastInteraction();
+        }
+        return sessionLastInteraction;
     }
 
     private RedisSessionQuizzesQueue createQuizzesQueue() {
@@ -103,5 +120,14 @@ public class RedisStudySession extends RedisStudySessionObject implements StudyS
         sessionBattle.setSessionMetadata(metadata);
 
         return sessionBattle;
+    }
+
+    private RedisSessionLastInteraction createLastInteraction() {
+        StudySessionMetadata metadata = getSessionMetadata();
+        RedisSessionLastInteraction sessionLastInteraction =
+                beanFactory.getBean(RedisSessionLastInteraction.class);
+        sessionLastInteraction.setSessionMetadata(metadata);
+
+        return sessionLastInteraction;
     }
 }
