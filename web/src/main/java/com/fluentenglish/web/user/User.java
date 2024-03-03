@@ -4,7 +4,6 @@ import com.fluentenglish.web.gaming.chapter.Chapter;
 import com.fluentenglish.web.gaming.user.level.UserLevel;
 import com.fluentenglish.web.learning.material.word.Word;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,7 +28,7 @@ public class User {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chapter_num", referencedColumnName = "number")
-    private Chapter chapter;
+    private Chapter chapter = new Chapter(1);
 
     // Progress in the current chapter, ranging from 0.0 (0%) to 1.0 (100%)
     private Float chapterProgress = 0.0f;
@@ -40,7 +39,7 @@ public class User {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "level", referencedColumnName = "level")
-    private UserLevel level;
+    private UserLevel level = new UserLevel(1);
 
     private Integer experience = 0;
 

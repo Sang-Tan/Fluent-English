@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface ChapterEnemyRepository extends JpaRepository<ChapterEnemy, ChapterEnemyId> {
-    @Query("SELECT ce FROM ChapterEnemy ce WHERE ce.id.chapter.number = ?1 ORDER BY RAND() LIMIT 1")
-    public Optional<ChapterEnemy> findRandomByChapterNumber(Integer chapterNumber);
+    @Query(value = "SELECT * FROM chapters__enemies ce WHERE ce.chapter_num = ?1 ORDER BY RANDOM() LIMIT 1", nativeQuery = true)
+    Optional<ChapterEnemy> findRandomByChapterNumber(Integer chapterNumber);
 }

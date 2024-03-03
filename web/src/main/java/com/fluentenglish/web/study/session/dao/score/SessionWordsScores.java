@@ -1,13 +1,11 @@
 package com.fluentenglish.web.study.session.dao.score;
 
 import java.util.Map;
+import java.util.Optional;
 
 public interface SessionWordsScores {
 
-    /**
-     * @throws WordNotFoundException if word score with given id does not exist
-     */
-    WordScore getWordScore(int wordId);
+    Optional<WordScore> getWordScore(int wordId);
 
     Map<Integer, WordScore> getWordsScores();
 
