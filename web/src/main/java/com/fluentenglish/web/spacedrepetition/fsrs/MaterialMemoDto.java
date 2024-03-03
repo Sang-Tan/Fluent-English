@@ -12,7 +12,7 @@ public class MaterialMemoDto {
 
     private Float difficulty;
 
-    private Date lastStudied;
+    private Date lastStudy;
 
     private Date nextStudy;
 }

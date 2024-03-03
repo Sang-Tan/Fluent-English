@@ -26,7 +26,7 @@ public class FSRS4Scheduler implements FSRSScheduler {
         MaterialMemoDto materialMemoDto = new MaterialMemoDto();
         materialMemoDto.setStability(initialStability(grade));
         materialMemoDto.setDifficulty(initialDifficulty(grade));
-        materialMemoDto.setLastStudied(new Date(now));
+        materialMemoDto.setLastStudy(new Date(now));
         materialMemoDto.setNextStudy(new Date(now + newIntervalMs(materialMemoDto.getStability())));
 
         return materialMemoDto;
@@ -42,9 +42,9 @@ public class FSRS4Scheduler implements FSRSScheduler {
         newMaterialMemoDto.setStability(
                 newStability(lastStability,
                         lastDifficulty,
-                        retrievability(dayElapsed(materialMemoDto.getLastStudied().getTime(), now), lastStability),
+                        retrievability(dayElapsed(materialMemoDto.getLastStudy().getTime(), now), lastStability),
                         grade));
-        newMaterialMemoDto.setLastStudied(new Date(now));
+        newMaterialMemoDto.setLastStudy(new Date(now));
         newMaterialMemoDto.setNextStudy(new Date(now + newIntervalMs(newMaterialMemoDto.getStability())));
 
         return newMaterialMemoDto;

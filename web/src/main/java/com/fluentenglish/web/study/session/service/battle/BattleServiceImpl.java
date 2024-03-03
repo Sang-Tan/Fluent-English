@@ -122,6 +122,8 @@ public class BattleServiceImpl implements BattleService {
         battleInfo.setUserShield(userShield);
         battleInfo.setUserStreak(userStreak);
 
+        studySession.getBattle().setBattleInfo(battleInfo);
+
         return battleInfo;
     }
 
