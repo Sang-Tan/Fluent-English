@@ -50,7 +50,14 @@ public class RedisSRSessionService implements SRSessionService {
         SessionWordsScores sessionWordsScores =
                 studySession.getWordsScores();
 
-        WordScore wordScore = sessionWordsScores.getWordScore(wordId);
+        WordScore wordScore = sessionWordsScores.getWordScore(wordId)
+                .orElseGet(() -> {
+                    WordScore newWordScore = new WordScore();
+                    newWordScore.setTotalScore(0);
+                    newWordScore.setAttempts(0);
+
+                    return newWordScore;
+                });
         wordScore.setTotalScore(wordScore.getTotalScore() + score);
         wordScore.setAttempts(wordScore.getAttempts() + 1);
 

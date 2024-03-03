@@ -4,41 +4,39 @@ import com.fluentenglish.web.study.session.dao.RedisStudySessionObject;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
 @Scope("prototype")
 public class RedisSessionWordsScores extends RedisStudySessionObject implements SessionWordsScores {
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    private final HashOperations<String, Integer, String> hashOperations;
+    private final HashOperations<String, String, String> hashOperations;
 
-    public RedisSessionWordsScores(RedisTemplate<String, Object> redisTemplate) {
+    public RedisSessionWordsScores(StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
         this.hashOperations = redisTemplate.opsForHash();
     }
 
     @Override
-    public WordScore getWordScore(int wordId) {
-        String wordScore = hashOperations.get(getWordScoreKey(), wordId);
-        if (wordScore == null) {
-            throw new RuntimeException("Word score's key does not exist or the it " +
-                    "has been set in the same transaction");
-        }
+    public Optional<WordScore> getWordScore(int wordId) {
+        String wordScore = hashOperations.get(getWordScoreKey(), String.valueOf(wordId));
 
-        return stringToWordScore(wordScore);
+        return Optional.ofNullable(wordScore).map(this::stringToWordScore);
     }
 
     @Override
     public Map<Integer, WordScore> getWordsScores() {
-        Map<Integer, String> scoreMap = hashOperations.entries(getWordScoreKey());
+        Map<String, String> scoreMap = hashOperations.entries(getWordScoreKey());
         return scoreMap.entrySet().stream()
                 .collect(
                         Collectors.toMap(
-                                Map.Entry::getKey,
+                                entry -> Integer.parseInt(entry.getKey()),
                                 entry -> stringToWordScore(entry.getValue())
                         )
                 );
@@ -46,15 +44,15 @@ public class RedisSessionWordsScores extends RedisStudySessionObject implements 
 
     @Override
     public void setWordScore(int wordId, WordScore wordScore) {
-        hashOperations.put(getWordScoreKey(), wordId, wordScoreToString(wordScore));
+        hashOperations.put(getWordScoreKey(), String.valueOf(wordId), wordScoreToString(wordScore));
     }
 
     @Override
     public void setWordsScores(Map<Integer, WordScore> wordScores) {
-        Map<Integer, String> stringWordScores = wordScores.entrySet().stream()
+        Map<String, String> stringWordScores = wordScores.entrySet().stream()
                 .collect(
                         Collectors.toMap(
-                                Map.Entry::getKey,
+                                entry -> String.valueOf(entry.getKey()),
                                 entry -> wordScoreToString(entry.getValue())
                         )
                 );
