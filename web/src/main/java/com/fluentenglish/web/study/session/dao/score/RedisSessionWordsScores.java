@@ -16,10 +16,9 @@ public class RedisSessionWordsScores extends RedisStudySessionObject implements 
 
     private final HashOperations<String, Integer, String> hashOperations;
 
-    public RedisSessionWordsScores(RedisTemplate<String, Object> redisTemplate,
-                                   HashOperations<String, Integer, String> hashOperations) {
+    public RedisSessionWordsScores(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
-        this.hashOperations = hashOperations;
+        this.hashOperations = redisTemplate.opsForHash();
     }
 
     @Override

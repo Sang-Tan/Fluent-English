@@ -18,9 +18,9 @@ public class RedisSessionBattle extends RedisStudySessionObject implements Sessi
     private final HashOperations<String, String, Object> hashOperations;
 
 
-    public RedisSessionBattle(RedisTemplate<String, Object> redisTemplate, HashOperations<String, String, Object> hashOperations) {
+    public RedisSessionBattle(RedisTemplate<String, Object> redisTemplate){
         this.redisTemplate = redisTemplate;
-        this.hashOperations = hashOperations;
+        this.hashOperations = redisTemplate.opsForHash();
     }
 
     @Override

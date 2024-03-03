@@ -20,11 +20,11 @@ public class RedisSessionQuizzesQueue extends RedisStudySessionObject implements
 
     private final ObjectMapper objectMapper;
 
-    public RedisSessionQuizzesQueue(RedisTemplate<String, Object> redisTemplate,
-                                    ListOperations<String, String> listOperations,
+    public RedisSessionQuizzesQueue(RedisTemplate<String, Object> objectTemplate,
+                                    RedisTemplate<String, String> stringTemplate,
                                     ObjectMapper objectMapper) {
-        this.redisTemplate = redisTemplate;
-        this.listOperations = listOperations;
+        this.redisTemplate = objectTemplate;
+        this.listOperations = stringTemplate.opsForList();
         this.objectMapper = objectMapper;
     }
 
