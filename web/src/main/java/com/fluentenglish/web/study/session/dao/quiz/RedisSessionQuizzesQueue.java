@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @Component
 @Scope("prototype")
-public class RedisSessionQuizzesQueue extends RedisStudySessionObject implements SessionQuizzesQueue{
+public class RedisSessionQuizzesQueue extends RedisStudySessionObject implements SessionQuizzesQueue {
     private final RedisTemplate<String, Object> redisTemplate;
 
     private final ListOperations<String, String> listOperations;
@@ -36,7 +36,7 @@ public class RedisSessionQuizzesQueue extends RedisStudySessionObject implements
     @Override
     public void add(Quiz quiz) {
         try {
-            listOperations.leftPush(getQuizzesQueueKey(), objectMapper.writeValueAsString(quiz));
+            listOperations.rightPush(getQuizzesQueueKey(), objectMapper.writeValueAsString(quiz));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
