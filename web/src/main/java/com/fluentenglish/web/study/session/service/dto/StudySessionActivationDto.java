@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StudySessionInitializationDto implements StudySessionStatusDto {
+public class StudySessionActivationDto implements StudySessionStatusDto {
     private Quiz nextQuiz;
     private BattleInfo battleInfo;
     private int remainingQuizzesCount;

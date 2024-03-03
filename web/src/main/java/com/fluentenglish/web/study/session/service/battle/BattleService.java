@@ -8,6 +8,8 @@ public interface BattleService {
 
     BattleInfo updateBattle(String sessionId, Integer score);
 
+    BattleInfo getBattleInfo(String sessionId);
+
     /**
      * @return battle result after battle ends
      */

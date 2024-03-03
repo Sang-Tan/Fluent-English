@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class BattleInfo {
+public class  BattleInfo {
     private int userCurrentHp;
 
     private int userMaxHp;

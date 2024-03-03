@@ -5,7 +5,8 @@ import com.fluentenglish.web.gaming.chapter.enemy.ChapterEnemy;
 import com.fluentenglish.web.gaming.chapter.enemy.ChapterEnemyRepository;
 import com.fluentenglish.web.gaming.user.PlayerProgressService;
 import com.fluentenglish.web.gaming.user.UserInfoService;
-import com.fluentenglish.web.gaming.user.dto.*;
+import com.fluentenglish.web.gaming.user.dto.CurrentStateDto;
+import com.fluentenglish.web.gaming.user.dto.UserAttributesDto;
 import com.fluentenglish.web.study.session.dao.RedisUserStudySessionDao;
 import com.fluentenglish.web.study.session.dao.StudySession;
 import com.fluentenglish.web.study.session.dao.battle.BattleInfo;
@@ -17,7 +18,7 @@ import com.fluentenglish.web.study.session.service.battle.dto.LevelBeforeAfterDt
 import org.springframework.stereotype.Service;
 
 @Service
-public class BattleServiceImpl implements BattleService{
+public class BattleServiceImpl implements BattleService {
     private static final float CHAPTER_PROGRESS_MIN_PERCENT = 0.03f;
     private static final float CHAPTER_PROGRESS_MAX_PERCENT = 0.08f;
 
@@ -47,6 +48,11 @@ public class BattleServiceImpl implements BattleService{
     @Override
     public BattleInfo updateBattle(String sessionId, Integer score) {
         return updateRedisBattle(sessionId, score);
+    }
+
+    @Override
+    public BattleInfo getBattleInfo(String sessionId) {
+        return redisUserStudySessionDao.getSessionById(sessionId).getBattle().getBattleInfo();
     }
 
     @Override
@@ -109,10 +115,9 @@ public class BattleServiceImpl implements BattleService{
         }
 
         // updating user streak
-        if(userStreak == 0){
+        if (userStreak == 0) {
             userStreak = isLost ? -1 : 1;
-        }
-        else if ((isLost && userStreak < 0) || (!isLost && userStreak > 0)) {
+        } else if ((isLost && userStreak < 0) || (!isLost && userStreak > 0)) {
             userStreak = userStreak > 0 ? userStreak + 1 : userStreak - 1;
         } else {
             userStreak = 0;
