@@ -21,4 +21,12 @@ public interface WordRepository extends JpaRepository<Word, Integer>, JpaSpecifi
 
     @Query("SELECT CASE WHEN COUNT(w) > 0 THEN true ELSE false END FROM Word w JOIN w.lessons l WHERE w.text = :text AND l.id = :lessonId")
     boolean existsByWordAndLessonId(String text, Integer lessonId);
+
+    @Query("SELECT w.id FROM Word w JOIN w.ignoredBy u WHERE u.id = :userId AND w.id IN :wordIds")
+    List<Integer> getIgnoredWordIdsByUserIdAndWordIds(Integer userId, Iterable<Integer> wordIds);
+
+    @Query("SELECT CASE WHEN COUNT(w) > 0 THEN true ELSE false END " +
+            "FROM Word w JOIN w.ignoredBy u " +
+            "WHERE w.id = :wordId AND u.id = :userId")
+    boolean ignoredByUserId(Integer wordId, Integer userId);
 }
