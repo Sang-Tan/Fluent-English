@@ -6,6 +6,10 @@ import com.fluentenglish.web.spacedrepetition.fsrs.FSRSScheduler;
 import com.fluentenglish.web.spacedrepetition.fsrs.MaterialMemoDto;
 import com.fluentenglish.web.spacedrepetition.word.dto.IgnoreWordsDto;
 import com.fluentenglish.web.spacedrepetition.word.dto.UpdateWordMemoDto;
+import com.fluentenglish.web.spacedrepetition.word.dto.status.IgnoreWordDto;
+import com.fluentenglish.web.spacedrepetition.word.dto.status.UncategorizedWordDto;
+import com.fluentenglish.web.spacedrepetition.word.dto.status.WordStudyStatusDto;
+import com.fluentenglish.web.spacedrepetition.word.mapper.WordMemoMapper;
 import com.fluentenglish.web.user.User;
 import com.fluentenglish.web.user.UserRepository;
 import org.springframework.data.domain.PageRequest;
@@ -72,6 +76,65 @@ public class WordMemoServiceImpl implements WordMemoService {
         return wordMemoRepository.findAll(spec, pageable).stream()
                 .map(wordMemo -> wordMemo.getId().getWord().getId())
                 .toList();
+    }
+
+    @Override
+    public WordStudyStatusDto getWordStudyStatus(int userId, int wordId) {
+        if (wordRepository.ignoredByUserId(wordId, userId)) {
+            IgnoreWordDto ignoreWordDto = new IgnoreWordDto();
+            ignoreWordDto.setWordId(wordId);
+
+            return ignoreWordDto;
+        }
+
+        WordMemoId wordMemoId = new WordMemoId(
+                new User(userId),
+                new Word(wordId)
+        );
+
+        Optional<WordMemo> wordMemoOpt = wordMemoRepository.findById(wordMemoId);
+        if (wordMemoOpt.isEmpty()) {
+            UncategorizedWordDto uncategorizedWordDto = new UncategorizedWordDto();
+            uncategorizedWordDto.setWordId(wordId);
+
+            return uncategorizedWordDto;
+        } else {
+            return wordMemoMapper.toStudyingWordDto(wordMemoOpt.get());
+        }
+    }
+
+    @Override
+    public List<WordStudyStatusDto> getWordsStudyStatus(int userId, List<Integer> wordIds) {
+        List<WordStudyStatusDto> wordStudyStatusDtos = new ArrayList<>();
+
+        List<Integer> pendingWordIds = new ArrayList<>(wordIds);
+
+        // Add ignored words to the list
+        List<Integer> ignoredWordIds = wordRepository.getIgnoredWordIdsByUserIdAndWordIds(userId, pendingWordIds);
+        ignoredWordIds.forEach(wordId -> {
+            IgnoreWordDto ignoreWordDto = new IgnoreWordDto();
+            ignoreWordDto.setWordId(wordId);
+            wordStudyStatusDtos.add(ignoreWordDto);
+        });
+
+        pendingWordIds.removeAll(ignoredWordIds);
+
+        // Add studying words to the list
+        List<WordMemo> wordMemos = wordMemoRepository.findAllByUserIdAndWordIds(userId, pendingWordIds);
+        wordStudyStatusDtos.addAll(wordMemos.stream()
+                .map(wordMemoMapper::toStudyingWordDto)
+                .toList());
+
+        pendingWordIds.removeAll(wordMemos.stream().map(wordMemo -> wordMemo.getId().getWord().getId()).toList());
+
+        // Add uncategorized words to the list
+        pendingWordIds.forEach(wordId -> {
+            UncategorizedWordDto uncategorizedWordDto = new UncategorizedWordDto();
+            uncategorizedWordDto.setWordId(wordId);
+            wordStudyStatusDtos.add(uncategorizedWordDto);
+        });
+
+        return wordStudyStatusDtos;
     }
 
     @Override
