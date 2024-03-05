@@ -12,7 +12,7 @@ public class StudySessionInteractionServiceImpl implements StudySessionInteracti
 
     private final int onlineLifespanSec;
 
-    public StudySessionInteractionServiceImpl(@Value("${study-session.online-lifespan}") int onlineLifespanSec,
+    public StudySessionInteractionServiceImpl(@Value("${study-session.online-lifespan-sec}") int onlineLifespanSec,
                                               RedisUserStudySessionDao redisUserStudySessionDao) {
         this.onlineLifespanSec = onlineLifespanSec;
         this.redisUserStudySessionDao = redisUserStudySessionDao;
