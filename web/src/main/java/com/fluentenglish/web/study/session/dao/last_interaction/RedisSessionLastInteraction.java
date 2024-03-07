@@ -1,6 +1,7 @@
 package com.fluentenglish.web.study.session.dao.last_interaction;
 
 import com.fluentenglish.web.study.session.dao.RedisStudySessionObject;
+import com.fluentenglish.web.study.session.dao.meta.StudySessionInternalMetadata;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
-public class RedisSessionLastInteraction extends RedisStudySessionObject implements SessionLastInteraction {
+public class RedisSessionLastInteraction extends RedisStudySessionObject<StudySessionInternalMetadata> implements SessionLastInteraction {
     private final RedisTemplate<String, Object> redisTemplate;
 
     private final ValueOperations<String, Long> longValueOperations;

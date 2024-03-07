@@ -12,6 +12,9 @@ public class StudySessionActivationDto implements StudySessionStatusDto {
     private Quiz nextQuiz;
     private BattleInfo battleInfo;
     private int remainingQuizzesCount;
+    /**
+     * this is session access id
+     */
     private String sessionId;
 
     @Override

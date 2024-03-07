@@ -81,6 +81,6 @@ public class RedisSessionQuizzesQueue extends RedisStudySessionObject implements
     }
 
     private String getQuizzesQueueKey() {
-        return String.format("studySession:%s:quizzes", getSessionMetadata().sessionId());
+        return String.format("studySession:%s:quizzes", getSessionMetadata());
     }
 }

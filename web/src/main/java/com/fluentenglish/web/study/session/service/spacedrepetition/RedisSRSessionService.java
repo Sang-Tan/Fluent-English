@@ -67,7 +67,7 @@ public class RedisSRSessionService implements SRSessionService {
     @Override
     public WordsScoresResult endSession(String sessionId) {
         StudySession studySession = userStudySessionDao.getSessionById(sessionId);
-        int userId = studySession.getUserId();
+        int userId = studySession.getMetadata().userId();
         SessionWordsScores sessionWordsScores =
                 studySession.getWordsScores();
         Map<Integer, WordScore> wordsScores = sessionWordsScores.getWordsScores();

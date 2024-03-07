@@ -49,35 +49,36 @@ public class StudySessionServiceImpl implements StudySessionService {
 
     @Override
     public StudySessionActivationDto startStudySession(int userId, Set<Integer> wordIds) {
-        String studySessionId = userStudySessionDao.createSession(userId).getId();
+        StudySession studySession = userStudySessionDao.createSession(userId);
 
-        Quiz firstQuiz = quizSessionService.initializeQuizzes(studySessionId, wordIds);
-        BattleInfo battleInfo = battleService.initializeBattle(studySessionId);
-        studySessionInteractionService.setLastInteractionTime(studySessionId, System.currentTimeMillis());
+        Quiz firstQuiz = quizSessionService.initializeQuizzes(studySession.getId(), wordIds);
+        BattleInfo battleInfo = battleService.initializeBattle(studySession.getId());
+        studySessionInteractionService.setLastInteractionTime(studySession.getId(), System.currentTimeMillis());
 
-        int remainingQuizzesCount = quizSessionService.countRemainingQuizzes(studySessionId);
+        int remainingQuizzesCount = quizSessionService.countRemainingQuizzes(studySession.getId());
 
         StudySessionActivationDto sessionInfo = new StudySessionActivationDto();
         sessionInfo.setNextQuiz(firstQuiz);
         sessionInfo.setBattleInfo(battleInfo);
-        sessionInfo.setSessionId(studySessionId);
+        sessionInfo.setSessionId(studySession.getMetadata().accessSessionId());
         sessionInfo.setRemainingQuizzesCount(remainingQuizzesCount);
 
         return sessionInfo;
     }
 
     @Override
-    public StudySessionActivationDto continueStudySession(int userId) {
+    public StudySessionActivationDto reactivateStudySession(int userId) {
         StudySession studySession = userStudySessionDao.getSessionByUserId(userId);
         String studySessionId = studySession.getId();
 
         if ((studySessionInteractionService.isSessionActive(studySessionId))) {
             throw new SessionActiveException();
         }
+        String newSessionAccessId = userStudySessionDao.renewSessionAccessId(studySession.getMetadata().sessionId());
 
         Optional<Quiz> quizOpt = quizSessionService.getNextQuiz(studySessionId);
         StudySessionActivationDto activationDto = new StudySessionActivationDto();
-        activationDto.setSessionId(studySessionId);
+        activationDto.setSessionId(newSessionAccessId);
         activationDto.setRemainingQuizzesCount(quizSessionService.countRemainingQuizzes(studySessionId));
         activationDto.setNextQuiz(quizOpt.orElse(null));
         activationDto.setBattleInfo(battleService.getBattleInfo(studySessionId));

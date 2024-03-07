@@ -63,10 +63,11 @@ public class BattleServiceImpl implements BattleService {
 
     private BattleInfo initializeRedisBattle(String sessionId) {
         StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
+        int userId = studySession.getMetadata().userId();
         SessionBattle sessionBattle = studySession.getBattle();
-        UserAttributesDto userAttributes = userInfoService.getUserAttributes(studySession.getUserId());
-        CurrentStateDto currentState = userInfoService.getCurrentState(studySession.getUserId());
-        int chapterNumber = playerProgressService.getStoryProgress(studySession.getUserId()).getChapterNumber();
+        UserAttributesDto userAttributes = userInfoService.getUserAttributes(userId);
+        CurrentStateDto currentState = userInfoService.getCurrentState(userId);
+        int chapterNumber = playerProgressService.getStoryProgress(userId).getChapterNumber();
         ChapterEnemy chapterEnemy = chapterEnemyRepository
                 .findRandomByChapterNumber(chapterNumber)
                 .orElseThrow(() -> new NotFoundException("There is no enemy in this chapter"));
@@ -141,20 +142,21 @@ public class BattleServiceImpl implements BattleService {
     private BattleResult endRedisBattle(String sessionId) {
         StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
         BattleInfo battleInfo = studySession.getBattle().getBattleInfo();
+        int userId = studySession.getMetadata().userId();
 
         AttributesBeforeAfterDto attributesChange = new AttributesBeforeAfterDto();
-        attributesChange.setBefore(userInfoService.getUserAttributes(studySession.getUserId()));
+        attributesChange.setBefore(userInfoService.getUserAttributes(userId));
 
         BeforeAfterStoryProgressDto chapterProgressDto = playerProgressService
-                .addChapterProgress(studySession.getUserId(), getRandomChapterProgress());
+                .addChapterProgress(userId, getRandomChapterProgress());
 
         LevelBeforeAfterDto levelProgressDto = userInfoService
-                .addExperience(studySession.getUserId(), battleInfo.getExpGain());
+                .addExperience(userId, battleInfo.getExpGain());
 
         CurrentStateDto currentStateDto = userInfoService
-                .updateCurrentState(studySession.getUserId(), new CurrentStateDto(battleInfo.getUserCurrentHp()));
+                .updateCurrentState(userId, new CurrentStateDto(battleInfo.getUserCurrentHp()));
 
-        attributesChange.setAfter(userInfoService.getUserAttributes(studySession.getUserId()));
+        attributesChange.setAfter(userInfoService.getUserAttributes(userId));
 
         return BattleResult.builder()
                 .storyProgress(chapterProgressDto)

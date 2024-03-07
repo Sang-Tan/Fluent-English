@@ -16,9 +16,24 @@ public interface UserStudySessionDao {
     StudySession getSessionByUserId(int userId);
 
     /**
+     * renew by using new random session access id
+     *
+     * @return new session access id
+     * @throws StudySessionNotExistException if a study session does not exist for the user
+     */
+    String renewSessionAccessId(String sessionId);
+
+    String renewSessionAccessId(String sessionId, String newAccessSessionId);
+
+    /**
      * @throws StudySessionNotExistException if a study session does not exist for the user
      */
     StudySession getSessionById(String sessionId);
+
+    /**
+     * @throws StudySessionNotExistException if a study session does not exist for the user
+     */
+    StudySession getSessionByAccessId(String sessionAccessId);
 
     boolean studySessionOfUserExists(int userId);
 

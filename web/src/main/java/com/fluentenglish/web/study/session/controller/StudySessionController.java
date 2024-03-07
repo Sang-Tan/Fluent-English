@@ -49,7 +49,7 @@ public class StudySessionController {
             @PathVariable String sessionId) {
         int userId = getUserIdCurrentRequest();
 
-        return ResponseEntity.ok(studySessionService.continueStudySession(userId));
+        return ResponseEntity.ok(studySessionService.reactivateStudySession(userId));
     }
 
     @PostMapping("/{sessionId}/answer")

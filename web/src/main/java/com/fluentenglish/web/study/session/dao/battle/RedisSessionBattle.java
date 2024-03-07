@@ -1,6 +1,7 @@
 package com.fluentenglish.web.study.session.dao.battle;
 
 import com.fluentenglish.web.study.session.dao.RedisStudySessionObject;
+import com.fluentenglish.web.study.session.dao.meta.StudySessionInternalMetadata;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
-public class RedisSessionBattle extends RedisStudySessionObject implements SessionBattle {
+public class RedisSessionBattle extends RedisStudySessionObject<StudySessionInternalMetadata> implements SessionBattle {
     private final HashMapper<Object, String, Object> hashMapper = new Jackson2HashMapper(false);
 
     private final RedisTemplate<String, Object> redisTemplate;
