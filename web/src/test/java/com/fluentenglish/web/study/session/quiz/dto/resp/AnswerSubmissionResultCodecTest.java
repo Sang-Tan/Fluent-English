@@ -2,8 +2,8 @@ package com.fluentenglish.web.study.session.quiz.dto.resp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fluentenglish.web.study.session.service.quiz.dto.resp.CorrectAnswerSubmissionResult;
 import com.fluentenglish.web.study.session.service.quiz.dto.resp.AnswerSubmissionFailed;
+import com.fluentenglish.web.study.session.service.quiz.dto.resp.CorrectAnswerSubmissionResult;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -20,6 +20,7 @@ class AnswerSubmissionResultCodecTest {
         String json = objectMapper.writeValueAsString(correctAnswerSubmissionResult);
 
         ObjectNode objectNode = objectMapper.readValue(json, ObjectNode.class);
+        assertTrue(objectNode.get("isCorrect").isBoolean());
         assertTrue(objectNode.get("isCorrect").asBoolean());
         assertEquals(10, objectNode.get("score").asInt());
     }
@@ -31,6 +32,7 @@ class AnswerSubmissionResultCodecTest {
         String json = objectMapper.writeValueAsString(answerSubmissionFailed);
 
         ObjectNode objectNode = objectMapper.readValue(json, ObjectNode.class);
+        assertTrue(objectNode.get("isCorrect").isBoolean());
         assertFalse(objectNode.get("isCorrect").asBoolean());
         assertEquals("correctAnswer", objectNode.get("correctAnswer").asText());
     }

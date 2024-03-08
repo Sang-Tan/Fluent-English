@@ -1,16 +1,9 @@
 package com.fluentenglish.web.study.session.service.quiz.dto.resp;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "isCorrect")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = CorrectAnswerSubmissionResult.class, name = "true"),
-        @JsonSubTypes.Type(value = AnswerSubmissionFailed.class, name = "false")
-})
 @Getter
 @Setter
 public abstract class AnswerSubmissionResult {
@@ -21,4 +14,10 @@ public abstract class AnswerSubmissionResult {
     }
 
     public abstract int getScore();
+
+    /**
+     * Workaround for polymorphism in Jackson
+     */
+    @JsonProperty("isCorrect")
+    public abstract boolean isCorrect();
 }
