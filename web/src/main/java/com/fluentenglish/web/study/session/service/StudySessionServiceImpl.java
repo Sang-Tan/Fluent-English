@@ -146,7 +146,7 @@ public class StudySessionServiceImpl implements StudySessionService {
     private StudySessionUpdateDto continueStudySession(String studySessionId, Quiz nextQuiz, int score) {
         StudySessionUpdateDto sessionInfo = new StudySessionUpdateDto();
         sessionInfo.setNextQuiz(nextQuiz);
-        sessionInfo.setBattleUpdateInfo(battleService.updateBattle(studySessionId, score));
+        sessionInfo.setBattleInfo(battleService.updateBattle(studySessionId, score));
         sessionInfo.setRemainingQuizzesCount(quizSessionService.countRemainingQuizzes(studySessionId));
 
         return sessionInfo;

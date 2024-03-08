@@ -10,7 +10,6 @@ import com.fluentenglish.web.gaming.user.dto.UserAttributesDto;
 import com.fluentenglish.web.study.session.dao.RedisUserStudySessionDao;
 import com.fluentenglish.web.study.session.dao.StudySession;
 import com.fluentenglish.web.study.session.dao.battle.BattleInfo;
-import com.fluentenglish.web.study.session.dao.battle.BattleUpdateInfo;
 import com.fluentenglish.web.study.session.dao.battle.SessionBattle;
 import com.fluentenglish.web.study.session.service.battle.dto.AttributesBeforeAfterDto;
 import com.fluentenglish.web.study.session.service.battle.dto.BattleResult;
@@ -47,7 +46,7 @@ public class BattleServiceImpl implements BattleService {
     }
 
     @Override
-    public BattleUpdateInfo updateBattle(String sessionId, Integer score) {
+    public BattleInfo updateBattle(String sessionId, Integer score) {
         return updateRedisBattle(sessionId, score);
     }
 
@@ -93,7 +92,7 @@ public class BattleServiceImpl implements BattleService {
         return battleInfo;
     }
 
-    private BattleUpdateInfo updateRedisBattle(String sessionId, Integer score) {
+    private BattleInfo updateRedisBattle(String sessionId, Integer score) {
         StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
         BattleInfo battleInfo = studySession.getBattle().getBattleInfo();
 
@@ -130,12 +129,7 @@ public class BattleServiceImpl implements BattleService {
 
         studySession.getBattle().setBattleInfo(battleInfo);
 
-        return BattleUpdateInfo.builder()
-                .userCurrentHp(userHp)
-                .userMaxHp(battleInfo.getUserMaxHp())
-                .userShield(userShield)
-                .userStreak(userStreak)
-                .build();
+        return battleInfo;
     }
 
     private BattleResult endRedisBattle(String sessionId) {
