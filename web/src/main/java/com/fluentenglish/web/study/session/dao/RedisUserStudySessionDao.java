@@ -7,9 +7,10 @@ import com.fluentenglish.web.study.session.dao.score.RedisMetadataDto;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.hash.BeanUtilsHashMapper;
 import org.springframework.data.redis.hash.HashMapper;
-import org.springframework.data.redis.hash.Jackson2HashMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
@@ -18,16 +19,17 @@ import java.util.UUID;
 public class RedisUserStudySessionDao implements UserStudySessionDao {
     private final BeanFactory beanFactory;
 
-    private final HashMapper<Object, String, Object> hashMapper = new Jackson2HashMapper(false);
+    private final HashMapper<RedisMetadataDto, String, String> hashMapper =
+            new BeanUtilsHashMapper<>(RedisMetadataDto.class);
 
     private final RedisTemplate<String, String> stringTemplate;
 
     private final ValueOperations<String, String> stringOperations;
 
-    private final HashOperations<String, String, Object> hashOperations;
+    private final HashOperations<String, String, String> hashOperations;
 
     public RedisUserStudySessionDao(BeanFactory beanFactory,
-                                    RedisTemplate<String, String> stringTemplate) {
+                                    StringRedisTemplate stringTemplate) {
         this.beanFactory = beanFactory;
         this.stringOperations = stringTemplate.opsForValue();
         this.hashOperations = stringTemplate.opsForHash();
@@ -166,8 +168,7 @@ public class RedisUserStudySessionDao implements UserStudySessionDao {
     }
 
     private RedisMetadataDto getMetadataBySessionId(String sessionId) {
-        return (RedisMetadataDto)
-                hashMapper.fromHash(hashOperations.entries(getSessionReferMetadataKey(sessionId)));
+        return hashMapper.fromHash(hashOperations.entries(getSessionReferMetadataKey(sessionId)));
     }
 
     private String generateRandomSessionId() {
