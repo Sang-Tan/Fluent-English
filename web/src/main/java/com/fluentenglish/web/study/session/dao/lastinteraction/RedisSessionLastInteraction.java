@@ -1,4 +1,4 @@
-package com.fluentenglish.web.study.session.dao.last_interaction;
+package com.fluentenglish.web.study.session.dao.lastinteraction;
 
 import com.fluentenglish.web.study.session.dao.RedisStudySessionObject;
 import com.fluentenglish.web.study.session.dao.meta.StudySessionInternalMetadata;

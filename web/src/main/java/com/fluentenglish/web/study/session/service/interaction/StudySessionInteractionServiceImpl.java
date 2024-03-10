@@ -2,7 +2,7 @@ package com.fluentenglish.web.study.session.service.interaction;
 
 import com.fluentenglish.web.study.session.dao.RedisUserStudySessionDao;
 import com.fluentenglish.web.study.session.dao.StudySession;
-import com.fluentenglish.web.study.session.dao.last_interaction.SessionLastInteraction;
+import com.fluentenglish.web.study.session.dao.lastinteraction.SessionLastInteraction;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

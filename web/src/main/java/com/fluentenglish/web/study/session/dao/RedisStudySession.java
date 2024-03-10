@@ -2,8 +2,8 @@ package com.fluentenglish.web.study.session.dao;
 
 import com.fluentenglish.web.study.session.dao.battle.RedisSessionBattle;
 import com.fluentenglish.web.study.session.dao.battle.SessionBattle;
-import com.fluentenglish.web.study.session.dao.last_interaction.RedisSessionLastInteraction;
-import com.fluentenglish.web.study.session.dao.last_interaction.SessionLastInteraction;
+import com.fluentenglish.web.study.session.dao.lastinteraction.RedisSessionLastInteraction;
+import com.fluentenglish.web.study.session.dao.lastinteraction.SessionLastInteraction;
 import com.fluentenglish.web.study.session.dao.meta.StudySessionInternalMetadata;
 import com.fluentenglish.web.study.session.dao.meta.StudySessionManageMetadata;
 import com.fluentenglish.web.study.session.dao.quiz.RedisSessionQuizzesQueue;
