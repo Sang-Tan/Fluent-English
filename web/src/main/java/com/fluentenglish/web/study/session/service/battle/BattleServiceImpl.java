@@ -10,12 +10,8 @@ import com.fluentenglish.web.gaming.user.dto.UserAttributesDto;
 import com.fluentenglish.web.study.session.dao.StudySession;
 import com.fluentenglish.web.study.session.dao.StudySessionDao;
 import com.fluentenglish.web.study.session.dao.battle.BattleInfo;
-import com.fluentenglish.web.study.session.dao.battle.BattleUpdateInfo;
 import com.fluentenglish.web.study.session.dao.battle.SessionBattle;
-import com.fluentenglish.web.study.session.service.battle.dto.AttributesBeforeAfterDto;
-import com.fluentenglish.web.study.session.service.battle.dto.BattleResult;
-import com.fluentenglish.web.study.session.service.battle.dto.BeforeAfterStoryProgressDto;
-import com.fluentenglish.web.study.session.service.battle.dto.LevelBeforeAfterDto;
+import com.fluentenglish.web.study.session.service.battle.dto.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,29 +27,37 @@ public class BattleServiceImpl implements BattleService {
 
     private final UserInfoService userInfoService;
 
+    private final BattleDtoMapper battleDtoMapper;
+
     public BattleServiceImpl(StudySessionDao studySessionDao,
                              ChapterEnemyRepository chapterEnemyRepository,
                              PlayerProgressService playerProgressService,
-                             UserInfoService userInfoService) {
+                             UserInfoService userInfoService,
+                             BattleDtoMapper battleDtoMapper) {
         this.studySessionDao = studySessionDao;
         this.chapterEnemyRepository = chapterEnemyRepository;
         this.playerProgressService = playerProgressService;
         this.userInfoService = userInfoService;
+        this.battleDtoMapper = battleDtoMapper;
     }
 
     @Override
-    public BattleInfo initializeBattle(String sessionId) {
-        return initializeRedisBattle(sessionId);
+    public BattleInfoDto initializeBattle(String sessionId) {
+        BattleInfo battleInfo = initializeRedisBattle(sessionId);
+        return battleDtoMapper.toDto(battleInfo);
     }
 
     @Override
-    public BattleUpdateInfo updateBattle(String sessionId, Integer score) {
-        return updateRedisBattle(sessionId, score);
+    public BattleInfoDto updateBattle(String sessionId, Integer score) {
+        BattleInfo battleInfo = updateRedisBattle(sessionId, score);
+        return battleDtoMapper.toDto(battleInfo);
     }
 
     @Override
-    public BattleInfo getBattleInfo(String sessionId) {
-        return studySessionDao.getSessionById(sessionId).getBattle().getBattleInfo();
+    public BattleInfoDto getBattleInfo(String sessionId) {
+        StudySession studySession = studySessionDao.getSessionById(sessionId);
+        BattleInfo battleInfo = studySession.getBattle().getBattleInfo();
+        return battleDtoMapper.toDto(battleInfo);
     }
 
     @Override
@@ -94,7 +98,7 @@ public class BattleServiceImpl implements BattleService {
         return battleInfo;
     }
 
-    private BattleUpdateInfo updateRedisBattle(String sessionId, Integer score) {
+    private BattleInfo updateRedisBattle(String sessionId, Integer score) {
         StudySession studySession = studySessionDao.getSessionById(sessionId);
         BattleInfo battleInfo = studySession.getBattle().getBattleInfo();
 
@@ -131,12 +135,7 @@ public class BattleServiceImpl implements BattleService {
 
         studySession.getBattle().setBattleInfo(battleInfo);
 
-        return BattleUpdateInfo.builder()
-                .userCurrentHp(userHp)
-                .userMaxHp(battleInfo.getUserMaxHp())
-                .userShield(userShield)
-                .userStreak(userStreak)
-                .build();
+        return battleInfo;
     }
 
     private BattleResult endRedisBattle(String sessionId) {

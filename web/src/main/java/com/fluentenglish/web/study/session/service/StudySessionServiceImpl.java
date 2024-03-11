@@ -3,9 +3,9 @@ package com.fluentenglish.web.study.session.service;
 import com.fluentenglish.web.study.session.dao.StudySession;
 import com.fluentenglish.web.study.session.dao.StudySessionAccessIdDao;
 import com.fluentenglish.web.study.session.dao.StudySessionDao;
-import com.fluentenglish.web.study.session.dao.battle.BattleInfo;
 import com.fluentenglish.web.study.session.dao.quiz.Quiz;
 import com.fluentenglish.web.study.session.service.battle.BattleService;
+import com.fluentenglish.web.study.session.service.battle.dto.BattleInfoDto;
 import com.fluentenglish.web.study.session.service.battle.dto.BattleResult;
 import com.fluentenglish.web.study.session.service.dto.StudySessionActivationDto;
 import com.fluentenglish.web.study.session.service.dto.StudySessionSubmissionDto;
@@ -116,7 +116,7 @@ public class StudySessionServiceImpl implements StudySessionService {
         StudySession studySession = studySessionDao.createSession(userId);
 
         Quiz firstQuiz = quizSessionService.initializeQuizzes(studySession.getId(), wordIds);
-        BattleInfo battleInfo = battleService.initializeBattle(studySession.getId());
+        BattleInfoDto battleInfo = battleService.initializeBattle(studySession.getId());
 
         int remainingQuizzesCount = quizSessionService.countRemainingQuizzes(studySession.getId());
 
@@ -182,7 +182,7 @@ public class StudySessionServiceImpl implements StudySessionService {
     private StudySessionUpdateDto continueStudySession(String studySessionId, Quiz nextQuiz, int score) {
         StudySessionUpdateDto sessionInfo = new StudySessionUpdateDto();
         sessionInfo.setNextQuiz(nextQuiz);
-        sessionInfo.setBattleUpdateInfo(battleService.updateBattle(studySessionId, score));
+        sessionInfo.setBattleInfo(battleService.updateBattle(studySessionId, score));
         sessionInfo.setRemainingQuizzesCount(quizSessionService.countRemainingQuizzes(studySessionId));
 
         return sessionInfo;

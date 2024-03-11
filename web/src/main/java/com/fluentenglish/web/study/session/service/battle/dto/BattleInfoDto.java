@@ -1,4 +1,4 @@
-package com.fluentenglish.web.study.session.dao.battle;
+package com.fluentenglish.web.study.session.service.battle.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class BattleUpdateInfo {
+public class BattleInfoDto {
     private int userCurrentHp;
 
     private int userMaxHp;
