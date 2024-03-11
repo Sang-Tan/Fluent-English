@@ -44,9 +44,8 @@ public class StudySessionController {
         return ResponseEntity.ok(sessionInfo);
     }
 
-    @GetMapping("/{sessionId}")
-    public ResponseEntity<StudySessionActivationDto> continueStudySession(
-            @PathVariable String sessionId) {
+    @GetMapping
+    public ResponseEntity<StudySessionActivationDto> continueStudySession() {
         int userId = getUserIdCurrentRequest();
 
         return ResponseEntity.ok(studySessionService.reactivateStudySession(userId));

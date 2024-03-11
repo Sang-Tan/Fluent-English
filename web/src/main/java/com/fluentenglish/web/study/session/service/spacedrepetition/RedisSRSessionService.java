@@ -4,7 +4,7 @@ import com.fluentenglish.web.spacedrepetition.fsrs.Grade;
 import com.fluentenglish.web.spacedrepetition.word.WordMemoService;
 import com.fluentenglish.web.spacedrepetition.word.dto.UpdateWordMemoDto;
 import com.fluentenglish.web.study.session.dao.StudySession;
-import com.fluentenglish.web.study.session.dao.UserStudySessionDao;
+import com.fluentenglish.web.study.session.dao.StudySessionDao;
 import com.fluentenglish.web.study.session.dao.score.SessionWordsScores;
 import com.fluentenglish.web.study.session.dao.score.WordScore;
 import org.springframework.stereotype.Service;
@@ -15,20 +15,20 @@ import java.util.stream.Collectors;
 
 @Service
 public class RedisSRSessionService implements SRSessionService {
-    private final UserStudySessionDao userStudySessionDao;
+    private final StudySessionDao studySessionDao;
 
     private final WordMemoService wordMemoService;
 
-    public RedisSRSessionService(UserStudySessionDao userStudySessionDao,
+    public RedisSRSessionService(StudySessionDao studySessionDao,
                                  WordMemoService wordMemoService) {
-        this.userStudySessionDao = userStudySessionDao;
+        this.studySessionDao = studySessionDao;
         this.wordMemoService = wordMemoService;
     }
 
     @Override
     public void initialize(String sessionId, Set<Integer> wordIds) {
         SessionWordsScores sessionWordsScores =
-                userStudySessionDao.getSessionById(sessionId).getWordsScores();
+                studySessionDao.getSessionById(sessionId).getWordsScores();
         Map<Integer, WordScore> wordsScores = wordIds.stream()
                 .collect(Collectors.toMap(
                         wordId -> wordId,
@@ -46,7 +46,7 @@ public class RedisSRSessionService implements SRSessionService {
     public void addAttempt(String sessionId, int wordId, int score) {
         validateScore(score);
 
-        StudySession studySession = userStudySessionDao.getSessionById(sessionId);
+        StudySession studySession = studySessionDao.getSessionById(sessionId);
         SessionWordsScores sessionWordsScores =
                 studySession.getWordsScores();
 
@@ -66,8 +66,8 @@ public class RedisSRSessionService implements SRSessionService {
 
     @Override
     public WordsScoresResult endSession(String sessionId) {
-        StudySession studySession = userStudySessionDao.getSessionById(sessionId);
-        int userId = studySession.getMetadata().userId();
+        StudySession studySession = studySessionDao.getSessionById(sessionId);
+        int userId = studySession.getUserId();
         SessionWordsScores sessionWordsScores =
                 studySession.getWordsScores();
         Map<Integer, WordScore> wordsScores = sessionWordsScores.getWordsScores();

@@ -32,21 +32,21 @@ public class RedisStudySession extends RedisStudySessionObject<StudySessionManag
     }
 
     @Override
-    public String getId() {
-        return getSessionMetadata().accessSessionId();
-    }
-
-    @Override
-    public StudySessionManageMetadata getMetadata() {
-        return getSessionMetadata();
-    }
-
-    @Override
     public void delete() {
         getRedisSessionBattle().delete();
         getRedisSessionQuizzesQueue().delete();
         getRedisSessionWordsScores().delete();
         getRedisSessionLastInteraction().delete();
+    }
+
+    @Override
+    public int getUserId() {
+        return getSessionMetadata().userId();
+    }
+
+    @Override
+    public String getId() {
+        return getSessionMetadata().sessionId();
     }
 
     @Override

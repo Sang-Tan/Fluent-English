@@ -1,13 +1,13 @@
 package com.fluentenglish.web.study.session.dao.battle;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class  BattleInfo {
+public class BattleInfo {
     private int userCurrentHp;
 
     private int userMaxHp;

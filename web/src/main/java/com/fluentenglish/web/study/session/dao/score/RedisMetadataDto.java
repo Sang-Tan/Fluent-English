@@ -11,5 +11,4 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RedisMetadataDto {
     private int userId;
-    private String sessionAccessId;
 }

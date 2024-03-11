@@ -7,8 +7,8 @@ import com.fluentenglish.web.gaming.user.PlayerProgressService;
 import com.fluentenglish.web.gaming.user.UserInfoService;
 import com.fluentenglish.web.gaming.user.dto.CurrentStateDto;
 import com.fluentenglish.web.gaming.user.dto.UserAttributesDto;
-import com.fluentenglish.web.study.session.dao.RedisUserStudySessionDao;
 import com.fluentenglish.web.study.session.dao.StudySession;
+import com.fluentenglish.web.study.session.dao.StudySessionDao;
 import com.fluentenglish.web.study.session.dao.battle.BattleInfo;
 import com.fluentenglish.web.study.session.dao.battle.BattleUpdateInfo;
 import com.fluentenglish.web.study.session.dao.battle.SessionBattle;
@@ -23,7 +23,7 @@ public class BattleServiceImpl implements BattleService {
     private static final float CHAPTER_PROGRESS_MIN_PERCENT = 0.03f;
     private static final float CHAPTER_PROGRESS_MAX_PERCENT = 0.08f;
 
-    private final RedisUserStudySessionDao redisUserStudySessionDao;
+    private final StudySessionDao studySessionDao;
 
     private final ChapterEnemyRepository chapterEnemyRepository;
 
@@ -31,11 +31,11 @@ public class BattleServiceImpl implements BattleService {
 
     private final UserInfoService userInfoService;
 
-    public BattleServiceImpl(RedisUserStudySessionDao userStudySessionDao,
+    public BattleServiceImpl(StudySessionDao studySessionDao,
                              ChapterEnemyRepository chapterEnemyRepository,
                              PlayerProgressService playerProgressService,
                              UserInfoService userInfoService) {
-        this.redisUserStudySessionDao = userStudySessionDao;
+        this.studySessionDao = studySessionDao;
         this.chapterEnemyRepository = chapterEnemyRepository;
         this.playerProgressService = playerProgressService;
         this.userInfoService = userInfoService;
@@ -53,7 +53,7 @@ public class BattleServiceImpl implements BattleService {
 
     @Override
     public BattleInfo getBattleInfo(String sessionId) {
-        return redisUserStudySessionDao.getSessionById(sessionId).getBattle().getBattleInfo();
+        return studySessionDao.getSessionById(sessionId).getBattle().getBattleInfo();
     }
 
     @Override
@@ -62,8 +62,8 @@ public class BattleServiceImpl implements BattleService {
     }
 
     private BattleInfo initializeRedisBattle(String sessionId) {
-        StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
-        int userId = studySession.getMetadata().userId();
+        StudySession studySession = studySessionDao.getSessionById(sessionId);
+        int userId = studySession.getUserId();
         SessionBattle sessionBattle = studySession.getBattle();
         UserAttributesDto userAttributes = userInfoService.getUserAttributes(userId);
         CurrentStateDto currentState = userInfoService.getCurrentState(userId);
@@ -95,7 +95,7 @@ public class BattleServiceImpl implements BattleService {
     }
 
     private BattleUpdateInfo updateRedisBattle(String sessionId, Integer score) {
-        StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
+        StudySession studySession = studySessionDao.getSessionById(sessionId);
         BattleInfo battleInfo = studySession.getBattle().getBattleInfo();
 
         int userHp = battleInfo.getUserCurrentHp();
@@ -140,9 +140,9 @@ public class BattleServiceImpl implements BattleService {
     }
 
     private BattleResult endRedisBattle(String sessionId) {
-        StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
+        StudySession studySession = studySessionDao.getSessionById(sessionId);
         BattleInfo battleInfo = studySession.getBattle().getBattleInfo();
-        int userId = studySession.getMetadata().userId();
+        int userId = studySession.getUserId();
 
         AttributesBeforeAfterDto attributesChange = new AttributesBeforeAfterDto();
         attributesChange.setBefore(userInfoService.getUserAttributes(userId));

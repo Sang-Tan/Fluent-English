@@ -3,36 +3,33 @@ package com.fluentenglish.web.study.session.dao.lastinteraction;
 import com.fluentenglish.web.study.session.dao.RedisStudySessionObject;
 import com.fluentenglish.web.study.session.dao.meta.StudySessionInternalMetadata;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 @Scope("prototype")
 public class RedisSessionLastInteraction extends RedisStudySessionObject<StudySessionInternalMetadata> implements SessionLastInteraction {
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final StringRedisTemplate redisTemplate;
 
-    private final ValueOperations<String, Long> longValueOperations;
+    private final ValueOperations<String, String> valueOperations;
 
-    public RedisSessionLastInteraction(RedisTemplate<String, Object> redisTemplate,
-                                       RedisTemplate<String, Long> longRedisTemplate) {
+    public RedisSessionLastInteraction(StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
-        this.longValueOperations = longRedisTemplate.opsForValue();
+        this.valueOperations = redisTemplate.opsForValue();
     }
 
     @Override
     public long getLastInteractionTime() {
-        Long interactionTime = longValueOperations.get(getLastInteractionKey());
-        if (interactionTime == null) {
-            throw new RuntimeException("Last interaction time is not set");
-        }
-
-        return interactionTime;
+        return getOptLastInteractionTime()
+                .orElseThrow(() -> new RuntimeException("Last interaction time is not set"));
     }
 
     @Override
     public void setLastInteractionTime(long lastInteractionTime) {
-        longValueOperations.set(getLastInteractionKey(), lastInteractionTime);
+        valueOperations.set(getLastInteractionKey(), String.valueOf(lastInteractionTime));
     }
 
     @Override
@@ -42,5 +39,10 @@ public class RedisSessionLastInteraction extends RedisStudySessionObject<StudySe
 
     private String getLastInteractionKey() {
         return String.format("studySession:%s:lastInteraction", getSessionMetadata().sessionId());
+    }
+
+    private Optional<Long> getOptLastInteractionTime() {
+        String lastInteractionString = valueOperations.get(getLastInteractionKey());
+        return Optional.ofNullable(lastInteractionString).map(Long::valueOf);
     }
 }
