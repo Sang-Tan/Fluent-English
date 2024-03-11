@@ -1,13 +1,12 @@
 package com.fluentenglish.web.study.session.service.quiz.dto.resp;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class AnswerSubmissionFailed extends AnswerSubmissionResult{
+public class AnswerSubmissionFailed extends AnswerSubmissionResult {
     @NotNull
     private String correctAnswer;
 
@@ -19,5 +18,10 @@ public class AnswerSubmissionFailed extends AnswerSubmissionResult{
     @Override
     public int getScore() {
         return 0;
+    }
+
+    @Override
+    public boolean isCorrect() {
+        return false;
     }
 }
