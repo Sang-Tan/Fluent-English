@@ -3,6 +3,7 @@ package com.fluentenglish.web.study.session.dao.quiz;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fluentenglish.web.study.session.dao.RedisStudySessionObject;
+import com.fluentenglish.web.study.session.dao.meta.StudySessionInternalMetadata;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -13,7 +14,7 @@ import java.util.Objects;
 
 @Component
 @Scope("prototype")
-public class RedisSessionQuizzesQueue extends RedisStudySessionObject implements SessionQuizzesQueue {
+public class RedisSessionQuizzesQueue extends RedisStudySessionObject<StudySessionInternalMetadata> implements SessionQuizzesQueue {
     private final RedisTemplate<String, Object> redisTemplate;
 
     private final ListOperations<String, String> listOperations;

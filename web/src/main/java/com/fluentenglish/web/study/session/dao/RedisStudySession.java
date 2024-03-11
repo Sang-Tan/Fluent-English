@@ -2,8 +2,10 @@ package com.fluentenglish.web.study.session.dao;
 
 import com.fluentenglish.web.study.session.dao.battle.RedisSessionBattle;
 import com.fluentenglish.web.study.session.dao.battle.SessionBattle;
-import com.fluentenglish.web.study.session.dao.last_interaction.RedisSessionLastInteraction;
-import com.fluentenglish.web.study.session.dao.last_interaction.SessionLastInteraction;
+import com.fluentenglish.web.study.session.dao.lastinteraction.RedisSessionLastInteraction;
+import com.fluentenglish.web.study.session.dao.lastinteraction.SessionLastInteraction;
+import com.fluentenglish.web.study.session.dao.meta.StudySessionInternalMetadata;
+import com.fluentenglish.web.study.session.dao.meta.StudySessionManageMetadata;
 import com.fluentenglish.web.study.session.dao.quiz.RedisSessionQuizzesQueue;
 import com.fluentenglish.web.study.session.dao.quiz.SessionQuizzesQueue;
 import com.fluentenglish.web.study.session.dao.score.RedisSessionWordsScores;
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
-public class RedisStudySession extends RedisStudySessionObject implements StudySession {
+public class RedisStudySession extends RedisStudySessionObject<StudySessionManageMetadata> implements StudySession {
     private final BeanFactory beanFactory;
 
     private RedisSessionBattle sessionBattle;
@@ -30,8 +32,11 @@ public class RedisStudySession extends RedisStudySessionObject implements StudyS
     }
 
     @Override
-    public String getId() {
-        return getSessionMetadata().sessionId();
+    public void delete() {
+        getRedisSessionBattle().delete();
+        getRedisSessionQuizzesQueue().delete();
+        getRedisSessionWordsScores().delete();
+        getRedisSessionLastInteraction().delete();
     }
 
     @Override
@@ -40,11 +45,8 @@ public class RedisStudySession extends RedisStudySessionObject implements StudyS
     }
 
     @Override
-    public void delete() {
-        getRedisSessionBattle().delete();
-        getRedisSessionQuizzesQueue().delete();
-        getRedisSessionWordsScores().delete();
-        getRedisSessionLastInteraction().delete();
+    public String getId() {
+        return getSessionMetadata().sessionId();
     }
 
     @Override
@@ -96,38 +98,38 @@ public class RedisStudySession extends RedisStudySessionObject implements StudyS
     }
 
     private RedisSessionQuizzesQueue createQuizzesQueue() {
-        StudySessionMetadata metadata = getSessionMetadata();
         RedisSessionQuizzesQueue sessionQuizzesQueue =
                 beanFactory.getBean(RedisSessionQuizzesQueue.class);
-        sessionQuizzesQueue.setSessionMetadata(metadata);
+        sessionQuizzesQueue.setSessionMetadata(getInternalMetadata());
 
         return sessionQuizzesQueue;
     }
 
     private RedisSessionWordsScores createWordsScores() {
-        StudySessionMetadata metadata = getSessionMetadata();
         RedisSessionWordsScores sessionWordsScores =
                 beanFactory.getBean(RedisSessionWordsScores.class);
-        sessionWordsScores.setSessionMetadata(metadata);
+        sessionWordsScores.setSessionMetadata(getInternalMetadata());
 
         return sessionWordsScores;
     }
 
     private RedisSessionBattle createBattle() {
-        StudySessionMetadata metadata = getSessionMetadata();
         RedisSessionBattle sessionBattle =
                 beanFactory.getBean(RedisSessionBattle.class);
-        sessionBattle.setSessionMetadata(metadata);
+        sessionBattle.setSessionMetadata(getInternalMetadata());
 
         return sessionBattle;
     }
 
     private RedisSessionLastInteraction createLastInteraction() {
-        StudySessionMetadata metadata = getSessionMetadata();
         RedisSessionLastInteraction sessionLastInteraction =
                 beanFactory.getBean(RedisSessionLastInteraction.class);
-        sessionLastInteraction.setSessionMetadata(metadata);
+        sessionLastInteraction.setSessionMetadata(getInternalMetadata());
 
         return sessionLastInteraction;
+    }
+
+    private StudySessionInternalMetadata getInternalMetadata() {
+        return new StudySessionInternalMetadata(getSessionMetadata().sessionId());
     }
 }

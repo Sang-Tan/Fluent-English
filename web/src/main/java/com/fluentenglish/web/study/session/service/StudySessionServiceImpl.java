@@ -1,7 +1,8 @@
 package com.fluentenglish.web.study.session.service;
 
 import com.fluentenglish.web.study.session.dao.StudySession;
-import com.fluentenglish.web.study.session.dao.UserStudySessionDao;
+import com.fluentenglish.web.study.session.dao.StudySessionAccessIdDao;
+import com.fluentenglish.web.study.session.dao.StudySessionDao;
 import com.fluentenglish.web.study.session.dao.battle.BattleInfo;
 import com.fluentenglish.web.study.session.dao.quiz.Quiz;
 import com.fluentenglish.web.study.session.service.battle.BattleService;
@@ -21,10 +22,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class StudySessionServiceImpl implements StudySessionService {
-    private final UserStudySessionDao userStudySessionDao;
+    private final StudySessionDao studySessionDao;
+
+    private final StudySessionAccessIdDao studySessionAccessIdDao;
 
     private final QuizSessionService quizSessionService;
 
@@ -35,12 +39,14 @@ public class StudySessionServiceImpl implements StudySessionService {
     private final StudySessionInteractionService studySessionInteractionService;
 
 
-    public StudySessionServiceImpl(UserStudySessionDao userStudySessionDao,
+    public StudySessionServiceImpl(StudySessionDao studySessionDao,
+                                   StudySessionAccessIdDao studySessionAccessIdDao,
                                    QuizSessionService quizSessionService,
                                    SRSessionService srSessionService,
                                    BattleService battleService,
-                                   StudySessionInteractionService studySessionInteractionService) {
-        this.userStudySessionDao = userStudySessionDao;
+                                   com.fluentenglish.web.study.session.service.interaction.StudySessionInteractionService studySessionInteractionService) {
+        this.studySessionDao = studySessionDao;
+        this.studySessionAccessIdDao = studySessionAccessIdDao;
         this.quizSessionService = quizSessionService;
         this.srSessionService = srSessionService;
         this.battleService = battleService;
@@ -49,65 +55,95 @@ public class StudySessionServiceImpl implements StudySessionService {
 
     @Override
     public StudySessionActivationDto startStudySession(int userId, Set<Integer> wordIds) {
-        String studySessionId = userStudySessionDao.createSession(userId).getId();
+        StudySessionActivationDto activationDto = initializeStudySession(userId, wordIds);
+        String sessionId = activationDto.getSessionId();
+        studySessionInteractionService.setLastInteractionTime(sessionId,
+                System.currentTimeMillis());
 
-        Quiz firstQuiz = quizSessionService.initializeQuizzes(studySessionId, wordIds);
-        BattleInfo battleInfo = battleService.initializeBattle(studySessionId);
-        studySessionInteractionService.setLastInteractionTime(studySessionId, System.currentTimeMillis());
+        String accessId = generateRandomAccessId();
 
-        int remainingQuizzesCount = quizSessionService.countRemainingQuizzes(studySessionId);
-
-        StudySessionActivationDto sessionInfo = new StudySessionActivationDto();
-        sessionInfo.setNextQuiz(firstQuiz);
-        sessionInfo.setBattleInfo(battleInfo);
-        sessionInfo.setSessionId(studySessionId);
-        sessionInfo.setRemainingQuizzesCount(remainingQuizzesCount);
-
-        return sessionInfo;
-    }
-
-    @Override
-    public StudySessionActivationDto continueStudySession(int userId) {
-        StudySession studySession = userStudySessionDao.getSessionByUserId(userId);
-        String studySessionId = studySession.getId();
-
-        if ((studySessionInteractionService.isSessionActive(studySessionId))) {
-            throw new SessionActiveException();
-        }
-
-        Optional<Quiz> quizOpt = quizSessionService.getNextQuiz(studySessionId);
-        StudySessionActivationDto activationDto = new StudySessionActivationDto();
-        activationDto.setSessionId(studySessionId);
-        activationDto.setRemainingQuizzesCount(quizSessionService.countRemainingQuizzes(studySessionId));
-        activationDto.setNextQuiz(quizOpt.orElse(null));
-        activationDto.setBattleInfo(battleService.getBattleInfo(studySessionId));
-
-        studySessionInteractionService.setLastInteractionTime(studySessionId, System.currentTimeMillis());
+        studySessionAccessIdDao
+                .createAccessIdForSession(sessionId, accessId);
+        activationDto.setSessionId(accessId);
 
         return activationDto;
     }
 
     @Override
-    public boolean studySessionExists(String sessionId) {
-        return userStudySessionDao.studySessionExists(sessionId);
+    public StudySessionActivationDto reactivateStudySession(int userId) {
+        String sessionId = studySessionDao.getSessionIdByUserId(userId);
+        if (!studySessionInteractionService.isSessionActive(sessionId)) {
+            throw new SessionActiveException();
+        }
+
+        StudySessionActivationDto activationDto = getCurrentSessionInfo(sessionId);
+        studySessionInteractionService.setLastInteractionTime(sessionId,
+                System.currentTimeMillis());
+
+        String newAccessId = generateRandomAccessId();
+        studySessionAccessIdDao.changeAccessIdBySessionId(sessionId, newAccessId);
+        activationDto.setSessionId(newAccessId);
+
+        return activationDto;
     }
 
     @Override
-    public StudySessionSubmissionDto submitAnswer(String sessionId, AnswerSubmission answer) {
+    public boolean studySessionExists(String sessionAccessId) {
+        String sessionId = studySessionAccessIdDao.getSessionIdByAccessId(sessionAccessId);
+
+        return studySessionDao.studySessionExists(sessionId);
+    }
+
+    @Override
+    public StudySessionSubmissionDto submitAnswer(String sessionAccessId, AnswerSubmission answer) {
+        String sessionId = studySessionAccessIdDao.getSessionIdByAccessId(sessionAccessId);
+
         AnswerSubmissionResult result = quizSessionService.submitAnswer(sessionId, answer);
         studySessionInteractionService.setLastInteractionTime(sessionId, System.currentTimeMillis());
         return handleResult(sessionId, result);
     }
 
     @Override
-    public StudySessionSubmissionDto handleFailedAnswerSubmission(String sessionId) {
+    public StudySessionSubmissionDto handleFailedAnswerSubmission(String sessionAccessId) {
+        String sessionId = studySessionAccessIdDao.getSessionIdByAccessId(sessionAccessId);
+
         AnswerSubmissionResult result = quizSessionService.handleFailedAnswerSubmission(sessionId);
         studySessionInteractionService.setLastInteractionTime(sessionId, System.currentTimeMillis());
         return handleResult(sessionId, result);
     }
 
+    private StudySessionActivationDto initializeStudySession(int userId, Set<Integer> wordIds) {
+        StudySession studySession = studySessionDao.createSession(userId);
+
+        Quiz firstQuiz = quizSessionService.initializeQuizzes(studySession.getId(), wordIds);
+        BattleInfo battleInfo = battleService.initializeBattle(studySession.getId());
+
+        int remainingQuizzesCount = quizSessionService.countRemainingQuizzes(studySession.getId());
+
+        StudySessionActivationDto sessionInfo = new StudySessionActivationDto();
+        sessionInfo.setNextQuiz(firstQuiz);
+        sessionInfo.setBattleInfo(battleInfo);
+        sessionInfo.setSessionId(studySession.getId());
+        sessionInfo.setRemainingQuizzesCount(remainingQuizzesCount);
+
+        return sessionInfo;
+    }
+
+    private StudySessionActivationDto getCurrentSessionInfo(String sessionId) {
+        Optional<Quiz> quizOpt = quizSessionService.getNextQuiz(sessionId);
+
+        StudySessionActivationDto activationDto = new StudySessionActivationDto();
+        activationDto.setSessionId(sessionId);
+        activationDto.setRemainingQuizzesCount(quizSessionService
+                .countRemainingQuizzes(sessionId));
+        activationDto.setNextQuiz(quizOpt.orElse(null));
+        activationDto.setBattleInfo(battleService.getBattleInfo(sessionId));
+
+        return activationDto;
+    }
+
     private StudySessionSubmissionDto handleResult(String sessionId, AnswerSubmissionResult result) {
-        StudySession studySession = userStudySessionDao.getSessionById(sessionId);
+        StudySession studySession = studySessionDao.getSessionById(sessionId);
         String studySessionId = studySession.getId();
 
         int score = result.getScore();
@@ -138,7 +174,7 @@ public class StudySessionServiceImpl implements StudySessionService {
         summary.setWordsScores(wordsScoresResult.getScoresByWords());
         summary.setBattleResult(battleResult);
 
-        userStudySessionDao.deleteStudySession(studySessionId);
+        studySessionDao.deleteStudySession(studySessionId);
 
         return summary;
     }
@@ -150,5 +186,9 @@ public class StudySessionServiceImpl implements StudySessionService {
         sessionInfo.setRemainingQuizzesCount(quizSessionService.countRemainingQuizzes(studySessionId));
 
         return sessionInfo;
+    }
+
+    private String generateRandomAccessId() {
+        return UUID.randomUUID().toString();
     }
 }

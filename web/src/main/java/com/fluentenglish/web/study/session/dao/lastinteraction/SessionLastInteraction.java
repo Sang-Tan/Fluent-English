@@ -1,4 +1,4 @@
-package com.fluentenglish.web.study.session.dao.last_interaction;
+package com.fluentenglish.web.study.session.dao.lastinteraction;
 
 public interface SessionLastInteraction {
 

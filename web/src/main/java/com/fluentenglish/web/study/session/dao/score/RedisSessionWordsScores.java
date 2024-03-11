@@ -1,6 +1,7 @@
 package com.fluentenglish.web.study.session.dao.score;
 
 import com.fluentenglish.web.study.session.dao.RedisStudySessionObject;
+import com.fluentenglish.web.study.session.dao.meta.StudySessionInternalMetadata;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Scope("prototype")
-public class RedisSessionWordsScores extends RedisStudySessionObject implements SessionWordsScores {
+public class RedisSessionWordsScores extends RedisStudySessionObject<StudySessionInternalMetadata> implements SessionWordsScores {
     private final RedisTemplate<String, String> redisTemplate;
 
     private final HashOperations<String, String, String> hashOperations;

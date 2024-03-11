@@ -13,7 +13,7 @@ public interface StudySessionService {
     /**
      * @throws SessionActiveException if the session is currently active
      */
-    StudySessionActivationDto continueStudySession(int userId);
+    StudySessionActivationDto reactivateStudySession(int userId);
 
     boolean studySessionExists(String sessionId);
 

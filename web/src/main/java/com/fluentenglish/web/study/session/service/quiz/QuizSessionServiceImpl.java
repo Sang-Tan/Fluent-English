@@ -1,16 +1,16 @@
 package com.fluentenglish.web.study.session.service.quiz;
 
-import com.fluentenglish.web.study.session.dao.RedisUserStudySessionDao;
 import com.fluentenglish.web.study.session.dao.StudySession;
+import com.fluentenglish.web.study.session.dao.StudySessionDao;
 import com.fluentenglish.web.study.session.dao.quiz.Quiz;
 import com.fluentenglish.web.study.session.dao.quiz.SessionQuizzesQueue;
 import com.fluentenglish.web.study.session.dao.quiz.answer.Answer;
 import com.fluentenglish.web.study.session.dao.quiz.answer.input.InputAnswer;
 import com.fluentenglish.web.study.session.dao.quiz.answer.multiplechoice.MultipleChoiceAnswer;
 import com.fluentenglish.web.study.session.service.quiz.dto.AnswerSubmission;
+import com.fluentenglish.web.study.session.service.quiz.dto.resp.AnswerSubmissionFailed;
 import com.fluentenglish.web.study.session.service.quiz.dto.resp.AnswerSubmissionResult;
 import com.fluentenglish.web.study.session.service.quiz.dto.resp.CorrectAnswerSubmissionResult;
-import com.fluentenglish.web.study.session.service.quiz.dto.resp.AnswerSubmissionFailed;
 import com.fluentenglish.web.study.session.service.quiz.generator.QuizGenerateService;
 import jakarta.annotation.Nullable;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,12 @@ import java.util.*;
 @Service
 public class QuizSessionServiceImpl implements QuizSessionService {
     private final QuizGenerateService quizGenerateService;
-    private final RedisUserStudySessionDao redisUserStudySessionDao;
+    private final StudySessionDao studySessionDao;
 
     public QuizSessionServiceImpl(QuizGenerateService quizGenerateService,
-                                  RedisUserStudySessionDao redisUserStudySessionDao) {
+                                  StudySessionDao studySessionDao) {
         this.quizGenerateService = quizGenerateService;
-        this.redisUserStudySessionDao = redisUserStudySessionDao;
+        this.studySessionDao = studySessionDao;
     }
 
     @Override
@@ -50,18 +50,18 @@ public class QuizSessionServiceImpl implements QuizSessionService {
 
     @Override
     public int countRemainingQuizzes(String studySessionId) {
-        return redisUserStudySessionDao.getSessionById(studySessionId).getQuizzesQueue().quizzesCount();
+        return studySessionDao.getSessionById(studySessionId).getQuizzesQueue().quizzesCount();
     }
 
     private Optional<Quiz> getNextQuizFromRedisQueue(String sessionId) {
-        StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
+        StudySession studySession = studySessionDao.getSessionById(sessionId);
         SessionQuizzesQueue quizzesQueue = studySession.getQuizzesQueue();
 
         return Optional.ofNullable(quizzesQueue.peek());
     }
 
     private AnswerSubmissionResult handleFailedAnswerOfRedisQueue(String sessionId) {
-        StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
+        StudySession studySession = studySessionDao.getSessionById(sessionId);
         SessionQuizzesQueue quizzesQueue = studySession.getQuizzesQueue();
         Quiz quizAnswered = quizzesQueue.poll();
 
@@ -72,7 +72,7 @@ public class QuizSessionServiceImpl implements QuizSessionService {
     }
 
     private AnswerSubmissionResult submitAnswerToRedisQueue(String sessionId, AnswerSubmission answer) {
-        StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
+        StudySession studySession = studySessionDao.getSessionById(sessionId);
         SessionQuizzesQueue quizzesQueue = studySession.getQuizzesQueue();
         Quiz quizAnswered = quizzesQueue.poll();
 
@@ -87,7 +87,7 @@ public class QuizSessionServiceImpl implements QuizSessionService {
     }
 
     private SessionQuizzesQueue createRedisQuizzesQueue(String sessionId, Set<Integer> wordIds) {
-        StudySession studySession = redisUserStudySessionDao.getSessionById(sessionId);
+        StudySession studySession = studySessionDao.getSessionById(sessionId);
         SessionQuizzesQueue sessionQuizzesQueue = studySession.getQuizzesQueue();
         List<Quiz> quizzes = new ArrayList<>();
         for (Integer wordId : wordIds) {

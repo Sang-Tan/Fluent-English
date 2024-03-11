@@ -1,31 +1,33 @@
 package com.fluentenglish.web.study.session.dao.battle;
 
 import com.fluentenglish.web.study.session.dao.RedisStudySessionObject;
+import com.fluentenglish.web.study.session.dao.meta.StudySessionInternalMetadata;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.hash.BeanUtilsHashMapper;
 import org.springframework.data.redis.hash.HashMapper;
-import org.springframework.data.redis.hash.Jackson2HashMapper;
 import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
-public class RedisSessionBattle extends RedisStudySessionObject implements SessionBattle {
-    private final HashMapper<Object, String, Object> hashMapper = new Jackson2HashMapper(false);
+public class RedisSessionBattle extends RedisStudySessionObject<StudySessionInternalMetadata> implements SessionBattle {
+    private final HashMapper<BattleInfo, String, String> hashMapper
+            = new BeanUtilsHashMapper<>(BattleInfo.class);
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final StringRedisTemplate redisTemplate;
 
-    private final HashOperations<String, String, Object> hashOperations;
+    private final HashOperations<String, String, String> hashOperations;
 
 
-    public RedisSessionBattle(RedisTemplate<String, Object> redisTemplate){
+    public RedisSessionBattle(StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
         this.hashOperations = redisTemplate.opsForHash();
     }
 
     @Override
     public BattleInfo getBattleInfo() {
-        return (BattleInfo) hashMapper.fromHash(hashOperations.entries(getBattleInfoKey()));
+        return hashMapper.fromHash(hashOperations.entries(getBattleInfoKey()));
     }
 
     @Override
