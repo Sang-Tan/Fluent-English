@@ -18,5 +18,6 @@ public interface WordMemoMapper {
     void updateEntity(MaterialMemoDto materialMemoDto, @MappingTarget WordMemo wordMemo);
 
     @Mapping(target = "wordId", source = "id.word.id")
+    @Mapping(target = "proficiency", ignore = true)
     StudyingWordDto toStudyingWordDto(WordMemo wordMemo);
 }

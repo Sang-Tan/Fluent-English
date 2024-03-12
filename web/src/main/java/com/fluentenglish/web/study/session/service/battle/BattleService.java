@@ -1,15 +1,14 @@
 package com.fluentenglish.web.study.session.service.battle;
 
-import com.fluentenglish.web.study.session.dao.battle.BattleInfo;
-import com.fluentenglish.web.study.session.dao.battle.BattleUpdateInfo;
+import com.fluentenglish.web.study.session.service.battle.dto.BattleInfoDto;
 import com.fluentenglish.web.study.session.service.battle.dto.BattleResult;
 
 public interface BattleService {
-    BattleInfo initializeBattle(String sessionId);
+    BattleInfoDto initializeBattle(String sessionId);
 
-    BattleUpdateInfo updateBattle(String sessionId, Integer score);
+    BattleInfoDto updateBattle(String sessionId, Integer score);
 
-    BattleInfo getBattleInfo(String sessionId);
+    BattleInfoDto getBattleInfo(String sessionId);
 
     /**
      * @return battle result after battle ends
