@@ -11,6 +11,7 @@ import com.fluentenglish.web.study.session.service.quiz.dto.AnswerSubmission;
 import com.fluentenglish.web.study.session.service.quiz.dto.resp.AnswerSubmissionFailed;
 import com.fluentenglish.web.study.session.service.quiz.dto.resp.AnswerSubmissionResult;
 import com.fluentenglish.web.study.session.service.quiz.dto.resp.CorrectAnswerSubmissionResult;
+import com.fluentenglish.web.study.session.service.quiz.exception.InvalidWordsCountException;
 import com.fluentenglish.web.study.session.service.quiz.generator.QuizGenerateService;
 import jakarta.annotation.Nullable;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,10 @@ import java.util.*;
 
 @Service
 public class QuizSessionServiceImpl implements QuizSessionService {
+    private static final int MIN_WORDS_COUNT = 4;
+
+    private static final int MAX_WORDS_COUNT = 10;
+
     private final QuizGenerateService quizGenerateService;
     private final StudySessionDao studySessionDao;
 
@@ -30,6 +35,12 @@ public class QuizSessionServiceImpl implements QuizSessionService {
 
     @Override
     public Quiz initializeQuizzes(String sessionId, Set<Integer> wordIds) {
+        if (wordIds.size() < MIN_WORDS_COUNT) {
+            throw new InvalidWordsCountException("Required at least " + MIN_WORDS_COUNT + " words");
+        } else if (wordIds.size() > MAX_WORDS_COUNT) {
+            throw new InvalidWordsCountException("Required at most " + MAX_WORDS_COUNT + " words");
+        }
+
         return createRedisQuizzesQueue(sessionId, wordIds).peek();
     }
 
