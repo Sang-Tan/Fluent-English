@@ -19,6 +19,8 @@ public class BattleServiceImpl implements BattleService {
     private static final float CHAPTER_PROGRESS_MIN_PERCENT = 0.03f;
     private static final float CHAPTER_PROGRESS_MAX_PERCENT = 0.08f;
 
+    private final BattleCalculator battleCalculator;
+
     private final StudySessionDao studySessionDao;
 
     private final ChapterEnemyRepository chapterEnemyRepository;
@@ -29,11 +31,13 @@ public class BattleServiceImpl implements BattleService {
 
     private final BattleDtoMapper battleDtoMapper;
 
-    public BattleServiceImpl(StudySessionDao studySessionDao,
+    public BattleServiceImpl(BattleCalculator battleCalculator,
+                             StudySessionDao studySessionDao,
                              ChapterEnemyRepository chapterEnemyRepository,
                              PlayerProgressService playerProgressService,
                              UserInfoService userInfoService,
                              BattleDtoMapper battleDtoMapper) {
+        this.battleCalculator = battleCalculator;
         this.studySessionDao = studySessionDao;
         this.chapterEnemyRepository = chapterEnemyRepository;
         this.playerProgressService = playerProgressService;
@@ -109,7 +113,7 @@ public class BattleServiceImpl implements BattleService {
         boolean isLost = score == 0;
 
         // taking damage
-        int dmgTaken = calculateDamageTaken(userStreak, score, enemyDmg);
+        int dmgTaken = battleCalculator.calculateDamageTaken(userStreak, score, enemyDmg);
         if (userShield > 0) {
             userShield -= dmgTaken;
             if (userShield < 0) {
@@ -119,6 +123,7 @@ public class BattleServiceImpl implements BattleService {
         } else {
             userHp -= dmgTaken;
         }
+        userHp = Math.max(userHp, 0);
 
         // updating user streak
         if (userStreak == 0) {
@@ -163,10 +168,6 @@ public class BattleServiceImpl implements BattleService {
                 .attributesChange(attributesChange)
                 .currentState(currentStateDto)
                 .build();
-    }
-
-    private int calculateDamageTaken(int userStreak, int score, int enemyDmg) {
-        return Math.toIntExact(Math.round(enemyDmg * (1 - userStreak * 0.1 + (10 - score) * 0.1)));
     }
 
     private Float getRandomChapterProgress() {
