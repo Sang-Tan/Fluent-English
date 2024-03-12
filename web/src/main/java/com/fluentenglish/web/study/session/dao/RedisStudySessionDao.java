@@ -4,7 +4,7 @@ import com.fluentenglish.web.study.session.dao.exception.StudySessionExistsExcep
 import com.fluentenglish.web.study.session.dao.exception.StudySessionNotExistException;
 import com.fluentenglish.web.study.session.dao.meta.StudySessionManageMetadata;
 import com.fluentenglish.web.study.session.dao.score.RedisMetadataDto;
-import jakarta.annotation.Nullable;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+@Log4j2
 @Repository
 public class RedisStudySessionDao implements StudySessionDao {
     private final BeanFactory beanFactory;
@@ -76,20 +77,21 @@ public class RedisStudySessionDao implements StudySessionDao {
 
     @Override
     public boolean studySessionOfUserExists(int userId) {
-        return stringOperations.get(getUserReferSessionKey(userId)) != null;
+        return Boolean.TRUE.equals(stringTemplate.hasKey(getUserReferSessionKey(userId)));
     }
 
     @Override
     public boolean studySessionExists(String sessionId) {
-        return stringOperations.get(getSessionMetadataKey(sessionId)) != null;
+        return Boolean.TRUE.equals(stringTemplate.hasKey(getSessionMetadataKey(sessionId)));
     }
 
     @Override
     public void deleteStudySession(String sessionId) {
-        Integer userId = getUserIdBySessionId(sessionId);
-        if (userId == null) {
+        if (!studySessionExists(sessionId)) {
+            log.warn("Trying to delete non-existing session");
             return;
         }
+        int userId = getMetadataBySessionId(sessionId).getUserId();
 
         RedisStudySession session = beanFactory.getBean(RedisStudySession.class);
         session.setSessionMetadata(new StudySessionManageMetadata(
@@ -110,12 +112,6 @@ public class RedisStudySessionDao implements StudySessionDao {
 
     private RedisMetadataDto getMetadataBySessionId(String sessionId) {
         return hashMapper.fromHash(hashOperations.entries(getSessionMetadataKey(sessionId)));
-    }
-
-    @Nullable
-    private Integer getUserIdBySessionId(String sessionId) {
-        String userIdStr = stringOperations.get(getSessionMetadataKey(sessionId));
-        return userIdStr == null ? null : Integer.parseInt(userIdStr);
     }
 
     private String generateRandomSessionId() {
