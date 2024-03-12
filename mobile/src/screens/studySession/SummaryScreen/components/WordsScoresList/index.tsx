@@ -1,4 +1,4 @@
-import { WordsScoresDto } from "src/screens/studySession/types";
+import { WordsScoresDto } from "src/types/study/session";
 import { WordScoreItem } from "./types";
 
 import { useEffect, useState } from "react";

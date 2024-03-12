@@ -1,4 +1,4 @@
-import { QuestionDto } from "src/screens/studySession/types";
+import { QuestionDto } from "src/types/study/session";
 import { View, Text } from "react-native";
 import Attachment from "./components/Attachment";
 import styles from "./styles";

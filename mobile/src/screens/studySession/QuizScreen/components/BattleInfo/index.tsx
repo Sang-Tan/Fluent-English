@@ -1,4 +1,4 @@
-import { BattleInfoDto } from "src/screens/studySession/types";
+import { BattleInfoDto } from "src/types/study/session";
 
 import { View, Text } from "react-native";
 
@@ -9,7 +9,7 @@ interface Props {
 function BattleInfo({ data }: Props) {
   return (
     <View>
-      <Text>User HP: {data.userHp}</Text>
+      <Text>User HP: {data.userCurrentHp}</Text>
       <Text>User streak: {data.userStreak}</Text>
       <Text>User shield: {data.userShield}</Text>
       <Text>Enemy name: {data.enemyName}</Text>

@@ -1,4 +1,4 @@
-import { QuizDto } from "src/screens/studySession/types";
+import { QuizDto } from "src/types/study/session";
 
 import { useState } from "react";
 import { View, SafeAreaView } from "react-native";

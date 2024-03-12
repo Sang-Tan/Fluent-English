@@ -1,5 +1,5 @@
-import { AnswerChoicesDto } from "src/screens/studySession/types";
-import { isTextChoices } from "src/screens/studySession/types/helpers";
+import { AnswerChoicesDto } from "src/types/study/session";
+import { isTextChoices } from "src/types/study/session/helpers";
 import { AnswerProps } from "../../types";
 
 import { useState } from "react";

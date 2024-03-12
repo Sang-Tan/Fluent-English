@@ -10,7 +10,7 @@ import {
 } from ".";
 
 import {
-  SessionSubmissionDto,
+  SessionSubmissionResultDto,
   SessionInfoSubmissionType,
   SessionUpdateDto,
   SessionSummaryDto,
@@ -45,13 +45,13 @@ export function isAudioChoices(
 
 //#region SessionInfo
 export function isUpdateSessionInfo(
-  info: SessionSubmissionDto
+  info: SessionSubmissionResultDto
 ): info is SessionUpdateDto {
   return info.type === SessionInfoSubmissionType.Update;
 }
 
 export function isSessionSummary(
-  info: SessionSubmissionDto
+  info: SessionSubmissionResultDto
 ): info is SessionSummaryDto {
   return info.type === SessionInfoSubmissionType.Summary;
 }

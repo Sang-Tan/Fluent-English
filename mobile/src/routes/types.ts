@@ -7,7 +7,7 @@ import { LessonDto } from "src/types/learningMaterial";
 import {
   SessionInitializationDto,
   SessionSummaryDto,
-} from "src/screens/studySession/types";
+} from "src/types/study/session";
 
 import ROUTE_NAMES from "./routeNames";
 
