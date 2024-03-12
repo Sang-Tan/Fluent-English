@@ -1,17 +1,17 @@
 import { QuizScreenProps } from "src/routes/types";
 
+import { submitAnswer } from "src/apis/study/session";
+
 import {
   SessionStatusDto,
-  SessionSubmissionDto,
-  SessionInitializationDto,
-  AnswerSubmissionType,
-  AnsweredSubmissionDto,
-} from "../types";
+  SessionSubmissionResultDto,
+  AnswerSubmissionDto,
+} from "../../../types/study/session";
 import {
   isUpdateSessionInfo,
   isSessionSummary,
   isIncorrectAnswerSubmissionResult,
-} from "../types/helpers";
+} from "../../../types/study/session/helpers";
 
 import useRequest from "src/hooks/useRequest";
 import { useState } from "react";
@@ -34,42 +34,37 @@ function QuizScreen({ navigation, route }: QuizScreenProps) {
   const battleInfo = sessionStatus.battleInfo;
 
   const handleAnswerSubmit = async () => {
-    const submission: AnsweredSubmissionDto = {
-      type: AnswerSubmissionType.Answered,
-      wordId: quiz.wordId,
+    const submission: AnswerSubmissionDto = {
       answer: userAnswer,
       timeAnsweredSec: 0,
     };
 
     try {
-      const resp = await request(`/study-sessions/${sessionId}/answer`, {
-        method: "POST",
-        body: JSON.stringify(submission),
-      });
+      const submissionInfo: SessionSubmissionResultDto = await submitAnswer(
+        request,
+        sessionId,
+        submission
+      );
 
-      if (resp.ok) {
-        const submissionInfo: SessionSubmissionDto = await resp.json();
-        const submissionResult = submissionInfo.answerSubmissionResult;
-        if (isIncorrectAnswerSubmissionResult(submissionResult)) {
-          alert(
-            "Incorrect answer, correct answer is " +
-              submissionResult.correctAnswer
-          );
-        }
+      const submissionResult = submissionInfo.answerSubmissionResult;
+      if (isIncorrectAnswerSubmissionResult(submissionResult)) {
+        alert(
+          "Incorrect answer, correct answer is " +
+            submissionResult.correctAnswer
+        );
+      }
 
-        if (isUpdateSessionInfo(submissionInfo)) {
-          setSessionStatus(submissionInfo);
-          setUserAnswer("");
-        } else if (isSessionSummary(submissionInfo)) {
-          navigation.navigate(ROUTE_NAMES.STUDY_SESSION_SUMMARY, {
-            summary: submissionInfo,
-          });
-        }
-      } else {
-        console.error("Failed to submit answer", resp);
+      if (isUpdateSessionInfo(submissionInfo)) {
+        setSessionStatus(submissionInfo);
+        setUserAnswer("");
+      } else if (isSessionSummary(submissionInfo)) {
+        navigation.navigate(ROUTE_NAMES.STUDY_SESSION_SUMMARY, {
+          summary: submissionInfo,
+        });
       }
     } catch (e) {
       console.error(e);
+      alert("Failed to submit answer");
     }
   };
 

@@ -1,8 +1,8 @@
-import { AnswerDto } from "src/screens/studySession/types";
+import { AnswerDto } from "src/types/study/session";
 import {
   isInputAnswer,
   isMultipleChoiceAnswer,
-} from "src/screens/studySession/types/helpers";
+} from "src/types/study/session/helpers";
 import { AnswerProps } from "./types";
 
 import { Text } from "react-native";

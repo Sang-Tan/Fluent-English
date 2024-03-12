@@ -32,7 +32,7 @@ function SummaryScreen({ route, navigation }: SummaryScreenProps) {
       <View>
         <Text style={styles.text}>
           Hp: {battleResult.currentState.currentHp}/
-          {battleResult.attributes.maxHp}
+          {battleResult.attributesChange.after.maxHp}
         </Text>
         <Text style={styles.text}>
           Level before: {levelProgress.before.level}, exp before:{" "}

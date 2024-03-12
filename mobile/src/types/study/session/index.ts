@@ -61,6 +61,7 @@ export interface QuizDto {
 }
 
 export interface AnswerSubmissionResultDto {
+  correctAnswer: string;
   isCorrect: boolean;
 }
 
@@ -116,13 +117,18 @@ export interface UserAttributesDto {
   maxHp: number;
   baseShield: number;
 }
+
+export interface BeforeAfterUserAttributesDto {
+  before: UserAttributesDto;
+  after: UserAttributesDto;
+}
 //#endregion
 
 //#endregion
 
 //#region Battle Info
 export interface BattleInfoDto {
-  userHp: number;
+  userCurrentHp: number;
   userShield: number;
   userStreak: number;
   enemyName: string;
@@ -132,7 +138,7 @@ export interface BattleResultDto {
   storyProgress: BeforeAfterStoryProgressDto;
   levelProgress: LevelBeforeAfterDto;
   currentState: UserCurrentStateDto;
-  attributes: UserAttributesDto;
+  attributesChange: BeforeAfterUserAttributesDto;
 }
 //#endregion
 
@@ -142,7 +148,7 @@ export enum SessionInfoSubmissionType {
   Summary = "summary",
 }
 
-export interface SessionSubmissionDto {
+export interface SessionSubmissionResultDto {
   type: SessionInfoSubmissionType;
   answerSubmissionResult: AnswerSubmissionResultDto;
 }
@@ -154,7 +160,7 @@ export interface SessionStatusDto {
 }
 
 export interface SessionUpdateDto
-  extends SessionSubmissionDto,
+  extends SessionSubmissionResultDto,
     SessionStatusDto {
   type: SessionInfoSubmissionType.Update;
   sessionId?: string;
@@ -168,7 +174,7 @@ export interface WordsScoresDto {
   [wordId: number]: number;
 }
 
-export interface SessionSummaryDto extends SessionSubmissionDto {
+export interface SessionSummaryDto extends SessionSubmissionResultDto {
   type: SessionInfoSubmissionType.Summary;
   battleResult: BattleResultDto;
   wordsScores: WordsScoresDto;
@@ -177,23 +183,8 @@ export interface SessionSummaryDto extends SessionSubmissionDto {
 //#endregion
 
 //#region ================REQUEST====================
-export enum AnswerSubmissionType {
-  Answered = "answered",
-  NotAnswered = "not-answered",
-}
-
 export interface AnswerSubmissionDto {
-  type: AnswerSubmissionType;
-  wordId: number;
-}
-
-export interface AnsweredSubmissionDto extends AnswerSubmissionDto {
-  type: AnswerSubmissionType.Answered;
   answer: string;
   timeAnsweredSec: number;
-}
-
-export interface NotAnsweredSubmissionDto extends AnswerSubmissionDto {
-  type: AnswerSubmissionType.NotAnswered;
 }
 //#endregion

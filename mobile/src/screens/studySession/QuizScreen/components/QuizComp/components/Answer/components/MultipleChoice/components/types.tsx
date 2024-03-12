@@ -1,4 +1,4 @@
-import { AnswerDto, AnswerChoiceDto } from "src/screens/studySession/types";
+import { AnswerDto, AnswerChoiceDto } from "src/types/study/session";
 
 export interface ChoiceComponentProps {
   choice: AnswerChoiceDto;
