@@ -1,0 +1,7 @@
+BEGIN;
+    ALTER TABLE users
+    ADD COLUMN enabled BOOLEAN NOT NULL DEFAULT FALSE;
+
+    ALTER TABLE users
+    ADD COLUMN created_date TIMESTAMP(6) NOT NULL DEFAULT now();
+END;

@@ -1,31 +1,66 @@
 package com.fluentenglish.web.auth.user;
 
 import com.fluentenglish.web.auth.dto.LoginDto;
+import com.fluentenglish.web.auth.user.dto.*;
 import com.fluentenglish.web.auth.dto.ResponseToken;
 import com.fluentenglish.web.auth.exception.InvalidLoginCredentialsException;
 import com.fluentenglish.web.common.exception.errorresponse.ErrorResponse;
+import com.fluentenglish.web.user.UserRepository;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserAuthController {
-    private final UserLoginService userLoginService;
+    private final UserAuthService userAuthService;
 
-    public UserAuthController(UserLoginService userLoginService) {
-        this.userLoginService = userLoginService;
+    private final UserRepository userRepository;
+
+    public UserAuthController(UserAuthService userAuthService, UserRepository userRepository) {
+        this.userAuthService = userAuthService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/api/login")
     public ResponseEntity<Object> postLogin(@RequestBody @Valid LoginDto loginDto) {
         try {
-            ResponseToken responseToken = userLoginService.login(loginDto);
+            ResponseToken responseToken = userAuthService.login(loginDto);
             return ResponseEntity.ok(responseToken);
         } catch (InvalidLoginCredentialsException e) {
             return ResponseEntity.badRequest().body(ErrorResponse.builder()
                     .withMessage("Invalid email or password").build());
         }
+    }
+
+    @PostMapping("/api/register")
+    public ResponseEntity<Object> postRegister(@RequestBody @Valid RegisterDto registerDto) {
+        if(userRepository.existsByEmail(registerDto.getEmail())) {
+            return ResponseEntity.badRequest().body(ErrorResponse.builder()
+                    .withMessage("Email already exists").build());
+        }
+
+        userAuthService.register(registerDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/api/confirm-registration/{token}")
+    public ResponseEntity<Void> confirmRegistration(@PathVariable("token") String verificationToken) {
+        userAuthService.confirmRegistration(new VerificationTokenDto(verificationToken));
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/api/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestBody @Valid ResetPasswordDto resetPasswordDto) {
+        userAuthService.resetPassword(resetPasswordDto);
+        return ResponseEntity.accepted().build();
+    }
+
+    @PutMapping("/api/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestParam("userId") Integer userId, @RequestParam("token") String resetPasswordToken,
+                                              @RequestBody @Valid NewPasswordDto newPasswordDto) {
+        userAuthService.resetNewPassword(new ConfirmNewPasswordTokenDto(userId, resetPasswordToken, newPasswordDto.getNewPassword()));
+        return ResponseEntity.noContent().build();
     }
 }
