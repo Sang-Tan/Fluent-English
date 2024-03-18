@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -43,6 +44,9 @@ public class User {
 
     private Integer experience = 0;
 
+    @Column(name = "enabled")
+    private boolean enabled = false;
+
     public User(Integer id) {
         this.id = id;
     }
@@ -56,4 +60,12 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "word_id")
     )
     private Set<Word> ignoredWords;
+
+    @Column(name = "created_date", nullable = false)
+    private LocalDateTime createdDate;
+
+    @PrePersist
+    public void prePersist() {
+        createdDate = LocalDateTime.now();
+    }
 }
