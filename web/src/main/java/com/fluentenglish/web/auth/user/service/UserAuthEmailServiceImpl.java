@@ -1,6 +1,7 @@
 package com.fluentenglish.web.auth.user.service;
 
 import com.fluentenglish.web.auth.user.dto.RegisterTokenDto;
+import com.fluentenglish.web.auth.user.dto.ResetPasswordTokenDto;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -36,6 +37,24 @@ public class UserAuthEmailServiceImpl implements UserAuthEmailService {
             message.setFrom(fromEmail);
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(registerTokenDto.getEmail()));
             message.setSubject("Kích hoạt tài khoản");
+            message.setText(emailContent, "UTF-8", "html");
+            emailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void sendResetPasswordEmail(ResetPasswordTokenDto resetPasswordTokenDto) {
+        String emailContent = "<h1>Chào " + resetPasswordTokenDto.getName() + "</h1>" +
+                "<p>Vui lòng nhấp vào liên kết sau để đặt lại mật khẩu của bạn:</p>" +
+                "<a href=\"" + appUrl + "/reset-password?" + "userId=" + resetPasswordTokenDto.getUserId() + "&token=" + resetPasswordTokenDto.getToken() + "\">Đặt lại mật khẩu</a>";
+
+        MimeMessage message = emailSender.createMimeMessage();
+        try {
+            message.setFrom(fromEmail);
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(resetPasswordTokenDto.getEmail()));
+            message.setSubject("Đặt lại mật khẩu");
             message.setText(emailContent, "UTF-8", "html");
             emailSender.send(message);
         } catch (MessagingException e) {

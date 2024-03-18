@@ -50,4 +50,17 @@ public class UserAuthController {
         userAuthService.confirmRegistration(new VerificationTokenDto(verificationToken));
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/api/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestBody @Valid ResetPasswordDto resetPasswordDto) {
+        userAuthService.resetPassword(resetPasswordDto);
+        return ResponseEntity.accepted().build();
+    }
+
+    @PutMapping("/api/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestParam("userId") Integer userId, @RequestParam("token") String resetPasswordToken,
+                                              @RequestBody @Valid NewPasswordDto newPasswordDto) {
+        userAuthService.resetNewPassword(new ConfirmNewPasswordTokenDto(userId, resetPasswordToken, newPasswordDto.getNewPassword()));
+        return ResponseEntity.noContent().build();
+    }
 }

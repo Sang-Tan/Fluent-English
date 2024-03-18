@@ -101,4 +101,42 @@ public class UserAuthServiceImpl implements UserAuthService {
         user.setEnabled(true);
         userRepository.save(user);
     }
+
+    @Override
+    public void resetPassword(ResetPasswordDto resetPasswordDto) {
+        User user = userRepository.findByEmail(resetPasswordDto.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String token = jwtProcessor.getBuilder()
+                .withSubject(user.getEmail())
+                .withClaim("expiredAt", System.currentTimeMillis() + verificationDuration)
+                .build();
+
+        userAuthEmailService.sendResetPasswordEmail(ResetPasswordTokenDto.builder()
+                .userId(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .token(token)
+                .build());
+    }
+
+    @Override
+    public void resetNewPassword(ConfirmNewPasswordTokenDto confirmNewPasswordTokenDto) {
+        VerifiedJWT verifiedJWT = jwtProcessor.getVerifiedJWT(confirmNewPasswordTokenDto.getToken());
+
+        Optional<Long> expiredAt = verifiedJWT.getClaim("expiredAt", Long.class);
+        if (expiredAt.isEmpty() || expiredAt.get() < System.currentTimeMillis()) {
+            throw new RuntimeException("Token expired");
+        }
+
+        User user = userRepository.findById(confirmNewPasswordTokenDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!verifiedJWT.getUsername().equals(user.getEmail())) {
+            throw new RuntimeException("Invalid token");
+        }
+
+        user.setPassword(passwordEncoder.encode(confirmNewPasswordTokenDto.getNewPassword()));
+        userRepository.save(user);
+    }
 }

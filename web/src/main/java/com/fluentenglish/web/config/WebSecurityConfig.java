@@ -66,6 +66,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/login").permitAll()
                         .requestMatchers("/api/register").permitAll()
                         .requestMatchers("/api/confirm-registration/**").permitAll()
+                        .requestMatchers("/api/reset-password").permitAll()
                         .anyRequest().hasRole(Role.USER.name())
                 ).cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
