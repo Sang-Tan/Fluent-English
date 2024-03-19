@@ -44,7 +44,7 @@ public class StudySessionServiceImpl implements StudySessionService {
                                    QuizSessionService quizSessionService,
                                    SRSessionService srSessionService,
                                    BattleService battleService,
-                                   com.fluentenglish.web.study.session.service.interaction.StudySessionInteractionService studySessionInteractionService) {
+                                   StudySessionInteractionService studySessionInteractionService) {
         this.studySessionDao = studySessionDao;
         this.studySessionAccessIdDao = studySessionAccessIdDao;
         this.quizSessionService = quizSessionService;
@@ -100,6 +100,7 @@ public class StudySessionServiceImpl implements StudySessionService {
 
         AnswerSubmissionResult result = quizSessionService.submitAnswer(sessionId, answer);
         studySessionInteractionService.setLastInteractionTime(sessionId, System.currentTimeMillis());
+
         return handleResult(sessionId, result);
     }
 
@@ -109,6 +110,7 @@ public class StudySessionServiceImpl implements StudySessionService {
 
         AnswerSubmissionResult result = quizSessionService.handleFailedAnswerSubmission(sessionId);
         studySessionInteractionService.setLastInteractionTime(sessionId, System.currentTimeMillis());
+
         return handleResult(sessionId, result);
     }
 
@@ -175,6 +177,7 @@ public class StudySessionServiceImpl implements StudySessionService {
         summary.setBattleResult(battleResult);
 
         studySessionDao.deleteStudySession(studySessionId);
+        studySessionAccessIdDao.deleteSessionAccessId(studySessionId);
 
         return summary;
     }

@@ -14,7 +14,12 @@ public class RedisStudySessionAccessIdDao implements StudySessionAccessIdDao {
 
     @Override
     public String getSessionIdByAccessId(String accessId) {
-        return stringTemplate.opsForValue().get(getAccessIdReferSessionIdKey(accessId));
+        String sessionId = stringTemplate.opsForValue().get(getAccessIdReferSessionIdKey(accessId));
+        if (sessionId == null) {
+            throw new RuntimeException("No session found for given accessId");
+        }
+
+        return sessionId;
     }
 
     @Override
@@ -26,6 +31,9 @@ public class RedisStudySessionAccessIdDao implements StudySessionAccessIdDao {
     @Override
     public void changeAccessIdBySessionId(String sessionId, String newAccessId) {
         String oldAccessId = stringTemplate.opsForValue().get(getSessionIdReferAccessIdKey(sessionId));
+        if (oldAccessId == null) {
+            throw new RuntimeException("No accessId found for given sessionId");
+        }
         stringTemplate.delete(getAccessIdReferSessionIdKey(oldAccessId));
 
         stringTemplate.opsForValue().set(getAccessIdReferSessionIdKey(newAccessId), sessionId);
@@ -34,12 +42,21 @@ public class RedisStudySessionAccessIdDao implements StudySessionAccessIdDao {
 
     @Override
     public String getAccessIdBySessionId(String sessionId) {
-        return stringTemplate.opsForValue().get(getSessionIdReferAccessIdKey(sessionId));
+        String accessId = stringTemplate.opsForValue().get(getSessionIdReferAccessIdKey(sessionId));
+        if (accessId == null) {
+            throw new RuntimeException("No accessId found for given sessionId");
+        }
+
+        return accessId;
     }
 
     @Override
     public void deleteSessionAccessId(String sessionId) {
         String accessId = stringTemplate.opsForValue().get(getSessionIdReferAccessIdKey(sessionId));
+        if (accessId == null) {
+            throw new RuntimeException("No accessId found for given sessionId");
+        }
+        
         stringTemplate.delete(getAccessIdReferSessionIdKey(accessId));
         stringTemplate.delete(getSessionIdReferAccessIdKey(sessionId));
     }
