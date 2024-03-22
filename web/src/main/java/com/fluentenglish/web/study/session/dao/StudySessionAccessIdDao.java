@@ -1,6 +1,7 @@
 package com.fluentenglish.web.study.session.dao;
 
 public interface StudySessionAccessIdDao {
+    
     String getSessionIdByAccessId(String accessId);
 
     void createAccessIdForSession(String sessionId, String accessId);
